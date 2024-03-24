@@ -1,5 +1,5 @@
 from libc.stdlib cimport malloc, free
-from libc.stdint cimport uint8_t, uint32_t, int32_t
+from libc.stdint cimport uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t
 from libc.string cimport memcpy
 from cpython cimport array
 
@@ -153,37 +153,7 @@ cdef class Application:
 
         free(self._window_name)
         
-    def read_memory_bytes(
-        self, 
-        unsigned long address, 
-        int bytes_to_read
-    ) -> bytes:
-        
-        cdef char* read_buffer
-        cdef SIZE_T num_bytes_read 
-        cdef bytes py_memory
-
-        read_buffer = <char*>malloc(bytes_to_read)
-        
-        if not read_buffer:
-            raise MemoryError("Failed to allocate memory.")
-
-        num_bytes_read = read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, bytes_to_read)
-
-        if num_bytes_read != bytes_to_read:
-            raise MemoryError(f"Error reading memory. Read bytes: {num_bytes_read}. Bytes instructed to read: {bytes_to_read}.")
-
-        py_memory = bytes(<char[:bytes_to_read]>read_buffer)
-        
-        free(read_buffer)
-
-        return py_memory
-
-    def write_memory_bytes(
-        self, 
-        unsigned long address, 
-        bytes bytes_to_write
-    ) -> None:
+    def write_memory_bytes(self, unsigned long address, bytes bytes_to_write) -> None:
         
         cdef char* write_buffer
         cdef SIZE_T num_bytes_written 
@@ -206,21 +176,44 @@ cdef class Application:
 
         return
 
+    def read_memory_bytes(self, unsigned long address, int bytes_to_read) -> bytes:
+        
+        cdef char* read_buffer
+        cdef SIZE_T num_bytes_read 
+        cdef bytes py_memory
+
+        read_buffer = <char*>malloc(bytes_to_read)
+        
+        if not read_buffer:
+            raise MemoryError("Failed to allocate memory.")
+
+        num_bytes_read = read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, bytes_to_read)
+
+        if num_bytes_read != bytes_to_read:
+            raise MemoryError(f"Error reading memory. Read bytes: {num_bytes_read}. Bytes instructed to read: {bytes_to_read}.")
+
+        py_memory = bytes(<char[:bytes_to_read]>read_buffer)
+        
+        free(read_buffer)
+
+        return py_memory
+
     def read_memory_float32(self, unsigned long address) -> float:
+        
         # Allocate buffer for reading memory
-        cdef void* read_buffer = <void*> malloc(sizeof(float))
+        cdef void* read_buffer = <void*> malloc(<SIZE_T>4)
         if not read_buffer:
             raise MemoryError("Failed to allocate memory buffer.")
 
         # Read process memory into the buffer
         
-        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>sizeof(float)):
+        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>4):
             free(read_buffer)  # Ensure to free allocated memory in case of failure
             raise OSError("Failed to read process memory.")
 
-        # Convert the buffer to a float
         cdef float result
-        memcpy(&result, read_buffer, sizeof(float))
+            
+        memcpy(&result, read_buffer, <SIZE_T>4)
 
         # Free the allocated memory
         free(read_buffer)
@@ -229,20 +222,21 @@ cdef class Application:
         return result
     
     def read_memory_float64(self, unsigned long address) -> double:
+        
         # Allocate buffer for reading memory
-        cdef void* read_buffer = <void*> malloc(sizeof(double))
+        cdef void* read_buffer = <void*> malloc(<SIZE_T>8)
         if not read_buffer:
             raise MemoryError("Failed to allocate memory buffer.")
 
         # Read process memory into the buffer
         
-        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>sizeof(double)):
+        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>8):
             free(read_buffer)  # Ensure to free allocated memory in case of failure
             raise OSError("Failed to read process memory.")
 
-        # Convert the buffer to a float
         cdef double result
-        memcpy(&result, read_buffer, sizeof(double))
+            
+        memcpy(&result, read_buffer, <SIZE_T>8)
 
         # Free the allocated memory
         free(read_buffer)
@@ -250,21 +244,25 @@ cdef class Application:
         # Return the float result
         return result
     
-    def read_memory_int32(self, unsigned long address) -> int:
+    cdef long long read_memory_int(self, unsigned long address, unsigned short bytes_in_int):
+        
+        if bytes_in_int > 8:
+            raise MemoryError("Too many bytes requested, requested: " + str(bytes_in_int) + ". Maximum is 8.")
+        
         # Allocate buffer for reading memory
-        cdef void* read_buffer = <void*> malloc(sizeof(int32_t))
+        cdef void* read_buffer = <void*> malloc(<SIZE_T>bytes_in_int)
         if not read_buffer:
             raise MemoryError("Failed to allocate memory buffer.")
 
         # Read process memory into the buffer
         
-        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>sizeof(int32_t)):
+        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>bytes_in_int):
             free(read_buffer)  # Ensure to free allocated memory in case of failure
             raise OSError("Failed to read process memory.")
 
         # Convert the buffer to a float
-        cdef int result
-        memcpy(&result, read_buffer, sizeof(int32_t))
+        cdef long long result
+        memcpy(&result, read_buffer, <SIZE_T>bytes_in_int)
 
         # Free the allocated memory
         free(read_buffer)
@@ -272,27 +270,30 @@ cdef class Application:
         # Return the float result
         return result
     
-    def read_memory_uint32(self, unsigned long address) -> int:
-        # Allocate buffer for reading memory
-        cdef void* read_buffer = <void*> malloc(sizeof(int32_t))
-        if not read_buffer:
-            raise MemoryError("Failed to allocate memory buffer.")
+    def read_memory_int8(self, unsigned long address) -> long:
+       return self.read_memory_int(address, 1)
 
-        # Read process memory into the buffer
-        
-        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>sizeof(uint32_t)):
-            free(read_buffer)  # Ensure to free allocated memory in case of failure
-            raise OSError("Failed to read process memory.")
+    def read_memory_int16(self, unsigned long address) -> long:
+        return self.read_memory_int(address, 2)
+    
+    def read_memory_int32(self, unsigned long address) -> long:
+       return self.read_memory_int(address, 4)
+    
+    def read_memory_int64(self, unsigned long address) -> long:
+       return self.read_memory_int(address, 8)
 
-        # Convert the buffer to a float
-        cdef unsigned int result
-        memcpy(&result, read_buffer, sizeof(uint32_t))
+    def read_memory_uint8(self, unsigned long address) -> long:
+       return <unsigned long long>self.read_memory_int(address, 1)
 
-        # Free the allocated memory
-        free(read_buffer)
+    def read_memory_uint16(self, unsigned long address) -> long:
+        return <unsigned long long>self.read_memory_int(address, 2)
+    
+    def read_memory_uint32(self, unsigned long address) -> long:
+       return <unsigned long long>self.read_memory_int(address, 4)
+    
+    def read_memory_uint64(self, unsigned long address) -> long:
+       return <unsigned long long>self.read_memory_int(address, 8)
 
-        # Return the float result
-        return result
 
     @property
     def window_handle(self) -> int:
