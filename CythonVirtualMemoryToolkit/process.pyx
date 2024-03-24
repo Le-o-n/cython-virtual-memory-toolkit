@@ -176,6 +176,47 @@ cdef class Application:
 
         return
 
+    def write_memory_float32(self, unsigned long address, float value) -> None:
+
+        cdef float c_value = <float>value
+    
+        # Allocate buffer for writing memory
+        cdef void* write_buffer = <void*>malloc(4)  # Size for float is 4 bytes
+        if not write_buffer:
+            raise MemoryError("Failed to allocate memory buffer.")
+
+        # Copy the Cython/C float value into the buffer
+        memcpy(write_buffer, <void*>&c_value, <size_t>4)
+
+        # Write the buffer to process memory
+        if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>4):
+            free(write_buffer)  # Ensure to free allocated memory in case of failure
+            raise OSError("Failed to write to process memory.")
+
+        # Free the allocated memory
+        free(write_buffer)
+    
+    def write_memory_float64(self, unsigned long address, double value) -> None:
+
+        cdef double c_value = <double>value
+    
+        # Allocate buffer for writing memory
+        cdef void* write_buffer = <void*>malloc(8)  # Size for float is 4 bytes
+        if not write_buffer:
+            raise MemoryError("Failed to allocate memory buffer.")
+
+        # Copy the Cython/C float value into the buffer
+        memcpy(write_buffer, <void*>&c_value, <size_t>8)
+
+        # Write the buffer to process memory
+        if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>8):
+            free(write_buffer)  # Ensure to free allocated memory in case of failure
+            raise OSError("Failed to write to process memory.")
+
+        # Free the allocated memory
+        free(write_buffer)
+        
+
     def read_memory_bytes(self, unsigned long address, int bytes_to_read) -> bytes:
         
         cdef char* read_buffer
