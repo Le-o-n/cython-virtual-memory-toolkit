@@ -1,6 +1,8 @@
 from libc.stdlib cimport malloc, free
-from libc.stdint cimport uint8_t
+from libc.stdint cimport uint8_t, uint32_t, int32_t
+from libc.string cimport memcpy
 from cpython cimport array
+
 
 
 cdef extern from "Windows.h":
@@ -66,14 +68,12 @@ cdef BOOL enum_window_match_callback(HWND hWnd, LPARAM lparam) noexcept:
 cdef EnumWindowCallbackLParam find_process(char* window_name):
     cdef EnumWindowCallbackLParam data
 
-
     data.in_window_name = window_name
     data.out_all_access_process_handle = 0
     data.out_pid = 0
     data.out_window_handle = 0
     EnumWindows(enum_window_match_callback, <LPARAM>&data)
 
-    
     return data
 
 cdef HANDLE get_process_handle_from_window_name(const char* windowName) :
@@ -82,8 +82,6 @@ cdef HANDLE get_process_handle_from_window_name(const char* windowName) :
     GetWindowThreadProcessId(gameWindow, &gameProcessId)
     CloseHandle(gameWindow)
     return OpenProcess(PROCESS_ALL_ACCESS, False, gameProcessId)
-
-
 
 cdef int read_process_memory(
     HANDLE process_handle, 
@@ -117,7 +115,7 @@ cdef int write_process_memory(
     )
     return written_bytes
 
-cdef class ApplicationHandle:
+cdef class Application:
     cdef HANDLE _process_handle
     cdef HWND _window_handle
     cdef const char* _window_name
@@ -155,7 +153,6 @@ cdef class ApplicationHandle:
 
         free(self._window_name)
         
-
     def read_memory_bytes(
         self, 
         unsigned long address, 
@@ -209,7 +206,93 @@ cdef class ApplicationHandle:
 
         return
 
+    def read_memory_float32(self, unsigned long address) -> float:
+        # Allocate buffer for reading memory
+        cdef void* read_buffer = <void*> malloc(sizeof(float))
+        if not read_buffer:
+            raise MemoryError("Failed to allocate memory buffer.")
+
+        # Read process memory into the buffer
+        
+        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>sizeof(float)):
+            free(read_buffer)  # Ensure to free allocated memory in case of failure
+            raise OSError("Failed to read process memory.")
+
+        # Convert the buffer to a float
+        cdef float result
+        memcpy(&result, read_buffer, sizeof(float))
+
+        # Free the allocated memory
+        free(read_buffer)
+
+        # Return the float result
+        return result
     
+    def read_memory_float64(self, unsigned long address) -> double:
+        # Allocate buffer for reading memory
+        cdef void* read_buffer = <void*> malloc(sizeof(double))
+        if not read_buffer:
+            raise MemoryError("Failed to allocate memory buffer.")
+
+        # Read process memory into the buffer
+        
+        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>sizeof(double)):
+            free(read_buffer)  # Ensure to free allocated memory in case of failure
+            raise OSError("Failed to read process memory.")
+
+        # Convert the buffer to a float
+        cdef double result
+        memcpy(&result, read_buffer, sizeof(double))
+
+        # Free the allocated memory
+        free(read_buffer)
+
+        # Return the float result
+        return result
+    
+    def read_memory_int32(self, unsigned long address) -> int:
+        # Allocate buffer for reading memory
+        cdef void* read_buffer = <void*> malloc(sizeof(int32_t))
+        if not read_buffer:
+            raise MemoryError("Failed to allocate memory buffer.")
+
+        # Read process memory into the buffer
+        
+        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>sizeof(int32_t)):
+            free(read_buffer)  # Ensure to free allocated memory in case of failure
+            raise OSError("Failed to read process memory.")
+
+        # Convert the buffer to a float
+        cdef int result
+        memcpy(&result, read_buffer, sizeof(int32_t))
+
+        # Free the allocated memory
+        free(read_buffer)
+
+        # Return the float result
+        return result
+    
+    def read_memory_uint32(self, unsigned long address) -> int:
+        # Allocate buffer for reading memory
+        cdef void* read_buffer = <void*> malloc(sizeof(int32_t))
+        if not read_buffer:
+            raise MemoryError("Failed to allocate memory buffer.")
+
+        # Read process memory into the buffer
+        
+        if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>sizeof(uint32_t)):
+            free(read_buffer)  # Ensure to free allocated memory in case of failure
+            raise OSError("Failed to read process memory.")
+
+        # Convert the buffer to a float
+        cdef unsigned int result
+        memcpy(&result, read_buffer, sizeof(uint32_t))
+
+        # Free the allocated memory
+        free(read_buffer)
+
+        # Return the float result
+        return result
 
     @property
     def window_handle(self) -> int:
