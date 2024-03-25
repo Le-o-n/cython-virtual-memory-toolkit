@@ -47,7 +47,7 @@ cdef BOOL enum_window_match_callback(HWND hWnd, LPARAM lparam) noexcept:
     cdef int length = GetWindowTextLengthA(hWnd)
     cdef char* text_buffer = <char*>malloc(sizeof(char) * (length + 1))
     cdef DWORD target_pid = 0
-    GetWindowTextA(hWnd, text_buffer, length + 1);
+    GetWindowTextA(hWnd, text_buffer, length + 1)
     
     if (length != 0 and IsWindowVisible(hWnd)):
         if data.in_window_name in text_buffer:
@@ -67,7 +67,7 @@ cdef BOOL enum_window_match_callback(HWND hWnd, LPARAM lparam) noexcept:
 
 cdef EnumWindowCallbackLParam find_process(char* window_name):
     cdef EnumWindowCallbackLParam data
-
+    
     data.in_window_name = window_name
     data.out_all_access_process_handle = 0
     data.out_pid = 0
@@ -133,20 +133,39 @@ cdef class Application:
         self._pid = window_data.out_pid
         self.is_verbose = is_verbose
 
+        if not self._window_handle:
+            if is_verbose:
+                print("=================================================")
+                print(" Cannot find window name with substring: ", window_name)
+                print("=================================================")
+            raise MemoryError("Cannot find window with name with substring: ", window_name)
+
+        if not self._process_handle:
+            error_code = GetLastError()  
+            if error_code == 5:
+                if is_verbose:
+                    print("=================================================")
+                    print(" Unable to get a privilaged handle to target ")
+                    print("process, please re-run using administrator :) ")
+                    print("=================================================")
+                raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")  
+            if is_verbose:
+                print("=================================================")
+                print(" Unable to get a privilaged handle to target ")
+                print(" process, unknown error. Error code: " + str(error_code) )
+                print("=================================================")
+            
+            raise RuntimeError("Unable to get a privilaged handle to target process, unknown error. Error code: " + str(error_code) + ". You can find the reason for the error by querying the error code here: https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes")
+
         if is_verbose:
-            print("=======================================")
+            print("=================================================")
             print(" Window name    = ", self._window_name)
             print(" Process handle = ", self._process_handle)
             print(" Window handle  = ", self._window_handle)
             print(" PID            = ", self._pid)
-            print("=======================================")
-
-        if self._process_handle == 0:
-            error_code = GetLastError()  
-            if error_code == 5:
-                raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")  
-            raise RuntimeError("Unable to get a privilaged handle to target process, unknown error. Error code: " + str(error_code) + ". You can find the reason for the error by querying the error code here: https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes")
-
+            print("=================================================")
+        
+        
     def __dealloc__(self):
         CloseHandle(self._process_handle)
         self._process_handle = 0
@@ -216,9 +235,9 @@ cdef class Application:
         # Free the allocated memory
         free(write_buffer)
         
-    def write_memory_int(self, unsigned long address, long value, int bytes_to_write) -> None:
-    # Convert Python int value to Cython/C long long value
-        cdef long long c_value = <long long>value
+    cdef void write_memory_int(self, unsigned long address, long long value, int bytes_to_write):
+    
+        # Convert Python int value to Cython/C long long value
         
         # Allocate buffer for writing memory
         cdef void* write_buffer = <void*> malloc(bytes_to_write)
@@ -226,7 +245,7 @@ cdef class Application:
             raise MemoryError("Failed to allocate memory buffer.")
 
         # Copy the Cython/C long long value into the buffer
-        memcpy(write_buffer, &c_value, <size_t>bytes_to_write)
+        memcpy(write_buffer, &value, <size_t>bytes_to_write)
 
         # Write the buffer to process memory
         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>bytes_to_write):
@@ -235,6 +254,22 @@ cdef class Application:
 
         # Free the allocated memory
         free(write_buffer)
+
+    def write_memory_int8(self, unsigned long address, long value) -> None:
+        cdef long long c_value = <long long>value
+        self.write_memory_int(address, c_value, 1)
+
+    def write_memory_int16(self, unsigned long address, long value) -> None:
+        cdef long long c_value = <long long>value
+        self.write_memory_int(address, c_value, 2)
+
+    def write_memory_int32(self, unsigned long address, long value) -> None:
+        cdef long long c_value = <long long>value
+        self.write_memory_int(address, c_value, 4)
+
+    def write_memory_int64(self, unsigned long address, long value) -> None:
+        cdef long long c_value = <long long>value
+        self.write_memory_int(address, c_value, 8)
 
     def read_memory_bytes(self, unsigned long address, int bytes_to_read) -> bytes:
         
