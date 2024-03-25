@@ -1,6 +1,6 @@
 from CythonVirtualMemoryToolkit import process
 
 
-app = process.Application(b"Noita", True)
+app = process.Application(b"Step", True)
 
-app.write_memory_float32(0x3f4d54a0, 4.0)
+app.write_memory_int(0x015DE5F8, 69, 3)

@@ -216,6 +216,25 @@ cdef class Application:
         # Free the allocated memory
         free(write_buffer)
         
+    def write_memory_int(self, unsigned long address, long value, int bytes_to_write) -> None:
+    # Convert Python int value to Cython/C long long value
+        cdef long long c_value = <long long>value
+        
+        # Allocate buffer for writing memory
+        cdef void* write_buffer = <void*> malloc(bytes_to_write)
+        if not write_buffer:
+            raise MemoryError("Failed to allocate memory buffer.")
+
+        # Copy the Cython/C long long value into the buffer
+        memcpy(write_buffer, &c_value, <size_t>bytes_to_write)
+
+        # Write the buffer to process memory
+        if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>bytes_to_write):
+            free(write_buffer)  # Ensure to free allocated memory in case of failure
+            raise OSError("Failed to write to process memory.")
+
+        # Free the allocated memory
+        free(write_buffer)
 
     def read_memory_bytes(self, unsigned long address, int bytes_to_read) -> bytes:
         
