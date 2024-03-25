@@ -83,12 +83,8 @@ cdef HANDLE get_process_handle_from_window_name(const char* windowName) :
     CloseHandle(gameWindow)
     return OpenProcess(PROCESS_ALL_ACCESS, False, gameProcessId)
 
-cdef int read_process_memory(
-    HANDLE process_handle, 
-    LPCVOID base_address,
-    LPVOID read_buffer, 
-    SIZE_T number_of_bytes
-):
+cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID read_buffer, SIZE_T number_of_bytes):
+    
     cdef SIZE_T read_bytes = 0
     ReadProcessMemory(
         process_handle, 
@@ -99,12 +95,8 @@ cdef int read_process_memory(
     )
     return read_bytes
 
-cdef int write_process_memory(
-    HANDLE process_handle,
-    LPVOID base_address,
-    LPCVOID write_buffer,
-    SIZE_T number_of_bytes
-):
+cdef int write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes):
+    
     cdef SIZE_T written_bytes = 0
     WriteProcessMemory(
         process_handle,
@@ -164,7 +156,6 @@ cdef class Application:
             print(" Window handle  = ", self._window_handle)
             print(" PID            = ", self._pid)
             print("=================================================")
-        
         
     def __dealloc__(self):
         CloseHandle(self._process_handle)
@@ -389,7 +380,6 @@ cdef class Application:
     def read_memory_uint64(self, unsigned long address) -> long:
        return <unsigned long long>self.read_memory_int(address, 8)
 
-
     @property
     def window_handle(self) -> int:
         return self._window_handle
@@ -402,3 +392,12 @@ cdef class Application:
     def pid(self) -> int:
         return self._pid    
 
+
+cdef class VirtualDatatype:
+
+    cdef get_address(self) -> long:
+        raise NotImplementedError()
+    
+    cdef get_value(self):
+        raise NotImplementedError()
+    
