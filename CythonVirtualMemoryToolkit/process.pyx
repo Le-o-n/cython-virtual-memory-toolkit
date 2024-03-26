@@ -4,15 +4,24 @@ from libc.string cimport memcpy
 from cpython cimport array
 from libc.string cimport strncpy, strdup
 
+#sizeof(char)         # 1
+#sizeof(short)        # 2
+#sizeof(int)          # 4
+#sizeof(long)         # 4
+#sizeof(long long)    # 8
+#sizeof(float)        # 4
+#sizeof(double)       # 8
+#sizeof(void*)        # 8
+
 cdef extern from "Windows.h":
     ctypedef unsigned char BYTE
     ctypedef unsigned char* PBYTE
-    ctypedef unsigned long long QWORD
-    ctypedef unsigned int DWORD
-    ctypedef unsigned int* PDWORD
-    ctypedef unsigned short WORD
-    ctypedef DWORD HANDLE
-    ctypedef DWORD HWND
+    ctypedef unsigned long long QWORD   # 64-bit
+    ctypedef unsigned int DWORD         # 32-bit
+    ctypedef unsigned short WORD        # 16-bit
+    ctypedef unsigned int* PDWORD       
+    ctypedef void* HANDLE
+    ctypedef HANDLE HWND
     ctypedef HANDLE HMODULE
     ctypedef unsigned long ULONG_PTR
     ctypedef ULONG_PTR SIZE_T
@@ -23,7 +32,7 @@ cdef extern from "Windows.h":
     ctypedef void* PVOID
     ctypedef Py_UNICODE WCHAR
     ctypedef const WCHAR* LPCWSTR
-    ctypedef long* LPARAM
+    ctypedef int* LPARAM
     ctypedef int BOOL
     ctypedef BOOL (*WNDENUMPROC)(HWND hWnd, LPARAM lParam)
     
@@ -119,9 +128,9 @@ cdef EnumWindowCallbackLParam find_process(char* window_name):
     cdef EnumWindowCallbackLParam data
     
     data.in_window_name_substring = window_name
-    data.out_all_access_process_handle = 0
+    data.out_all_access_process_handle = <HANDLE>0
     data.out_pid = 0
-    data.out_window_handle = 0
+    data.out_window_handle = <HANDLE>0
     EnumWindows(enum_window_match_callback, <LPARAM>&data)
 
     return data
@@ -284,9 +293,9 @@ cdef class Application:
 
         if is_verbose:
             print("=================================================")
-            print(" Window name      = ", self._window_name)
-            print(" Process handle   = ", self._process_handle)
-            print(" Window handle    = ", self._window_handle)
+            print(" Window name      = ", <unsigned long long>self._window_name)
+            print(" Process handle   = ", <unsigned long long>self._process_handle)
+            print(" Window handle    = ", <unsigned long long>self._window_handle)
             print(" PID              = ", self._pid)
             print(" Process filename = ", self._process_image_filename)
             print("=================================================")
@@ -551,11 +560,11 @@ cdef class Application:
 
     @property
     def window_handle(self) -> int:
-        return self._window_handle
+        return <unsigned long long>self._window_handle
     
     @property
     def process_handle(self) -> int:
-        return self._process_handle
+        return <unsigned long long>self._process_handle
 
     @property
     def pid(self) -> int:
