@@ -93,15 +93,12 @@ cdef EnumWindowCallbackLParam find_process(char* window_name):
 
     return data
 
-cdef BOOL set_page_protection(HANDLE process_handle, LPVOID address, SIZE_T size, DWORD new_protection, PDWORD old_protection):
-    return VirtualProtectEx(process_handle, address, size, new_protection, old_protection)
-
 cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID read_buffer, SIZE_T number_of_bytes):
 
     cdef DWORD old_page_protection
     cdef bint changed_page_protection
     
-    changed_page_protection = set_page_protection(
+    changed_page_protection = VirtualProtectEx(
         process_handle,
         base_address,
         number_of_bytes,
@@ -121,7 +118,7 @@ cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID 
         &read_bytes
     )
 
-    changed_page_protection = set_page_protection(
+    changed_page_protection = VirtualProtectEx(
         process_handle,
         base_address,
         number_of_bytes,
@@ -139,7 +136,7 @@ cdef int write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOI
     cdef DWORD old_page_protection
     cdef bint changed_page_protection
     
-    changed_page_protection = set_page_protection(
+    changed_page_protection = VirtualProtectEx(
         process_handle,
         base_address,
         number_of_bytes,
@@ -160,7 +157,7 @@ cdef int write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOI
         &written_bytes
     )
 
-    changed_page_protection = set_page_protection(
+    changed_page_protection = VirtualProtectEx(
         process_handle,
         base_address,
         number_of_bytes,
