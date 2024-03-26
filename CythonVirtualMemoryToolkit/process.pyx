@@ -7,8 +7,8 @@ cdef extern from "Windows.h":
     ctypedef unsigned int DWORD
     ctypedef unsigned int* PDWORD
     ctypedef unsigned short WORD
-    ctypedef uintptr_t HANDLE
-    ctypedef uintptr_t HWND
+    ctypedef DWORD HANDLE
+    ctypedef DWORD HWND
     ctypedef unsigned long ULONG_PTR
     ctypedef ULONG_PTR SIZE_T
     ctypedef char* LPSTR
@@ -100,6 +100,7 @@ cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID 
 
     cdef DWORD old_page_protection
     cdef bint changed_page_protection
+    
     changed_page_protection = set_page_protection(
         process_handle,
         base_address,
@@ -108,6 +109,9 @@ cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID 
         <PDWORD>&old_page_protection
     )
 
+    if not changed_page_protection:
+        raise MemoryError("Unknown error, cannot modify virtual memory page protection!")
+     
     cdef SIZE_T read_bytes = 0
     ReadProcessMemory(
         process_handle, 
@@ -131,8 +135,10 @@ cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID 
     return read_bytes
 
 cdef int write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes):
+    
     cdef DWORD old_page_protection
     cdef bint changed_page_protection
+    
     changed_page_protection = set_page_protection(
         process_handle,
         base_address,
@@ -428,7 +434,6 @@ cdef class Application:
             raise MemoryError("Failed to allocate memory buffer.")
 
         # Read process memory into the buffer
-        
         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>bytes_in_int):
             free(read_buffer)  # Ensure to free allocated memory in case of failure
             raise OSError("Failed to read process memory.")
@@ -443,28 +448,28 @@ cdef class Application:
         # Return the float result
         return result
     
-    def read_memory_int8(self, unsigned long address) -> float:
-       return self.read_memory_int(address, 1)
+    def read_memory_int8(self, unsigned long address) -> int:
+       return <char>self.read_memory_int(address, 1)
 
-    def read_memory_int16(self, unsigned long address) -> float:
-        return self.read_memory_int(address, 2)
+    def read_memory_int16(self, unsigned long address) -> int:
+        return <short>self.read_memory_int(address, 2)
     
-    def read_memory_int32(self, unsigned long address) -> float:
-       return self.read_memory_int(address, 4)
+    def read_memory_int32(self, unsigned long address) -> int:
+       return <int>self.read_memory_int(address, 4)
     
-    def read_memory_int64(self, unsigned long address) -> float:
-       return self.read_memory_int(address, 8)
+    def read_memory_int64(self, unsigned long address) -> int:
+       return <long>self.read_memory_int(address, 8)
 
-    def read_memory_uint8(self, unsigned long address) -> float:
+    def read_memory_uint8(self, unsigned long address) -> int:
        return <unsigned long long>self.read_memory_int(address, 1)
 
-    def read_memory_uint16(self, unsigned long address) -> float:
+    def read_memory_uint16(self, unsigned long address) -> int:
         return <unsigned long long>self.read_memory_int(address, 2)
     
-    def read_memory_uint32(self, unsigned long address) -> float:
+    def read_memory_uint32(self, unsigned long address) -> int:
        return <unsigned long long>self.read_memory_int(address, 4)
     
-    def read_memory_uint64(self, unsigned long address) -> float:
+    def read_memory_uint64(self, unsigned long address) -> int:
        return <unsigned long long>self.read_memory_int(address, 8)
 
     @property
