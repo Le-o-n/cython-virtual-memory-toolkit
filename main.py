@@ -1,6 +1,8 @@
 from CythonVirtualMemoryToolkit import process
 
 
-app = process.Application(b"Noita", True)
+app = process.Application(b"Step", True)
 
-app.write_memory_int16(0x43e792cc, 256)
+#app.read_memory_int8(0x66250a84)
+x = app.read_memory_int8(0x0169FDD0)
+print(x)
