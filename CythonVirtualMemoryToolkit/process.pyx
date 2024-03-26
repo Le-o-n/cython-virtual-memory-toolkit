@@ -4,10 +4,10 @@ from libc.string cimport memcpy
 from cpython cimport array
 
 
-
 cdef extern from "Windows.h":
-    ctypedef unsigned long DWORD
-    ctypedef unsigned long* PDWORD
+    ctypedef unsigned int DWORD
+    ctypedef unsigned int* PDWORD
+    ctypedef unsigned short WORD
     ctypedef DWORD HANDLE
     ctypedef DWORD HWND
     ctypedef unsigned long ULONG_PTR
@@ -16,14 +16,28 @@ cdef extern from "Windows.h":
     ctypedef const char* LPCSTR
     ctypedef const void* LPCVOID
     ctypedef void* LPVOID
+    ctypedef void* PVOID
     ctypedef Py_UNICODE WCHAR
     ctypedef const WCHAR* LPCWSTR
     ctypedef long* LPARAM
     ctypedef int BOOL
     ctypedef BOOL (*WNDENUMPROC)(HWND hWnd, LPARAM lParam)
-
+    
     cdef unsigned long PROCESS_ALL_ACCESS
     cdef DWORD PAGE_EXECUTE_READWRITE
+
+    ctypedef struct MEMORY_BASIC_INFORMATION:
+        PVOID  BaseAddress
+        PVOID  AllocationBase
+        DWORD  AllocationProtect
+        WORD   PartitionId
+        SIZE_T RegionSize
+        DWORD  State
+        DWORD  Protect
+        DWORD  Type
+
+    ctypedef MEMORY_BASIC_INFORMATION* PMEMORY_BASIC_INFORMATION
+
     HANDLE OpenProcess(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessId)
     HWND FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName)
     int GetWindowThreadProcessId(HWND hWnd, DWORD* lpdwProcessId)
@@ -35,15 +49,16 @@ cdef extern from "Windows.h":
     BOOL EnumWindows(WNDENUMPROC lpEnumFunc, LPARAM lParam)
     BOOL IsWindowVisible(HWND hWnd)
     DWORD GetLastError()
-    BOOL VirtualProtectEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect,PDWORD lpflOldProtect)
-    
+    BOOL VirtualProtectEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect,PDWORD out_lpflOldProtect)
+    SIZE_T VirtualQueryEx(HANDLE hProcess, LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION out_lpBuffer, SIZE_T dwLength)
+
 
 cdef struct EnumWindowCallbackLParam:
-    char* in_window_name
-    HWND out_window_handle
-    DWORD out_pid
-    HANDLE out_all_access_process_handle
-    char* out_full_window_name
+        char* in_window_name_substring
+        HWND out_window_handle
+        DWORD out_pid
+        HANDLE out_all_access_process_handle
+        char* out_full_window_name
 
 cdef BOOL enum_window_match_callback(HWND hWnd, LPARAM lparam) noexcept:
     cdef EnumWindowCallbackLParam* data = <EnumWindowCallbackLParam*>lparam
@@ -53,7 +68,7 @@ cdef BOOL enum_window_match_callback(HWND hWnd, LPARAM lparam) noexcept:
     GetWindowTextA(hWnd, text_buffer, length + 1)
     
     if (length != 0 and IsWindowVisible(hWnd)):
-        if data.in_window_name in text_buffer:
+        if data.in_window_name_substring in text_buffer:
             GetWindowThreadProcessId(hWnd, &target_pid)
             data.out_pid = target_pid
             data.out_window_handle = hWnd
@@ -71,7 +86,7 @@ cdef BOOL enum_window_match_callback(HWND hWnd, LPARAM lparam) noexcept:
 cdef EnumWindowCallbackLParam find_process(char* window_name):
     cdef EnumWindowCallbackLParam data
     
-    data.in_window_name = window_name
+    data.in_window_name_substring = window_name
     data.out_all_access_process_handle = 0
     data.out_pid = 0
     data.out_window_handle = 0
