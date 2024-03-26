@@ -1,15 +1,14 @@
 from libc.stdlib cimport malloc, free
-from libc.stdint cimport uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t
+from libc.stdint cimport uintptr_t, uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t
 from libc.string cimport memcpy
 from cpython cimport array
-
 
 cdef extern from "Windows.h":
     ctypedef unsigned int DWORD
     ctypedef unsigned int* PDWORD
     ctypedef unsigned short WORD
-    ctypedef DWORD HANDLE
-    ctypedef DWORD HWND
+    ctypedef uintptr_t HANDLE
+    ctypedef uintptr_t HWND
     ctypedef unsigned long ULONG_PTR
     ctypedef ULONG_PTR SIZE_T
     ctypedef char* LPSTR
