@@ -1,14 +1,19 @@
-from libc.stdlib cimport malloc, free
+from libc.stdlib cimport malloc, free, calloc
 from libc.stdint cimport uintptr_t, uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t
 from libc.string cimport memcpy
 from cpython cimport array
+from libc.string cimport strncpy, strdup
 
 cdef extern from "Windows.h":
+    ctypedef unsigned char BYTE
+    ctypedef unsigned char* PBYTE
+    ctypedef unsigned long long QWORD
     ctypedef unsigned int DWORD
     ctypedef unsigned int* PDWORD
     ctypedef unsigned short WORD
     ctypedef DWORD HANDLE
     ctypedef DWORD HWND
+    ctypedef HANDLE HMODULE
     ctypedef unsigned long ULONG_PTR
     ctypedef ULONG_PTR SIZE_T
     ctypedef char* LPSTR
@@ -51,6 +56,34 @@ cdef extern from "Windows.h":
     BOOL VirtualProtectEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect,PDWORD out_lpflOldProtect)
     SIZE_T VirtualQueryEx(HANDLE hProcess, LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION out_lpBuffer, SIZE_T dwLength)
 
+cdef extern from "psapi.h":
+    DWORD GetProcessImageFileNameA(HANDLE hProcess, LPSTR out_lpImageFileName, DWORD nSize)
+
+
+cdef int MAX_MODULES = 1024 # Arbitrarily chosen limit
+
+cdef extern from "tlhelp32.h":
+    cdef SIZE_T MAX_MODULE_NAME32 = 255
+    cdef SIZE_T MAX_PATH = 260
+    ctypedef struct MODULEENTRY32:
+        DWORD   dwSize
+        DWORD   th32ModuleID
+        DWORD   th32ProcessID
+        DWORD   GlblcntUsage
+        DWORD   ProccntUsage
+        PBYTE   modBaseAddr
+        DWORD   modBaseSize
+        HMODULE hModule
+        char*    szModule # size of MAX_MODULE_NAME32
+        char*    szExePath # size of MAX_PATH
+
+    ctypedef MODULEENTRY32* LPMODULEENTRY32 
+
+    DWORD TH32CS_SNAPMODULE32
+    DWORD TH32CS_SNAPMODULE
+    HANDLE CreateToolhelp32Snapshot(DWORD dwFlags, DWORD th32ProcessID)
+    BOOL Module32First(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme)
+    BOOL Module32Next(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme)
 
 cdef struct EnumWindowCallbackLParam:
         char* in_window_name_substring
@@ -170,17 +203,43 @@ cdef int write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOI
 
     return written_bytes
 
+
+cdef MODULEENTRY32* collect_module_information(HANDLE snapshot_handle):
+    cdef MODULEENTRY32 me32
+    cdef BOOL result
+    cdef int count = 0
+    cdef MODULEENTRY32* modules = <MODULEENTRY32*>calloc(MAX_MODULES, sizeof(MODULEENTRY32))
+
+    if not modules:
+        raise MemoryError("Failed to allocate modules array")
+
+    me32.dwSize = sizeof(MODULEENTRY32)
+    result = Module32First(snapshot_handle, &me32)
+
+    while result and count < MAX_MODULES:
+        memcpy(&modules[count], &me32, sizeof(MODULEENTRY32))  # Copy structure
+        
+        count += 1
+        result = Module32Next(snapshot_handle, &me32)
+
+    return modules
+
 cdef class Application:
     cdef HANDLE _process_handle
     cdef HWND _window_handle
+    cdef HANDLE _snapshot32_handle
     cdef const char* _window_name
+    
     cdef DWORD _pid
     cdef bint is_verbose
+    cdef char* _process_image_filename
+    cdef MODULEENTRY32* _modules_info
+    
 
-    def __cinit__(self, const char* window_name, bint is_verbose = False):
+    def __cinit__(self, const char* window_name_substring, bint is_verbose = False):
         
 
-        cdef EnumWindowCallbackLParam window_data = find_process(window_name)
+        cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
         cdef unsigned long error_code
         self._process_handle = window_data.out_all_access_process_handle
         self._window_handle = window_data.out_window_handle
@@ -188,20 +247,28 @@ cdef class Application:
         self._pid = window_data.out_pid
         self.is_verbose = is_verbose
 
+        self._process_image_filename = <char*>malloc(sizeof(char) * MAX_PATH)
+        GetProcessImageFileNameA(self._process_handle, self._process_image_filename, sizeof(char) * MAX_PATH)
+
+        self._snapshot32_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE, self._pid)
+
+        self._modules_info = collect_module_information(self._snapshot32_handle)
+        
+
         if not self._window_handle:
             if is_verbose:
                 print("=================================================")
-                print(" Cannot find window name with substring: ", window_name)
+                print(" Cannot find window name with substring: ", window_name_substring)
                 print("=================================================")
-            raise MemoryError("Cannot find window with name with substring: ", window_name)
+            raise MemoryError("Cannot find window with name with substring: ", window_name_substring)
 
         if not self._process_handle:
             error_code = GetLastError()  
-            if error_code == 5:
+            if error_code == 5 or error_code == 6:
                 if is_verbose:
                     print("=================================================")
                     print(" Unable to get a privilaged handle to target ")
-                    print("process, please re-run using administrator :) ")
+                    print(" process, please re-run using administrator :) ")
                     print("=================================================")
                 raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")  
             if is_verbose:
@@ -212,18 +279,31 @@ cdef class Application:
             
             raise RuntimeError("Unable to get a privilaged handle to target process, unknown error. Error code: " + str(error_code) + ". You can find the reason for the error by querying the error code here: https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes")
 
+
+        cdef MODULEENTRY32 cur_mod
+
         if is_verbose:
             print("=================================================")
-            print(" Window name    = ", self._window_name)
-            print(" Process handle = ", self._process_handle)
-            print(" Window handle  = ", self._window_handle)
-            print(" PID            = ", self._pid)
+            print(" Window name      = ", self._window_name)
+            print(" Process handle   = ", self._process_handle)
+            print(" Window handle    = ", self._window_handle)
+            print(" PID              = ", self._pid)
+            print(" Process filename = ", self._process_image_filename)
             print("=================================================")
-        
+
+            
+            for i in range(MAX_MODULES):
+                cur_mod = self._modules_info[i]
+                if cur_mod.modBaseSize != 0:
+                    print(f" Mod name: {cur_mod.szModule} - {hex(<unsigned long long>cur_mod.modBaseAddr)}")
+
+            print("=======")    
+
     def __dealloc__(self):
         CloseHandle(self._process_handle)
         CloseHandle(self._window_handle)
         free(self._window_name)
+        free(self._process_image_filename)
         
     def write_memory_bytes(self, unsigned long address, bytes bytes_to_write) -> None:
         
