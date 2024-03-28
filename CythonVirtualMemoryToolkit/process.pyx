@@ -1,6 +1,6 @@
 from libc.stdlib cimport malloc, free, calloc
 from libc.stdint cimport uintptr_t, uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t
-from libc.string cimport memcpy
+from libc.string cimport memcpy, memcmp
 from cpython cimport array
 from libc.string cimport strncpy, strdup
 
@@ -23,7 +23,7 @@ cdef extern from "Windows.h":
     ctypedef void* HANDLE
     ctypedef HANDLE HWND
     ctypedef HANDLE HMODULE
-    ctypedef unsigned long ULONG_PTR
+    ctypedef unsigned long long ULONG_PTR
     ctypedef ULONG_PTR SIZE_T
     ctypedef char* LPSTR
     ctypedef const char* LPCSTR
@@ -36,8 +36,13 @@ cdef extern from "Windows.h":
     ctypedef int BOOL
     ctypedef BOOL (*WNDENUMPROC)(HWND hWnd, LPARAM lParam)
     
-    cdef unsigned long PROCESS_ALL_ACCESS
-    cdef DWORD PAGE_EXECUTE_READWRITE
+    DWORD PROCESS_ALL_ACCESS
+    DWORD MEM_COMMIT
+    DWORD PAGE_READWRITE
+    DWORD PAGE_WRITECOPY
+    DWORD PAGE_EXECUTE_READWRITE
+    DWORD PAGE_EXECUTE_WRITECOPY
+    DWORD PAGE_NOACCESS
 
     ctypedef struct MEMORY_BASIC_INFORMATION:
         PVOID  BaseAddress
@@ -51,23 +56,22 @@ cdef extern from "Windows.h":
 
     ctypedef MEMORY_BASIC_INFORMATION* PMEMORY_BASIC_INFORMATION
 
-    HANDLE OpenProcess(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessId)
-    HWND FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName)
-    int GetWindowThreadProcessId(HWND hWnd, DWORD* lpdwProcessId)
-    int CloseHandle(HANDLE handle)
-    BOOL ReadProcessMemory(HANDLE hProcess, LPCVOID lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, SIZE_T* out_lpNumberOfBytesRead)
-    BOOL WriteProcessMemory(HANDLE  hProcess, LPVOID lpBaseAddress, LPCVOID lpBuffer, SIZE_T nSize, SIZE_T *lpNumberOfBytesWritten)
-    int GetWindowTextLengthA(HWND hWnd)
-    int GetWindowTextA(HWND  hWnd, LPSTR out_lpString, int nMaxCount)
-    BOOL EnumWindows(WNDENUMPROC lpEnumFunc, LPARAM lParam)
-    BOOL IsWindowVisible(HWND hWnd)
-    DWORD GetLastError()
-    BOOL VirtualProtectEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect,PDWORD out_lpflOldProtect)
-    SIZE_T VirtualQueryEx(HANDLE hProcess, LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION out_lpBuffer, SIZE_T dwLength)
+    HANDLE OpenProcess(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessId) nogil
+    HWND FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName) nogil
+    int GetWindowThreadProcessId(HWND hWnd, DWORD* lpdwProcessId) nogil
+    int CloseHandle(HANDLE handle) nogil
+    BOOL ReadProcessMemory(HANDLE hProcess, LPCVOID lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, SIZE_T* out_lpNumberOfBytesRead) nogil
+    BOOL WriteProcessMemory(HANDLE  hProcess, LPVOID lpBaseAddress, LPCVOID lpBuffer, SIZE_T nSize, SIZE_T *lpNumberOfBytesWritten) nogil
+    int GetWindowTextLengthA(HWND hWnd) nogil
+    int GetWindowTextA(HWND  hWnd, LPSTR out_lpString, int nMaxCount) nogil
+    BOOL EnumWindows(WNDENUMPROC lpEnumFunc, LPARAM lParam) nogil
+    BOOL IsWindowVisible(HWND hWnd) nogil
+    DWORD GetLastError() nogil
+    BOOL VirtualProtectEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect,PDWORD out_lpflOldProtect) nogil
+    SIZE_T VirtualQueryEx(HANDLE hProcess, LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION out_lpBuffer, SIZE_T dwLength) nogil
 
 cdef extern from "psapi.h":
-    DWORD GetProcessImageFileNameA(HANDLE hProcess, LPSTR out_lpImageFileName, DWORD nSize)
-
+    DWORD GetProcessImageFileNameA(HANDLE hProcess, LPSTR out_lpImageFileName, DWORD nSize) nogil
 
 cdef int MAX_MODULES = 1024 # Arbitrarily chosen limit
 
@@ -135,7 +139,18 @@ cdef EnumWindowCallbackLParam find_process(char* window_name):
 
     return data
 
-cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID read_buffer, SIZE_T number_of_bytes):
+cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
+
+    cdef MEMORY_BASIC_INFORMATION mbi
+    if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:
+        with gil:
+            raise MemoryError("Failed to query memory information. Address: ", hex(<SIZE_T> base_address))
+        
+
+    if mbi.State != MEM_COMMIT or mbi.Protect == PAGE_NOACCESS:
+        with gil:
+            raise MemoryError("Memory is not committed or is marked as no access. Address: ", hex(<SIZE_T> base_address))
+        
 
     cdef DWORD old_page_protection
     cdef bint changed_page_protection
@@ -149,13 +164,15 @@ cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID 
     )
 
     if not changed_page_protection:
-        raise MemoryError("Unknown error, cannot modify virtual memory page protection!")
-     
+        with gil:
+            raise MemoryError("Unknown error, cannot modify virtual memory page protection! Address: ", hex(<SIZE_T> base_address))
+        
+
     cdef SIZE_T read_bytes = 0
     ReadProcessMemory(
         process_handle, 
         base_address, 
-        read_buffer, 
+        out_read_buffer, 
         number_of_bytes, 
         &read_bytes
     )
@@ -169,11 +186,12 @@ cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID 
     )
 
     if not changed_page_protection:
-        raise MemoryError("Unknown error, cannot restore page protection!")
-
+        with gil:
+            raise MemoryError("Unknown error, cannot restore page protection! Address: ", hex(<SIZE_T> base_address))
+        
     return read_bytes
 
-cdef int write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes):
+cdef int write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
     
     cdef DWORD old_page_protection
     cdef bint changed_page_protection
@@ -212,8 +230,47 @@ cdef int write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOI
 
     return written_bytes
 
+cdef SIZE_T search_memory(HANDLE process, SIZE_T start_address, SIZE_T end_address, PBYTE pattern, SIZE_T pattern_size) nogil:
+    cdef MEMORY_BASIC_INFORMATION mbi
+    cdef SIZE_T address = start_address
+    cdef SIZE_T read_bytes
+    cdef BOOL found = False
+    cdef BYTE* read_bytes_buffer = <BYTE*>calloc(pattern_size, sizeof(BYTE))
+    
+    cdef SIZE_T region_end
+    cdef SIZE_T search_end
+    cdef SIZE_T current_address
 
-cdef MODULEENTRY32* collect_module_information(HANDLE snapshot_handle):
+    if not read_bytes_buffer:
+        raise MemoryError("Cannot allocate memory for read buffer")
+
+    while address < end_address:
+        if VirtualQueryEx(process, <LPCVOID>address, &mbi, sizeof(mbi)) == 0:
+            break  # Failed to query memory information
+
+        if mbi.State == MEM_COMMIT:
+            region_end = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
+            search_end = min(end_address, region_end) - pattern_size + 1
+            current_address = address
+
+            while current_address < search_end:
+                if not read_process_memory(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, pattern_size):
+                    break  # Failed to read memory at current address
+
+                if memcmp(<const void*>pattern, <const void*>read_bytes_buffer, pattern_size) == 0:
+                    free(read_bytes_buffer)
+                    return current_address  # Pattern found
+
+                current_address += 1
+            address = region_end
+        else:
+            # if region is not committed
+            address = <SIZE_T>mbi.BaseAddress + mbi.RegionSize # skip to end of region
+
+    free(read_bytes_buffer)
+    return 0  # Pattern not found
+
+cdef MODULEENTRY32* collect_all_module_information(HANDLE snapshot_handle):
     cdef MODULEENTRY32 me32
     cdef BOOL result
     cdef int count = 0
@@ -261,7 +318,7 @@ cdef class Application:
 
         self._snapshot32_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE, self._pid)
 
-        self._modules_info = collect_module_information(self._snapshot32_handle)
+        self._modules_info = collect_all_module_information(self._snapshot32_handle)
         
 
         if not self._window_handle:
@@ -313,7 +370,37 @@ cdef class Application:
         CloseHandle(self._window_handle)
         free(self._window_name)
         free(self._process_image_filename)
+        free(self._modules_info)
+
+    def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes):
+        if not search_bytes:
+            raise ValueError("Search bytes must not be empty.")
+
+        cdef size_t num_bytes = len(search_bytes)
+        print("Num bytes = ", num_bytes)
+        cdef PBYTE c_search_bytes = <PBYTE>calloc(num_bytes, sizeof(BYTE))
+        if not c_search_bytes:
+            raise MemoryError("Cannot allocate memory for search bytes.")
         
+        for i in range(num_bytes):
+            c_search_bytes[i] = <BYTE>search_bytes[i]
+
+        cdef SIZE_T found_address
+        try:
+            # Call the search function with the C bytes array
+            found_address = search_memory(
+                self._process_handle, 
+                start_address, 
+                end_address, 
+                c_search_bytes, 
+                num_bytes
+            )
+        finally:
+            # Ensure memory is freed even if the search throws an exception
+            free(c_search_bytes)
+
+        return found_address
+
     def write_memory_bytes(self, unsigned long address, bytes bytes_to_write) -> None:
         
         cdef char* write_buffer
@@ -520,6 +607,7 @@ cdef class Application:
             raise MemoryError("Failed to allocate memory buffer.")
 
         # Read process memory into the buffer
+        
         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>bytes_in_int):
             free(read_buffer)  # Ensure to free allocated memory in case of failure
             raise OSError("Failed to read process memory.")
