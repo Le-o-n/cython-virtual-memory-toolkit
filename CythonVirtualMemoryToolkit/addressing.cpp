@@ -3,16 +3,17 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
+        "language": "c++",
         "libraries": [
             "user32",
             "kernel32"
         ],
-        "name": "cython_virtual_memory_toolkit.hooks",
+        "name": "cython_virtual_memory_toolkit.addressing",
         "sources": [
-            "hooks.pyx"
+            "addressing.pyx"
         ]
     },
-    "module_name": "cython_virtual_memory_toolkit.hooks"
+    "module_name": "cython_virtual_memory_toolkit.addressing"
 }
 END: Cython Metadata */
 
@@ -367,19 +368,33 @@ END: Cython Metadata */
   #endif
 #endif
 
+#ifndef __cplusplus
+  #error "Cython files generated with the C++ option must be compiled with a C++ compiler."
+#endif
 #ifndef CYTHON_INLINE
   #if defined(__clang__)
     #define CYTHON_INLINE __inline__ __attribute__ ((__unused__))
-  #elif defined(__GNUC__)
-    #define CYTHON_INLINE __inline__
-  #elif defined(_MSC_VER)
-    #define CYTHON_INLINE __inline
-  #elif defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-    #define CYTHON_INLINE inline
   #else
-    #define CYTHON_INLINE
+    #define CYTHON_INLINE inline
   #endif
 #endif
+template<typename T>
+void __Pyx_call_destructor(T& x) {
+    x.~T();
+}
+template<typename T>
+class __Pyx_FakeReference {
+  public:
+    __Pyx_FakeReference() : ptr(NULL) { }
+    __Pyx_FakeReference(const T& ref) : ptr(const_cast<T*>(&ref)) { }
+    T *operator->() { return ptr; }
+    T *operator&() { return ptr; }
+    operator T&() { return *ptr; }
+    template<typename U> bool operator ==(U other) { return *ptr == other; }
+    template<typename U> bool operator !=(U other) { return *ptr != other; }
+  private:
+    T *ptr;
+};
 
 #if CYTHON_COMPILING_IN_PYPY && PY_VERSION_HEX < 0x02070600 && !defined(Py_OptimizeFlag)
   #define Py_OptimizeFlag 0
@@ -754,8 +769,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__cython_virtual_memory_toolkit__hooks
-#define __PYX_HAVE_API__cython_virtual_memory_toolkit__hooks
+#define __PYX_HAVE__cython_virtual_memory_toolkit__addressing
+#define __PYX_HAVE_API__cython_virtual_memory_toolkit__addressing
 /* Early includes */
 #ifdef _OPENMP
 #include <omp.h>
@@ -966,7 +981,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "hooks.pyx",
+  "addressing.pyx",
 };
 
 /*--- Type declarations ---*/
@@ -1164,12 +1179,12 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'cython_virtual_memory_toolkit.hooks' */
-#define __Pyx_MODULE_NAME "cython_virtual_memory_toolkit.hooks"
-extern int __pyx_module_is_main_cython_virtual_memory_toolkit__hooks;
-int __pyx_module_is_main_cython_virtual_memory_toolkit__hooks = 0;
+/* Module declarations from 'cython_virtual_memory_toolkit.addressing' */
+#define __Pyx_MODULE_NAME "cython_virtual_memory_toolkit.addressing"
+extern int __pyx_module_is_main_cython_virtual_memory_toolkit__addressing;
+int __pyx_module_is_main_cython_virtual_memory_toolkit__addressing = 0;
 
-/* Implementation of 'cython_virtual_memory_toolkit.hooks' */
+/* Implementation of 'cython_virtual_memory_toolkit.addressing' */
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
@@ -1187,17 +1202,17 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_hooks(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_addressing(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_hooks},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_addressing},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "hooks",
+    "addressing",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -1333,11 +1348,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC inithooks(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC inithooks(void)
+__Pyx_PyMODINIT_FUNC initaddressing(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initaddressing(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_hooks(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_hooks(void)
+__Pyx_PyMODINIT_FUNC PyInit_addressing(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_addressing(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -1404,7 +1419,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_hooks(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_addressing(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -1416,7 +1431,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_hooks(PyObject *__pyx_pyinit_modul
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'hooks' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'addressing' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -1431,7 +1446,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_hooks(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_addressing(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -1468,7 +1483,7 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("hooks", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("addressing", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -1486,14 +1501,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_cython_virtual_memory_toolkit__hooks) {
+  if (__pyx_module_is_main_cython_virtual_memory_toolkit__addressing) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "cython_virtual_memory_toolkit.hooks")) {
-      if (unlikely(PyDict_SetItemString(modules, "cython_virtual_memory_toolkit.hooks", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "cython_virtual_memory_toolkit.addressing")) {
+      if (unlikely(PyDict_SetItemString(modules, "cython_virtual_memory_toolkit.addressing", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -1514,7 +1529,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "hooks.pyx":1
+  /* "addressing.pyx":1
              # <<<<<<<<<<<<<<
  */
   __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -1529,11 +1544,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init cython_virtual_memory_toolkit.hooks", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init cython_virtual_memory_toolkit.addressing", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init cython_virtual_memory_toolkit.hooks");
+    PyErr_SetString(PyExc_ImportError, "init cython_virtual_memory_toolkit.addressing");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

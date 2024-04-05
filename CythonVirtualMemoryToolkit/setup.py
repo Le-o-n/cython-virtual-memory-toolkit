@@ -30,35 +30,40 @@ process_extension: Extension = Extension(
     [
         "process.pyx"
     ],
-    libraries=include_libs
+    libraries=include_libs,
+    language="c++"
 )
 hooks_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.hooks",
     [
         "hooks.pyx"
     ],
-    libraries=include_libs
+    libraries=include_libs,
+    language="c++"
 )
 datatypes_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.datatypes",
     [
         "datatypes.pyx"
     ],
-    libraries=include_libs
+    libraries=include_libs,
+    language="c++"
 )
 addressing_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.addressing",
     [
         "addressing.pyx"
     ],
-    libraries=include_libs
+    libraries=include_libs,
+    language="c++"
 )
 scanning_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.scanning",
     [
         "scanning.pyx"
     ],
-    libraries=include_libs
+    libraries=include_libs,
+    language="c++"
 )
 
 
@@ -94,7 +99,7 @@ setup(
     },
     ext_modules=cythonize(
         extensions,
-        language_level="3"
+        language_level="3",
     ),
 
 

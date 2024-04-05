@@ -3,6 +3,7 @@ from libc.stdint cimport uintptr_t, uint8_t, uint16_t, uint32_t, uint64_t, int8_
 from libc.string cimport memcpy, memcmp
 from cpython cimport array
 from libc.string cimport strncpy, strdup
+from libcpp.vector cimport vector
 
 #sizeof(char)         # 1
 #sizeof(short)        # 2
@@ -43,7 +44,7 @@ cdef extern from "Windows.h":
     DWORD PAGE_EXECUTE_READWRITE
     DWORD PAGE_EXECUTE_WRITECOPY
     DWORD PAGE_NOACCESS
-
+    DWORD MEM_DECOMMIT
     ctypedef struct MEMORY_BASIC_INFORMATION:
         PVOID  BaseAddress
         PVOID  AllocationBase
@@ -69,6 +70,8 @@ cdef extern from "Windows.h":
     DWORD GetLastError() nogil
     BOOL VirtualProtectEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect,PDWORD out_lpflOldProtect) nogil
     SIZE_T VirtualQueryEx(HANDLE hProcess, LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION out_lpBuffer, SIZE_T dwLength) nogil
+    LPVOID VirtualAllocEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect) nogil
+    BOOL VirtualFreeEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType)
 
 cdef extern from "psapi.h":
     DWORD GetProcessImageFileNameA(HANDLE hProcess, LPSTR out_lpImageFileName, DWORD nSize) nogil
@@ -134,12 +137,12 @@ cdef EnumWindowCallbackLParam find_process(char* window_name):
     data.in_window_name_substring = window_name
     data.out_all_access_process_handle = <HANDLE>0
     data.out_pid = 0
-    data.out_window_handle = <HANDLE>0
+    data.out_window_handle = <HWND>0
     EnumWindows(enum_window_match_callback, <LPARAM>&data)
 
     return data
 
-cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
+cdef SIZE_T read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
 
     cdef MEMORY_BASIC_INFORMATION mbi
     if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:
@@ -157,7 +160,7 @@ cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID 
     
     changed_page_protection = VirtualProtectEx(
         process_handle,
-        base_address,
+        <LPVOID>base_address,
         number_of_bytes,
         PAGE_EXECUTE_READWRITE,
         <PDWORD>&old_page_protection
@@ -179,7 +182,7 @@ cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID 
 
     changed_page_protection = VirtualProtectEx(
         process_handle,
-        base_address,
+        <LPVOID>base_address,
         number_of_bytes,
         old_page_protection,
         <PDWORD>&old_page_protection
@@ -191,14 +194,14 @@ cdef int read_process_memory(HANDLE process_handle, LPCVOID base_address,LPVOID 
         
     return read_bytes
 
-cdef int write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
+cdef SIZE_T write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
     
     cdef DWORD old_page_protection
     cdef bint changed_page_protection
     
     changed_page_protection = VirtualProtectEx(
         process_handle,
-        base_address,
+        <LPVOID>base_address,
         number_of_bytes,
         PAGE_EXECUTE_READWRITE,
         <PDWORD>&old_page_protection
@@ -219,7 +222,7 @@ cdef int write_process_memory(HANDLE process_handle, LPVOID base_address, LPCVOI
 
     changed_page_protection = VirtualProtectEx(
         process_handle,
-        base_address,
+        <LPVOID>base_address,
         number_of_bytes,
         old_page_protection,
         <PDWORD>&old_page_protection
@@ -290,21 +293,29 @@ cdef MODULEENTRY32* collect_all_module_information(HANDLE snapshot_handle):
 
     return modules
 
+cdef struct MemoryBlock:
+    void* process_handle
+    void* address
+    SIZE_T size
+
 cdef class Application:
     cdef HANDLE _process_handle
     cdef HWND _window_handle
     cdef HANDLE _snapshot32_handle
-    cdef const char* _window_name
+    cdef char* _window_name
     
     cdef DWORD _pid
     cdef bint is_verbose
     cdef char* _process_image_filename
     cdef MODULEENTRY32* _modules_info
     
+    cdef vector[MemoryBlock] _allocated_memory_blocks
 
-    def __cinit__(self, const char* window_name_substring, bint is_verbose = False):
+    _py_modules_ordered_list: list[tuple[bytes, int]] = [] 
+    _py_modules_dict: dict[bytes, int] = {}
+
+    def __cinit__(self, char* window_name_substring, bint is_verbose = False):
         
-
         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
         cdef unsigned long error_code
         self._process_handle = window_data.out_all_access_process_handle
@@ -320,7 +331,6 @@ cdef class Application:
 
         self._modules_info = collect_all_module_information(self._snapshot32_handle)
         
-
         if not self._window_handle:
             if is_verbose:
                 print("=================================================")
@@ -345,39 +355,28 @@ cdef class Application:
             
             raise RuntimeError("Unable to get a privilaged handle to target process, unknown error. Error code: " + str(error_code) + ". You can find the reason for the error by querying the error code here: https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes")
 
-
         cdef MODULEENTRY32 cur_mod
 
-        if is_verbose:
-            print("=================================================")
-            print(" Window name      = ", <unsigned long long>self._window_name)
-            print(" Process handle   = ", <unsigned long long>self._process_handle)
-            print(" Window handle    = ", <unsigned long long>self._window_handle)
-            print(" PID              = ", self._pid)
-            print(" Process filename = ", self._process_image_filename)
-            print("=================================================")
+        for i in range(MAX_MODULES):
+            cur_mod = self._modules_info[i]
+            if cur_mod.modBaseSize != 0:
+                self._py_modules_ordered_list.append(
+                    (
+                        cur_mod.szModule, 
+                        <unsigned long long>cur_mod.modBaseAddr
+                    )
+                )
 
-            
-            for i in range(MAX_MODULES):
-                cur_mod = self._modules_info[i]
-                if cur_mod.modBaseSize != 0:
-                    print(f" Mod name: {cur_mod.szModule} - {hex(<unsigned long long>cur_mod.modBaseAddr)}")
+                self._py_modules_dict[cur_mod.szModule] = <unsigned long long>cur_mod.modBaseAddr
 
-            print("=======")    
+        self._py_modules_ordered_list.sort(key = lambda x: x[1])
 
-    def __dealloc__(self):
-        CloseHandle(self._process_handle)
-        CloseHandle(self._window_handle)
-        free(self._window_name)
-        free(self._process_image_filename)
-        free(self._modules_info)
-
-    def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes):
+    def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes) -> int:
         if not search_bytes:
             raise ValueError("Search bytes must not be empty.")
 
         cdef size_t num_bytes = len(search_bytes)
-        print("Num bytes = ", num_bytes)
+        
         cdef PBYTE c_search_bytes = <PBYTE>calloc(num_bytes, sizeof(BYTE))
         if not c_search_bytes:
             raise MemoryError("Cannot allocate memory for search bytes.")
@@ -400,8 +399,8 @@ cdef class Application:
             free(c_search_bytes)
 
         return found_address
-
-    def write_memory_bytes(self, unsigned long address, bytes bytes_to_write) -> None:
+  
+    def write_memory_bytes(self, unsigned long long address, bytes bytes_to_write) -> None:
         
         cdef char* write_buffer
         cdef SIZE_T num_bytes_written 
@@ -414,7 +413,7 @@ cdef class Application:
         if not write_buffer:
             raise MemoryError("Failed to allocate memory.")
 
-        num_bytes_written = write_process_memory(self._process_handle, <LPCVOID>address, <LPCVOID>write_buffer, len(bytes_to_write))
+        num_bytes_written = write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, len(bytes_to_write))
 
         if num_bytes_written != len(bytes_to_write):
             raise MemoryError(f"Error writing to memory. Written bytes: {num_bytes_written}. Bytes instructed to write: {len(bytes_to_write)}.")
@@ -424,7 +423,7 @@ cdef class Application:
 
         return
 
-    def write_memory_float32(self, unsigned long address, float value) -> None:
+    def write_memory_float32(self, unsigned long long address, float value) -> None:
 
         cdef float c_value = <float>value
     
@@ -444,7 +443,7 @@ cdef class Application:
         # Free the allocated memory
         free(write_buffer)
     
-    def write_memory_float64(self, unsigned long address, double value) -> None:
+    def write_memory_float64(self, unsigned long long address, double value) -> None:
 
         cdef double c_value = <double>value
     
@@ -464,7 +463,7 @@ cdef class Application:
         # Free the allocated memory
         free(write_buffer)
         
-    cdef void write_memory_int(self, unsigned long address, long long value, int bytes_to_write):
+    cdef void write_memory_int(self, unsigned long long address, long long value, int bytes_to_write):
     
         # Convert Python int value to Cython/C long long value
         
@@ -484,7 +483,7 @@ cdef class Application:
         # Free the allocated memory
         free(write_buffer)
 
-    cdef void write_memory_uint(self, unsigned long address, unsigned long long value, int bytes_to_write):
+    cdef void write_memory_uint(self, unsigned long long address, unsigned long long value, int bytes_to_write):
     
         # Convert Python int value to Cython/C long long value
         
@@ -504,31 +503,31 @@ cdef class Application:
         # Free the allocated memory
         free(write_buffer)
 
-    def write_memory_int8(self, unsigned long address, long value) -> None:
+    def write_memory_int8(self, unsigned long long address, long value) -> None:
         self.write_memory_int(address, <long long>value, 1)
 
-    def write_memory_int16(self, unsigned long address, long value) -> None:
+    def write_memory_int16(self, unsigned long long address, long value) -> None:
         self.write_memory_int(address, <long long>value, 2)
 
-    def write_memory_int32(self, unsigned long address, long value) -> None:
+    def write_memory_int32(self, unsigned long long address, long value) -> None:
         self.write_memory_int(address, <long long>value, 4)
 
-    def write_memory_int64(self, unsigned long address, long value) -> None:
+    def write_memory_int64(self, unsigned long long address, long value) -> None:
         self.write_memory_int(address, <long long>value, 8)
 
-    def write_memory_uint8(self, unsigned long address, unsigned long value) -> None:
+    def write_memory_uint8(self, unsigned long long address, unsigned long value) -> None:
         self.write_memory_uint(address, <unsigned long long>value, 1)
 
-    def write_memory_uint16(self, unsigned long address, unsigned long value) -> None:
+    def write_memory_uint16(self, unsigned long long address, unsigned long value) -> None:
         self.write_memory_uint(address, <unsigned long long>value, 2)
 
-    def write_memory_uint32(self, unsigned long address, unsigned long value) -> None:
+    def write_memory_uint32(self, unsigned long long address, unsigned long value) -> None:
         self.write_memory_uint(address, <unsigned long long>value, 4)
 
-    def write_memory_uint64(self, unsigned long address, unsigned long value) -> None:
+    def write_memory_uint64(self, unsigned long long address, unsigned long value) -> None:
         self.write_memory_uint(address, <unsigned long long>value, 8)
 
-    def read_memory_bytes(self, unsigned long address, int bytes_to_read) -> bytes:
+    def read_memory_bytes(self, unsigned long long address, int bytes_to_read) -> bytes:
         
         cdef char* read_buffer
         cdef SIZE_T num_bytes_read 
@@ -550,7 +549,7 @@ cdef class Application:
 
         return py_memory
 
-    def read_memory_float32(self, unsigned long address) -> float:
+    def read_memory_float32(self, unsigned long long address) -> float:
         
         # Allocate buffer for reading memory
         cdef void* read_buffer = <void*> malloc(<SIZE_T>4)
@@ -573,7 +572,7 @@ cdef class Application:
         # Return the float result
         return result
     
-    def read_memory_float64(self, unsigned long address) -> float:
+    def read_memory_float64(self, unsigned long long address) -> float:
         
         # Allocate buffer for reading memory
         cdef void* read_buffer = <void*> malloc(<SIZE_T>8)
@@ -596,7 +595,7 @@ cdef class Application:
         # Return the float result
         return result
     
-    cdef long long read_memory_int(self, unsigned long address, unsigned short bytes_in_int):
+    cdef long long read_memory_int(self, unsigned long long address, unsigned short bytes_in_int):
         
         if bytes_in_int > 8:
             raise MemoryError("Too many bytes requested, requested: " + str(bytes_in_int) + ". Maximum is 8.")
@@ -622,29 +621,93 @@ cdef class Application:
         # Return the float result
         return result
     
-    def read_memory_int8(self, unsigned long address) -> int:
+    def read_memory_int8(self, unsigned long long address) -> int:
        return <char>self.read_memory_int(address, 1)
 
-    def read_memory_int16(self, unsigned long address) -> int:
+    def read_memory_int16(self, unsigned long long address) -> int:
         return <short>self.read_memory_int(address, 2)
     
-    def read_memory_int32(self, unsigned long address) -> int:
+    def read_memory_int32(self, unsigned long long address) -> int:
        return <int>self.read_memory_int(address, 4)
     
-    def read_memory_int64(self, unsigned long address) -> int:
+    def read_memory_int64(self, unsigned long long address) -> int:
        return <long>self.read_memory_int(address, 8)
 
-    def read_memory_uint8(self, unsigned long address) -> int:
+    def read_memory_uint8(self, unsigned long long address) -> int:
        return <unsigned long long>self.read_memory_int(address, 1)
 
-    def read_memory_uint16(self, unsigned long address) -> int:
+    def read_memory_uint16(self, unsigned long long address) -> int:
         return <unsigned long long>self.read_memory_int(address, 2)
     
-    def read_memory_uint32(self, unsigned long address) -> int:
+    def read_memory_uint32(self, unsigned long long address) -> int:
        return <unsigned long long>self.read_memory_int(address, 4)
     
-    def read_memory_uint64(self, unsigned long address) -> int:
+    def read_memory_uint64(self, unsigned long long address) -> int:
        return <unsigned long long>self.read_memory_int(address, 8)
+
+    def alloc_memory(self, unsigned long long size, unsigned long long min_address = 0, unsigned int allocation_type = MEM_COMMIT, unsigned int protection_type = PAGE_EXECUTE_READWRITE) -> int:
+        cdef unsigned long long address = <unsigned long long>VirtualAllocEx(
+            self._process_handle,
+            <void*>min_address,
+            <SIZE_T>size,
+            <DWORD>allocation_type,
+            <DWORD>protection_type
+        )
+
+        cdef MemoryBlock mem_block
+        mem_block.address = <void*>address
+        mem_block.process_handle = <void*>self.process_handle
+        mem_block.size = <SIZE_T>size
+
+        self._allocated_memory_blocks.push_back(mem_block)
+
+        return address
+
+    def dealloc_memory(self, unsigned long long address) -> None:
+        cdef int i = 0
+        cdef SIZE_T mem_size = 0
+        cdef char found = 0
+        cdef MemoryBlock mem_block
+
+        # Iterate in reverse order to safely remove elements without affecting the iteration
+        for i in range(self._allocated_memory_blocks.size() - 1, -1, -1):
+            mem_block = self._allocated_memory_blocks.at(i)
+            if <SIZE_T>mem_block.address == address:
+                # Mark that we've found a matching block
+                found = 1
+                
+                # Save the size before erasing the block
+                mem_size = mem_block.size
+                
+                # Erase the block from the vector
+                self._allocated_memory_blocks.erase(self._allocated_memory_blocks.begin() + i)
+                
+                # Break after the first match since address should be unique
+                break
+
+        # Only attempt to free memory if a matching block was found
+        if found:
+            if not VirtualFreeEx(self._process_handle, <LPVOID>address, mem_size, MEM_DECOMMIT):
+                raise MemoryError(f"Cannot deallocate memory at address {hex(address)}")
+        else:
+            raise ValueError(f"No memory block found at address {hex(address)}")
+
+    def dealloc_all_memory(self):
+
+        cdef MemoryBlock mem_block
+        
+        for i in range(self._allocated_memory_blocks.size()):
+            mem_block = self._allocated_memory_blocks.at(i)
+            print(f"Dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
+            if not VirtualFreeEx(
+                self._process_handle, 
+                mem_block.address, 
+                mem_block.size, 
+                MEM_DECOMMIT
+            ):
+                raise MemoryError(f"Unable to free allocated memory block at address {hex(<SIZE_T>mem_block.address)}")
+
+
 
     @property
     def window_handle(self) -> int:
@@ -658,4 +721,47 @@ cdef class Application:
     def pid(self) -> int:
         return self._pid    
 
+    @property
+    def modules(self) -> dict[bytes, int]:
+        return self._py_modules_dict
 
+    def __str__(self) -> str:
+        cdef MODULEENTRY32 cur_mod
+
+        py_str: str = ""
+        py_str = py_str + "\n================================================="
+        py_str = py_str + "\n|                Application                    |"
+        py_str = py_str + "\n================================================="
+        py_str = py_str + "\n| Window name      = " + str(<bytes>self._window_name)
+        py_str = py_str + "\n| Process handle   = " + str(<unsigned long long>self._process_handle)
+        py_str = py_str + "\n| Window handle    = " + str(<unsigned long long>self._window_handle)
+        py_str = py_str + "\n| PID              = " + str(self._pid)
+        py_str = py_str + "\n| Process filename = " + str(self._process_image_filename)
+        py_str = py_str + "\n================================================="
+        py_str = py_str + "\n|                 Modules                       |"
+        py_str = py_str + "\n================================================="
+        
+
+        module_name: bytes
+        module_addr: int
+        for module_name, module_addr in self._py_modules_ordered_list:
+            py_str = py_str + "\n| " + hex(module_addr) + ": " + module_name.decode('utf-8')
+
+        py_str = py_str + "\n================================================="
+
+
+        return py_str
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __dealloc__(self):
+
+
+        self.dealloc_all_memory()
+
+        CloseHandle(self._process_handle)
+        CloseHandle(self._window_handle)
+        free(self._window_name)
+        free(self._process_image_filename)
+        free(self._modules_info)
