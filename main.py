@@ -9,17 +9,14 @@ hook_addr: int = TUTORIAL_EXE_ADDR + 0x2b4bc
 
 print(str(app))
 
-addr1: int = app.alloc_memory(8)
-addr2: int = app.alloc_memory(8)
-addr3: int = app.alloc_memory(8)
-addr4: int = app.alloc_memory(8)
+addr1: int = app.alloc_memory(100, 0x1900000)
 
 print(hex(addr1))
-print(hex(addr2))
-print(hex(addr3))
-print(hex(addr4))
-input()
 
-app.dealloc_memory(addr2)
+x = 0
+while x < 100000:
+    x += 1
+    app.write_memory_uint32(addr1, x)
+    x = app.read_memory_uint32(addr1)
 
 input()

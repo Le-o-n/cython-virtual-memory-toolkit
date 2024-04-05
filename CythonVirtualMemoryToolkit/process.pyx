@@ -631,16 +631,16 @@ cdef class Application:
        return <int>self.read_memory_int(address, 4)
     
     def read_memory_int64(self, unsigned long long address) -> int:
-       return <long>self.read_memory_int(address, 8)
+       return <long long>self.read_memory_int(address, 8)
 
     def read_memory_uint8(self, unsigned long long address) -> int:
-       return <unsigned long long>self.read_memory_int(address, 1)
+       return <unsigned char>self.read_memory_int(address, 1)
 
     def read_memory_uint16(self, unsigned long long address) -> int:
-        return <unsigned long long>self.read_memory_int(address, 2)
+        return <unsigned short>self.read_memory_int(address, 2)
     
     def read_memory_uint32(self, unsigned long long address) -> int:
-       return <unsigned long long>self.read_memory_int(address, 4)
+        return <unsigned int>self.read_memory_int(address, 4)
     
     def read_memory_uint64(self, unsigned long long address) -> int:
        return <unsigned long long>self.read_memory_int(address, 8)

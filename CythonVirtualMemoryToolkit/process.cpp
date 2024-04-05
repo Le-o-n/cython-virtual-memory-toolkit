@@ -2258,6 +2258,15 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_short(unsigned short va
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_short(short value);
 
 /* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_PY_LONG_LONG(PY_LONG_LONG value);
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_char(unsigned char value);
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_int(unsigned int value);
+
+/* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_DWORD(DWORD value);
 
 /* MemviewSliceCopyTemplate.proto */
@@ -2605,8 +2614,8 @@ static const char __pyx_k_Bytes_instructed_to_write[] = ". Bytes instructed to w
 static const char __pyx_k_Failed_to_allocate_memory[] = "Failed to allocate memory.";
 static const char __pyx_k_Invalid_shape_in_axis_d_d[] = "Invalid shape in axis %d: %d.";
 static const char __pyx_k_itemsize_0_for_cython_array[] = "itemsize <= 0 for cython.array";
+static const char __pyx_k_Dealocating_memory_at_address[] = "Dealocating memory at address ";
 static const char __pyx_k_Failed_to_read_process_memory[] = "Failed to read process memory.";
-static const char __pyx_k_dealocating_memory_at_address[] = "dealocating memory at address ";
 static const char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate array data.";
 static const char __pyx_k_Search_bytes_must_not_be_empty[] = "Search bytes must not be empty.";
 static const char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direct or indirect>";
@@ -2664,6 +2673,7 @@ static PyObject *__pyx_kp_u_Cannot_deallocate_memory_at_addr;
 static PyObject *__pyx_kp_u_Cannot_find_window_name_with_su;
 static PyObject *__pyx_kp_u_Cannot_find_window_with_name_wit;
 static PyObject *__pyx_kp_s_Cannot_index_with_type_s;
+static PyObject *__pyx_kp_u_Dealocating_memory_at_address;
 static PyObject *__pyx_n_s_Ellipsis;
 static PyObject *__pyx_kp_s_Empty_shape_tuple_for_cython_arr;
 static PyObject *__pyx_kp_u_Error_reading_memory_Read_bytes;
@@ -2739,7 +2749,6 @@ static PyObject *__pyx_kp_s_contiguous_and_direct;
 static PyObject *__pyx_kp_s_contiguous_and_indirect;
 static PyObject *__pyx_n_s_cython_virtual_memory_toolkit_pr;
 static PyObject *__pyx_n_s_dealloc_all_memory;
-static PyObject *__pyx_kp_u_dealocating_memory_at_address;
 static PyObject *__pyx_n_s_dict;
 static PyObject *__pyx_n_s_dtype_is_object;
 static PyObject *__pyx_n_s_encode;
@@ -8371,7 +8380,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *        return <int>self.read_memory_int(address, 4)
  * 
  *     def read_memory_int64(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <long>self.read_memory_int(address, 8)
+ *        return <long long>self.read_memory_int(address, 8)
  * 
  */
 
@@ -8413,12 +8422,12 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* "process.pyx":634
  * 
  *     def read_memory_int64(self, unsigned long long address) -> int:
- *        return <long>self.read_memory_int(address, 8)             # <<<<<<<<<<<<<<
+ *        return <long long>self.read_memory_int(address, 8)             # <<<<<<<<<<<<<<
  * 
  *     def read_memory_uint8(self, unsigned long long address) -> int:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_long(((long)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 8))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 634, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_PY_LONG_LONG(((PY_LONG_LONG)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 8))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 634, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -8428,7 +8437,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *        return <int>self.read_memory_int(address, 4)
  * 
  *     def read_memory_int64(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <long>self.read_memory_int(address, 8)
+ *        return <long long>self.read_memory_int(address, 8)
  * 
  */
 
@@ -8444,10 +8453,10 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 }
 
 /* "process.pyx":636
- *        return <long>self.read_memory_int(address, 8)
+ *        return <long long>self.read_memory_int(address, 8)
  * 
  *     def read_memory_uint8(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <unsigned long long>self.read_memory_int(address, 1)
+ *        return <unsigned char>self.read_memory_int(address, 1)
  * 
  */
 
@@ -8489,22 +8498,22 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* "process.pyx":637
  * 
  *     def read_memory_uint8(self, unsigned long long address) -> int:
- *        return <unsigned long long>self.read_memory_int(address, 1)             # <<<<<<<<<<<<<<
+ *        return <unsigned char>self.read_memory_int(address, 1)             # <<<<<<<<<<<<<<
  * 
  *     def read_memory_uint16(self, unsigned long long address) -> int:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 1))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 637, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_char(((unsigned char)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 1))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 637, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
   /* "process.pyx":636
- *        return <long>self.read_memory_int(address, 8)
+ *        return <long long>self.read_memory_int(address, 8)
  * 
  *     def read_memory_uint8(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <unsigned long long>self.read_memory_int(address, 1)
+ *        return <unsigned char>self.read_memory_int(address, 1)
  * 
  */
 
@@ -8520,10 +8529,10 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 }
 
 /* "process.pyx":639
- *        return <unsigned long long>self.read_memory_int(address, 1)
+ *        return <unsigned char>self.read_memory_int(address, 1)
  * 
  *     def read_memory_uint16(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *         return <unsigned long long>self.read_memory_int(address, 2)
+ *         return <unsigned short>self.read_memory_int(address, 2)
  * 
  */
 
@@ -8565,22 +8574,22 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* "process.pyx":640
  * 
  *     def read_memory_uint16(self, unsigned long long address) -> int:
- *         return <unsigned long long>self.read_memory_int(address, 2)             # <<<<<<<<<<<<<<
+ *         return <unsigned short>self.read_memory_int(address, 2)             # <<<<<<<<<<<<<<
  * 
  *     def read_memory_uint32(self, unsigned long long address) -> int:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 2))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 640, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_short(((unsigned short)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 2))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 640, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
   /* "process.pyx":639
- *        return <unsigned long long>self.read_memory_int(address, 1)
+ *        return <unsigned char>self.read_memory_int(address, 1)
  * 
  *     def read_memory_uint16(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *         return <unsigned long long>self.read_memory_int(address, 2)
+ *         return <unsigned short>self.read_memory_int(address, 2)
  * 
  */
 
@@ -8596,10 +8605,10 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 }
 
 /* "process.pyx":642
- *         return <unsigned long long>self.read_memory_int(address, 2)
+ *         return <unsigned short>self.read_memory_int(address, 2)
  * 
  *     def read_memory_uint32(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <unsigned long long>self.read_memory_int(address, 4)
+ *         return <unsigned int>self.read_memory_int(address, 4)
  * 
  */
 
@@ -8641,22 +8650,22 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* "process.pyx":643
  * 
  *     def read_memory_uint32(self, unsigned long long address) -> int:
- *        return <unsigned long long>self.read_memory_int(address, 4)             # <<<<<<<<<<<<<<
+ *         return <unsigned int>self.read_memory_int(address, 4)             # <<<<<<<<<<<<<<
  * 
  *     def read_memory_uint64(self, unsigned long long address) -> int:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 4))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_int(((unsigned int)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 4))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 643, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
   /* "process.pyx":642
- *         return <unsigned long long>self.read_memory_int(address, 2)
+ *         return <unsigned short>self.read_memory_int(address, 2)
  * 
  *     def read_memory_uint32(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <unsigned long long>self.read_memory_int(address, 4)
+ *         return <unsigned int>self.read_memory_int(address, 4)
  * 
  */
 
@@ -8672,7 +8681,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 }
 
 /* "process.pyx":645
- *        return <unsigned long long>self.read_memory_int(address, 4)
+ *         return <unsigned int>self.read_memory_int(address, 4)
  * 
  *     def read_memory_uint64(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
  *        return <unsigned long long>self.read_memory_int(address, 8)
@@ -8729,7 +8738,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   goto __pyx_L0;
 
   /* "process.pyx":645
- *        return <unsigned long long>self.read_memory_int(address, 4)
+ *         return <unsigned int>self.read_memory_int(address, 4)
  * 
  *     def read_memory_uint64(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
  *        return <unsigned long long>self.read_memory_int(address, 8)
@@ -9274,7 +9283,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  * 
  *         for i in range(self._allocated_memory_blocks.size()):             # <<<<<<<<<<<<<<
  *             mem_block = self._allocated_memory_blocks.at(i)
- *             print(f"dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
+ *             print(f"Dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
  */
   __pyx_t_1 = __pyx_v_self->_allocated_memory_blocks.size();
   __pyx_t_2 = __pyx_t_1;
@@ -9285,7 +9294,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  * 
  *         for i in range(self._allocated_memory_blocks.size()):
  *             mem_block = self._allocated_memory_blocks.at(i)             # <<<<<<<<<<<<<<
- *             print(f"dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
+ *             print(f"Dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
  *             if not VirtualFreeEx(
  */
     try {
@@ -9299,7 +9308,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     /* "process.pyx":701
  *         for i in range(self._allocated_memory_blocks.size()):
  *             mem_block = self._allocated_memory_blocks.at(i)
- *             print(f"dealocating memory at address {hex(<SIZE_T>mem_block.address)}")             # <<<<<<<<<<<<<<
+ *             print(f"Dealocating memory at address {hex(<SIZE_T>mem_block.address)}")             # <<<<<<<<<<<<<<
  *             if not VirtualFreeEx(
  *                 self._process_handle,
  */
@@ -9311,7 +9320,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_dealocating_memory_at_address, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Dealocating_memory_at_address, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_print, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 701, __pyx_L1_error)
@@ -9321,7 +9330,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 
     /* "process.pyx":702
  *             mem_block = self._allocated_memory_blocks.at(i)
- *             print(f"dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
+ *             print(f"Dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
  *             if not VirtualFreeEx(             # <<<<<<<<<<<<<<
  *                 self._process_handle,
  *                 mem_block.address,
@@ -9356,7 +9365,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 
       /* "process.pyx":702
  *             mem_block = self._allocated_memory_blocks.at(i)
- *             print(f"dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
+ *             print(f"Dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
  *             if not VirtualFreeEx(             # <<<<<<<<<<<<<<
  *                 self._process_handle,
  *                 mem_block.address,
@@ -25372,6 +25381,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_Cannot_find_window_name_with_su, __pyx_k_Cannot_find_window_name_with_su, sizeof(__pyx_k_Cannot_find_window_name_with_su), 0, 1, 0, 0},
   {&__pyx_kp_u_Cannot_find_window_with_name_wit, __pyx_k_Cannot_find_window_with_name_wit, sizeof(__pyx_k_Cannot_find_window_with_name_wit), 0, 1, 0, 0},
   {&__pyx_kp_s_Cannot_index_with_type_s, __pyx_k_Cannot_index_with_type_s, sizeof(__pyx_k_Cannot_index_with_type_s), 0, 0, 1, 0},
+  {&__pyx_kp_u_Dealocating_memory_at_address, __pyx_k_Dealocating_memory_at_address, sizeof(__pyx_k_Dealocating_memory_at_address), 0, 1, 0, 0},
   {&__pyx_n_s_Ellipsis, __pyx_k_Ellipsis, sizeof(__pyx_k_Ellipsis), 0, 0, 1, 1},
   {&__pyx_kp_s_Empty_shape_tuple_for_cython_arr, __pyx_k_Empty_shape_tuple_for_cython_arr, sizeof(__pyx_k_Empty_shape_tuple_for_cython_arr), 0, 0, 1, 0},
   {&__pyx_kp_u_Error_reading_memory_Read_bytes, __pyx_k_Error_reading_memory_Read_bytes, sizeof(__pyx_k_Error_reading_memory_Read_bytes), 0, 1, 0, 0},
@@ -25447,7 +25457,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_contiguous_and_indirect, __pyx_k_contiguous_and_indirect, sizeof(__pyx_k_contiguous_and_indirect), 0, 0, 1, 0},
   {&__pyx_n_s_cython_virtual_memory_toolkit_pr, __pyx_k_cython_virtual_memory_toolkit_pr, sizeof(__pyx_k_cython_virtual_memory_toolkit_pr), 0, 0, 1, 1},
   {&__pyx_n_s_dealloc_all_memory, __pyx_k_dealloc_all_memory, sizeof(__pyx_k_dealloc_all_memory), 0, 0, 1, 1},
-  {&__pyx_kp_u_dealocating_memory_at_address, __pyx_k_dealocating_memory_at_address, sizeof(__pyx_k_dealocating_memory_at_address), 0, 1, 0, 0},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
   {&__pyx_n_s_dtype_is_object, __pyx_k_dtype_is_object, sizeof(__pyx_k_dtype_is_object), 0, 0, 1, 1},
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
@@ -32179,6 +32188,120 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_short(short value) {
         int one = 1; int little = (int)*(unsigned char *)&one;
         unsigned char *bytes = (unsigned char *)&value;
         return _PyLong_FromByteArray(bytes, sizeof(short),
+                                     little, !is_unsigned);
+    }
+}
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_PY_LONG_LONG(PY_LONG_LONG value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const PY_LONG_LONG neg_one = (PY_LONG_LONG) -1, const_zero = (PY_LONG_LONG) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(PY_LONG_LONG) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(PY_LONG_LONG) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(PY_LONG_LONG) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(PY_LONG_LONG) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(PY_LONG_LONG) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(PY_LONG_LONG),
+                                     little, !is_unsigned);
+    }
+}
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_char(unsigned char value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const unsigned char neg_one = (unsigned char) -1, const_zero = (unsigned char) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(unsigned char) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(unsigned char) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(unsigned char) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(unsigned char) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(unsigned char) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(unsigned char),
+                                     little, !is_unsigned);
+    }
+}
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_int(unsigned int value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const unsigned int neg_one = (unsigned int) -1, const_zero = (unsigned int) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(unsigned int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(unsigned int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(unsigned int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(unsigned int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(unsigned int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(unsigned int),
                                      little, !is_unsigned);
     }
 }
