@@ -31,7 +31,10 @@ process_extension: Extension = Extension(
         "process.pyx"
     ],
     libraries=include_libs,
-    language="c++"
+    language="c++",
+    depends=[
+        "errors.py"
+    ]
 )
 hooks_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.hooks",
@@ -57,13 +60,12 @@ addressing_extension: Extension = Extension(
     libraries=include_libs,
     language="c++"
 )
-scanning_extension: Extension = Extension(
-    "cython_virtual_memory_toolkit.scanning",
+errors_extension: Extension = Extension(
+    "cython_virtual_memory_toolkit.errors",
     [
-        "scanning.pyx"
+        "errors.py"
     ],
-    libraries=include_libs,
-    language="c++"
+    libraries=None,
 )
 
 
@@ -72,7 +74,7 @@ extensions = [
     hooks_extension,
     datatypes_extension,
     addressing_extension,
-    scanning_extension
+    errors_extension
 ]
 
 setup(

@@ -3,7 +3,9 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "depends": [],
+        "depends": [
+            "errors.py"
+        ],
         "language": "c++",
         "libraries": [
             "user32",
@@ -1113,7 +1115,7 @@ typedef struct {
 struct arrayobject;
 typedef struct arrayobject arrayobject;
 #endif
-struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application;
+struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle;
 struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
@@ -1152,13 +1154,13 @@ struct __pyx_t_29cython_virtual_memory_toolkit_7process_MemoryBlock {
 /* "process.pyx":301
  *     SIZE_T size
  * 
- * cdef class Application:             # <<<<<<<<<<<<<<
+ * cdef class AppHandle:             # <<<<<<<<<<<<<<
  *     cdef HANDLE _process_handle
  *     cdef HWND _window_handle
  */
-struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application {
+struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle {
   PyObject_HEAD
-  struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *__pyx_vtab;
+  struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_vtab;
   HANDLE _process_handle;
   HWND _window_handle;
   HANDLE _snapshot32_handle;
@@ -1252,17 +1254,17 @@ struct __pyx_memoryviewslice_obj {
 /* "process.pyx":301
  *     SIZE_T size
  * 
- * cdef class Application:             # <<<<<<<<<<<<<<
+ * cdef class AppHandle:             # <<<<<<<<<<<<<<
  *     cdef HANDLE _process_handle
  *     cdef HWND _window_handle
  */
 
-struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application {
-  void (*write_memory_int)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *, unsigned PY_LONG_LONG, PY_LONG_LONG, int);
-  void (*write_memory_uint)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *, unsigned PY_LONG_LONG, unsigned PY_LONG_LONG, int);
-  PY_LONG_LONG (*read_memory_int)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *, unsigned PY_LONG_LONG, unsigned short);
+struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle {
+  void (*write_memory_int)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *, unsigned PY_LONG_LONG, PY_LONG_LONG, int);
+  void (*write_memory_uint)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *, unsigned PY_LONG_LONG, unsigned PY_LONG_LONG, int);
+  PY_LONG_LONG (*read_memory_int)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *, unsigned PY_LONG_LONG, unsigned short);
 };
-static struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *__pyx_vtabptr_29cython_virtual_memory_toolkit_7process_Application;
+static struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_vtabptr_29cython_virtual_memory_toolkit_7process_AppHandle;
 
 
 /* "View.MemoryView":106
@@ -1523,6 +1525,78 @@ static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j);
 static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i,
                                                      int is_list, int wraparound, int boundscheck);
 
+/* PyDictVersioning.proto */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+#define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
+#define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
+#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)\
+    (version_var) = __PYX_GET_DICT_VERSION(dict);\
+    (cache_var) = (value);
+#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP) {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    if (likely(__PYX_GET_DICT_VERSION(DICT) == __pyx_dict_version)) {\
+        (VAR) = __pyx_dict_cached_value;\
+    } else {\
+        (VAR) = __pyx_dict_cached_value = (LOOKUP);\
+        __pyx_dict_version = __PYX_GET_DICT_VERSION(DICT);\
+    }\
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj);
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj);
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version);
+#else
+#define __PYX_GET_DICT_VERSION(dict)  (0)
+#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
+#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
+#endif
+
+/* GetModuleGlobalName.proto */
+#if CYTHON_USE_DICT_VERSIONS
+#define __Pyx_GetModuleGlobalName(var, name)  do {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    (var) = (likely(__pyx_dict_version == __PYX_GET_DICT_VERSION(__pyx_d))) ?\
+        (likely(__pyx_dict_cached_value) ? __Pyx_NewRef(__pyx_dict_cached_value) : __Pyx_GetBuiltinName(name)) :\
+        __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+} while(0)
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  do {\
+    PY_UINT64_T __pyx_dict_version;\
+    PyObject *__pyx_dict_cached_value;\
+    (var) = __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+} while(0)
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value);
+#else
+#define __Pyx_GetModuleGlobalName(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
+#endif
+
+/* PyObjectFormatSimple.proto */
+#if CYTHON_COMPILING_IN_PYPY
+    #define __Pyx_PyObject_FormatSimple(s, f) (\
+        likely(PyUnicode_CheckExact(s)) ? (Py_INCREF(s), s) :\
+        PyObject_Format(s, f))
+#elif PY_MAJOR_VERSION < 3
+    #define __Pyx_PyObject_FormatSimple(s, f) (\
+        likely(PyUnicode_CheckExact(s)) ? (Py_INCREF(s), s) :\
+        likely(PyString_CheckExact(s)) ? PyUnicode_FromEncodedObject(s, NULL, "strict") :\
+        PyObject_Format(s, f))
+#elif CYTHON_USE_TYPE_SLOTS
+    #define __Pyx_PyObject_FormatSimple(s, f) (\
+        likely(PyUnicode_CheckExact(s)) ? (Py_INCREF(s), s) :\
+        likely(PyLong_CheckExact(s)) ? PyLong_Type.tp_str(s) :\
+        likely(PyFloat_CheckExact(s)) ? PyFloat_Type.tp_str(s) :\
+        PyObject_Format(s, f))
+#else
+    #define __Pyx_PyObject_FormatSimple(s, f) (\
+        likely(PyUnicode_CheckExact(s)) ? (Py_INCREF(s), s) :\
+        PyObject_Format(s, f))
+#endif
+
+/* PyObjectCall2Args.proto */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
+
 /* ListAppend.proto */
 #if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
 static CYTHON_INLINE int __Pyx_PyList_Append(PyObject* list, PyObject* x) {
@@ -1539,9 +1613,6 @@ static CYTHON_INLINE int __Pyx_PyList_Append(PyObject* list, PyObject* x) {
 #else
 #define __Pyx_PyList_Append(L,x) PyList_Append(L,x)
 #endif
-
-/* PyObjectCall2Args.proto */
-static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
 
 /* PyObjectGetMethod.proto */
 static int __Pyx_PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method);
@@ -1623,28 +1694,6 @@ static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *nam
 
 /* bytes_index.proto */
 static CYTHON_INLINE char __Pyx_PyBytes_GetItemInt(PyObject* bytes, Py_ssize_t index, int check_bounds);
-
-/* PyObjectFormatSimple.proto */
-#if CYTHON_COMPILING_IN_PYPY
-    #define __Pyx_PyObject_FormatSimple(s, f) (\
-        likely(PyUnicode_CheckExact(s)) ? (Py_INCREF(s), s) :\
-        PyObject_Format(s, f))
-#elif PY_MAJOR_VERSION < 3
-    #define __Pyx_PyObject_FormatSimple(s, f) (\
-        likely(PyUnicode_CheckExact(s)) ? (Py_INCREF(s), s) :\
-        likely(PyString_CheckExact(s)) ? PyUnicode_FromEncodedObject(s, NULL, "strict") :\
-        PyObject_Format(s, f))
-#elif CYTHON_USE_TYPE_SLOTS
-    #define __Pyx_PyObject_FormatSimple(s, f) (\
-        likely(PyUnicode_CheckExact(s)) ? (Py_INCREF(s), s) :\
-        likely(PyLong_CheckExact(s)) ? PyLong_Type.tp_str(s) :\
-        likely(PyFloat_CheckExact(s)) ? PyFloat_Type.tp_str(s) :\
-        PyObject_Format(s, f))
-#else
-    #define __Pyx_PyObject_FormatSimple(s, f) (\
-        likely(PyUnicode_CheckExact(s)) ? (Py_INCREF(s), s) :\
-        PyObject_Format(s, f))
-#endif
 
 /* GCCDiagnostics.proto */
 #if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
@@ -1765,53 +1814,6 @@ static CYTHON_INLINE int __Pyx_PyErr_ExceptionMatchesInState(PyThreadState* tsta
 
 /* GetAttr3.proto */
 static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *);
-
-/* PyDictVersioning.proto */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-#define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
-#define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
-#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)\
-    (version_var) = __PYX_GET_DICT_VERSION(dict);\
-    (cache_var) = (value);
-#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP) {\
-    static PY_UINT64_T __pyx_dict_version = 0;\
-    static PyObject *__pyx_dict_cached_value = NULL;\
-    if (likely(__PYX_GET_DICT_VERSION(DICT) == __pyx_dict_version)) {\
-        (VAR) = __pyx_dict_cached_value;\
-    } else {\
-        (VAR) = __pyx_dict_cached_value = (LOOKUP);\
-        __pyx_dict_version = __PYX_GET_DICT_VERSION(DICT);\
-    }\
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj);
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj);
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version);
-#else
-#define __PYX_GET_DICT_VERSION(dict)  (0)
-#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
-#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
-#endif
-
-/* GetModuleGlobalName.proto */
-#if CYTHON_USE_DICT_VERSIONS
-#define __Pyx_GetModuleGlobalName(var, name)  do {\
-    static PY_UINT64_T __pyx_dict_version = 0;\
-    static PyObject *__pyx_dict_cached_value = NULL;\
-    (var) = (likely(__pyx_dict_version == __PYX_GET_DICT_VERSION(__pyx_d))) ?\
-        (likely(__pyx_dict_cached_value) ? __Pyx_NewRef(__pyx_dict_cached_value) : __Pyx_GetBuiltinName(name)) :\
-        __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
-} while(0)
-#define __Pyx_GetModuleGlobalNameUncached(var, name)  do {\
-    PY_UINT64_T __pyx_dict_version;\
-    PyObject *__pyx_dict_cached_value;\
-    (var) = __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
-} while(0)
-static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value);
-#else
-#define __Pyx_GetModuleGlobalName(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
-#define __Pyx_GetModuleGlobalNameUncached(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
-static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
-#endif
 
 /* RaiseNoneIterError.proto */
 static CYTHON_INLINE void __Pyx_RaiseNoneNotIterableError(void);
@@ -1978,6 +1980,10 @@ enum __Pyx_ImportType_CheckSize {
 };
 static PyTypeObject *__Pyx_ImportType(PyObject* module, const char *module_name, const char *class_name, size_t size, enum __Pyx_ImportType_CheckSize check_size);
 #endif
+
+/* GetNameInClass.proto */
+#define __Pyx_GetNameInClass(var, nmspace, name)  (var) = __Pyx__GetNameInClass(nmspace, name)
+static PyObject *__Pyx__GetNameInClass(PyObject *nmspace, PyObject *name);
 
 /* CLineInTraceback.proto */
 #ifdef CYTHON_CLINE_IN_TRACEBACK
@@ -2314,9 +2320,9 @@ static int __Pyx_check_binary_version(void);
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
-static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write_memory_int(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, PY_LONG_LONG __pyx_v_value, int __pyx_v_bytes_to_write); /* proto*/
-static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write_memory_uint(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned PY_LONG_LONG __pyx_v_value, int __pyx_v_bytes_to_write); /* proto*/
-static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_read_memory_int(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned short __pyx_v_bytes_in_int); /* proto*/
+static void __pyx_f_29cython_virtual_memory_toolkit_7process_9AppHandle_write_memory_int(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, PY_LONG_LONG __pyx_v_value, int __pyx_v_bytes_to_write); /* proto*/
+static void __pyx_f_29cython_virtual_memory_toolkit_7process_9AppHandle_write_memory_uint(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned PY_LONG_LONG __pyx_v_value, int __pyx_v_bytes_to_write); /* proto*/
+static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_9AppHandle_read_memory_int(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned short __pyx_v_bytes_in_int); /* proto*/
 static PyObject *__pyx_array_get_memview(struct __pyx_array_obj *__pyx_v_self); /* proto*/
 static char *__pyx_memoryview_get_item_pointer(struct __pyx_memoryview_obj *__pyx_v_self, PyObject *__pyx_v_index); /* proto*/
 static PyObject *__pyx_memoryview_is_slice(struct __pyx_memoryview_obj *__pyx_v_self, PyObject *__pyx_v_obj); /* proto*/
@@ -2424,7 +2430,7 @@ static CYTHON_INLINE int __pyx_f_7cpython_5array_extend_buffer(arrayobject *, ch
 /* Module declarations from 'libcpp.vector' */
 
 /* Module declarations from 'cython_virtual_memory_toolkit.process' */
-static PyTypeObject *__pyx_ptype_29cython_virtual_memory_toolkit_7process_Application = 0;
+static PyTypeObject *__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle = 0;
 static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
 static PyTypeObject *__pyx_memoryview_type = 0;
@@ -2483,6 +2489,7 @@ extern int __pyx_module_is_main_cython_virtual_memory_toolkit__process;
 int __pyx_module_is_main_cython_virtual_memory_toolkit__process = 0;
 
 /* Implementation of 'cython_virtual_memory_toolkit.process' */
+static PyObject *__pyx_builtin_staticmethod;
 static PyObject *__pyx_builtin_MemoryError;
 static PyObject *__pyx_builtin_hex;
 static PyObject *__pyx_builtin_print;
@@ -2498,6 +2505,7 @@ static PyObject *__pyx_builtin_IndexError;
 static const char __pyx_k_O[] = "O";
 static const char __pyx_k_T[] = "T{";
   static const char __pyx_k_c[] = "c";
+  static const char __pyx_k_i[] = "i";
   static const char __pyx_k_s[] = "(%s)";
   static const char __pyx_k__5[] = "=================================================";
   static const char __pyx_k_id[] = "id";
@@ -2511,6 +2519,7 @@ static const char __pyx_k_T[] = "T{";
   static const char __pyx_k__45[] = ":";
 static const char __pyx_k__46[] = "}";
 static const char __pyx_k__47[] = ",";
+static const char __pyx_k_app[] = "app";
 static const char __pyx_k_hex[] = "hex";
 static const char __pyx_k_key[] = "key";
 static const char __pyx_k_new[] = "__new__";
@@ -2540,6 +2549,7 @@ static const char __pyx_k_start[] = "start";
 static const char __pyx_k_value[] = "value";
 static const char __pyx_k_append[] = "append";
 static const char __pyx_k_encode[] = "encode";
+static const char __pyx_k_errors[] = "errors";
 static const char __pyx_k_format[] = "format";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_name_2[] = "__name__";
@@ -2551,6 +2561,7 @@ static const char __pyx_k_update[] = "update";
 static const char __pyx_k_Modules[] = "\n|                 Modules                       |";
 static const char __pyx_k_OSError[] = "OSError";
 static const char __pyx_k_address[] = "address";
+static const char __pyx_k_cur_mod[] = "cur_mod";
 static const char __pyx_k_fortran[] = "fortran";
 static const char __pyx_k_memview[] = "memview";
 static const char __pyx_k_Ellipsis[] = "Ellipsis";
@@ -2558,12 +2569,14 @@ static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_itemsize[] = "itemsize";
 static const char __pyx_k_pyx_type[] = "__pyx_type";
 static const char __pyx_k_setstate[] = "__setstate__";
+static const char __pyx_k_AppHandle[] = "AppHandle";
 static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_enumerate[] = "enumerate";
 static const char __pyx_k_pyx_state[] = "__pyx_state";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_ValueError[] = "ValueError";
+static const char __pyx_k_error_code[] = "error_code";
 static const char __pyx_k_is_verbose[] = "is_verbose";
 static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
@@ -2573,12 +2586,14 @@ static const char __pyx_k_PickleError[] = "PickleError";
 static const char __pyx_k_Window_name[] = "\n| Window name      = ";
 static const char __pyx_k_end_address[] = "end_address";
 static const char __pyx_k_min_address[] = "min_address";
+static const char __pyx_k_process_pyx[] = "process.pyx";
+static const char __pyx_k_window_data[] = "window_data";
 static const char __pyx_k_Maximum_is_8[] = ". Maximum is 8.";
 static const char __pyx_k_RuntimeError[] = "RuntimeError";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
 static const char __pyx_k_search_bytes[] = "search_bytes";
+static const char __pyx_k_staticmethod[] = "staticmethod";
 static const char __pyx_k_stringsource[] = "stringsource";
-static const char __pyx_k_Application_2[] = "Application";
 static const char __pyx_k_Window_handle[] = "\n| Window handle    = ";
 static const char __pyx_k_bytes_to_read[] = "bytes_to_read";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
@@ -2596,12 +2611,13 @@ static const char __pyx_k_py_modules_dict[] = "_py_modules_dict";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_Process_filename[] = "\n| Process filename = ";
+static const char __pyx_k_from_window_name[] = "from_window_name";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_dealloc_all_memory[] = "dealloc_all_memory";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
 static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
-static const char __pyx_k_cinit___locals_lambda[] = "__cinit__.<locals>.<lambda>";
+static const char __pyx_k_UnableToAcquireHandle[] = "UnableToAcquireHandle";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
 static const char __pyx_k_window_name_substring[] = "window_name_substring";
 static const char __pyx_k_MemoryView_of_r_object[] = "<MemoryView of %r object>";
@@ -2618,6 +2634,7 @@ static const char __pyx_k_Dealocating_memory_at_address[] = "Dealocating memory 
 static const char __pyx_k_Failed_to_read_process_memory[] = "Failed to read process memory.";
 static const char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate array data.";
 static const char __pyx_k_Search_bytes_must_not_be_empty[] = "Search bytes must not be empty.";
+static const char __pyx_k_from_window_name_locals_lambda[] = "from_window_name.<locals>.<lambda>";
 static const char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direct or indirect>";
 static const char __pyx_k_Cannot_allocate_memory_for_read[] = "Cannot allocate memory for read buffer";
 static const char __pyx_k_Cannot_find_window_name_with_su[] = " Cannot find window name with substring: ";
@@ -2648,19 +2665,21 @@ static const char __pyx_k_No_memory_block_found_at_address[] = "No memory block 
 static const char __pyx_k_Out_of_bounds_on_buffer_access_a[] = "Out of bounds on buffer access (axis %d)";
 static const char __pyx_k_Too_many_bytes_requested_request[] = "Too many bytes requested, requested: ";
 static const char __pyx_k_Unable_to_convert_item_to_object[] = "Unable to convert item to object";
+static const char __pyx_k_Unable_to_find_window_with_subst[] = "Unable to find window with substring ";
 static const char __pyx_k_Unable_to_get_a_privilaged_handl[] = "Unable to get a privilaged handle to target process, please re-run using administrator :)";
 static const char __pyx_k_Unknown_error_cannot_modify_virt[] = "Unknown error, cannot modify virtual memory page protection! Address: ";
 static const char __pyx_k_Unknown_error_cannot_restore_pag[] = "Unknown error, cannot restore page protection! Address: ";
 static const char __pyx_k_cython_virtual_memory_toolkit_pr[] = "cython_virtual_memory_toolkit.process";
 static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing extents in dimension %d (got %d and %d)";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
+static const char __pyx_k_self__allocated_memory_blocks_se[] = "self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
 static const char __pyx_k_Unable_to_get_a_privilaged_handl_2[] = "Unable to get a privilaged handle to target process, unknown error. Error code: ";
 static const char __pyx_k_Unknown_error_cannot_modify_virt_2[] = "Unknown error, cannot modify virtual memory page protection!";
 static const char __pyx_k_Unknown_error_cannot_restore_pag_2[] = "Unknown error, cannot restore page protection!";
 static PyObject *__pyx_n_s_ASCII;
+static PyObject *__pyx_n_s_AppHandle;
 static PyObject *__pyx_kp_u_Application;
-static PyObject *__pyx_n_s_Application_2;
 static PyObject *__pyx_kp_s_Buffer_view_does_not_expose_stri;
 static PyObject *__pyx_kp_u_Bytes_instructed_to_read;
 static PyObject *__pyx_kp_u_Bytes_instructed_to_write;
@@ -2708,7 +2727,9 @@ static PyObject *__pyx_kp_u_Search_bytes_must_not_be_empty;
 static PyObject *__pyx_kp_b_T;
 static PyObject *__pyx_kp_u_Too_many_bytes_requested_request;
 static PyObject *__pyx_n_s_TypeError;
+static PyObject *__pyx_n_s_UnableToAcquireHandle;
 static PyObject *__pyx_kp_s_Unable_to_convert_item_to_object;
+static PyObject *__pyx_kp_u_Unable_to_find_window_with_subst;
 static PyObject *__pyx_kp_u_Unable_to_free_allocated_memory;
 static PyObject *__pyx_kp_u_Unable_to_get_a_privilaged_hand;
 static PyObject *__pyx_kp_u_Unable_to_get_a_privilaged_handl;
@@ -2736,17 +2757,18 @@ static PyObject *__pyx_kp_u__5;
 static PyObject *__pyx_n_s_address;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_allocation_type;
+static PyObject *__pyx_n_s_app;
 static PyObject *__pyx_n_s_append;
 static PyObject *__pyx_n_s_base;
 static PyObject *__pyx_n_s_bytes_to_read;
 static PyObject *__pyx_n_s_bytes_to_write;
 static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_u_c;
-static PyObject *__pyx_n_s_cinit___locals_lambda;
 static PyObject *__pyx_n_s_class;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_kp_s_contiguous_and_direct;
 static PyObject *__pyx_kp_s_contiguous_and_indirect;
+static PyObject *__pyx_n_s_cur_mod;
 static PyObject *__pyx_n_s_cython_virtual_memory_toolkit_pr;
 static PyObject *__pyx_n_s_dealloc_all_memory;
 static PyObject *__pyx_n_s_dict;
@@ -2755,13 +2777,18 @@ static PyObject *__pyx_n_s_encode;
 static PyObject *__pyx_n_s_end_address;
 static PyObject *__pyx_n_s_enumerate;
 static PyObject *__pyx_n_s_error;
+static PyObject *__pyx_n_s_error_code;
+static PyObject *__pyx_n_s_errors;
 static PyObject *__pyx_n_s_flags;
 static PyObject *__pyx_n_s_format;
 static PyObject *__pyx_n_s_fortran;
 static PyObject *__pyx_n_u_fortran;
+static PyObject *__pyx_n_s_from_window_name;
+static PyObject *__pyx_n_s_from_window_name_locals_lambda;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_kp_s_got_differing_extents_in_dimensi;
 static PyObject *__pyx_n_s_hex;
+static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_id;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_is_verbose;
@@ -2784,6 +2811,7 @@ static PyObject *__pyx_n_s_pickle;
 static PyObject *__pyx_n_s_print;
 static PyObject *__pyx_n_s_process_handle;
 static PyObject *__pyx_kp_u_process_please_re_run_using_adm;
+static PyObject *__pyx_kp_s_process_pyx;
 static PyObject *__pyx_kp_u_process_unknown_error_Error_cod;
 static PyObject *__pyx_n_s_protection_type;
 static PyObject *__pyx_n_s_py_modules_dict;
@@ -2802,6 +2830,7 @@ static PyObject *__pyx_n_s_reduce_cython;
 static PyObject *__pyx_n_s_reduce_ex;
 static PyObject *__pyx_kp_u_s;
 static PyObject *__pyx_n_s_search_bytes;
+static PyObject *__pyx_kp_s_self__allocated_memory_blocks_se;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_shape;
@@ -2809,6 +2838,7 @@ static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_n_s_sort;
 static PyObject *__pyx_n_s_start;
 static PyObject *__pyx_n_s_start_address;
+static PyObject *__pyx_n_s_staticmethod;
 static PyObject *__pyx_n_s_step;
 static PyObject *__pyx_n_s_stop;
 static PyObject *__pyx_n_s_str;
@@ -2823,44 +2853,45 @@ static PyObject *__pyx_kp_s_unable_to_allocate_shape_and_str;
 static PyObject *__pyx_n_s_unpack;
 static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_value;
+static PyObject *__pyx_n_s_window_data;
 static PyObject *__pyx_n_s_window_name_substring;
 static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
-static int __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application___cinit__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, char *__pyx_v_window_name_substring, int __pyx_v_is_verbose); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_2search_process_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, SIZE_T __pyx_v_start_address, SIZE_T __pyx_v_end_address, PyObject *__pyx_v_search_bytes); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_4write_memory_bytes(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, PyObject *__pyx_v_bytes_to_write); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_6write_memory_float32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, float __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_8write_memory_float64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, double __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_10write_memory_int8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_12write_memory_int16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_14write_memory_int32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_16write_memory_int64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_18write_memory_uint8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_20write_memory_uint16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_22write_memory_uint32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_24write_memory_uint64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_26read_memory_bytes(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, int __pyx_v_bytes_to_read); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_28read_memory_float32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_30read_memory_float64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_32read_memory_int8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_34read_memory_int16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_36read_memory_int32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_38read_memory_int64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_40read_memory_uint8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_42read_memory_uint16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_44read_memory_uint32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_46read_memory_uint64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_48alloc_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_size, unsigned PY_LONG_LONG __pyx_v_min_address, unsigned int __pyx_v_allocation_type, unsigned int __pyx_v_protection_type); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_50dealloc_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_52dealloc_all_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_13window_handle___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_14process_handle___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_3pid___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_7modules___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_54__str__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_56__repr__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self); /* proto */
-static void __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_58__dealloc__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_60__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_62__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_from_window_name(char *__pyx_v_window_name_substring, int __pyx_v_is_verbose); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_2search_process_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, SIZE_T __pyx_v_start_address, SIZE_T __pyx_v_end_address, PyObject *__pyx_v_search_bytes); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_4write_memory_bytes(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, PyObject *__pyx_v_bytes_to_write); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_6write_memory_float32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, float __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_8write_memory_float64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, double __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_10write_memory_int8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_12write_memory_int16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_14write_memory_int32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_16write_memory_int64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_18write_memory_uint8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_20write_memory_uint16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_22write_memory_uint32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_24write_memory_uint64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_26read_memory_bytes(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, int __pyx_v_bytes_to_read); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_28read_memory_float32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_30read_memory_float64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_32read_memory_int8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_34read_memory_int16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_36read_memory_int32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_38read_memory_int64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_40read_memory_uint8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_42read_memory_uint16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_44read_memory_uint32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_46read_memory_uint64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_48alloc_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_size, unsigned PY_LONG_LONG __pyx_v_min_address, unsigned int __pyx_v_allocation_type, unsigned int __pyx_v_protection_type); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_50dealloc_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_52dealloc_all_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_13window_handle___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_14process_handle___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_3pid___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_7modules___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_54__str__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_56__repr__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self); /* proto */
+static void __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_58__dealloc__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_60__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_62__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_7cpython_5array_5array___getbuffer__(arrayobject *__pyx_v_self, Py_buffer *__pyx_v_info, CYTHON_UNUSED int __pyx_v_flags); /* proto */
 static void __pyx_pf_7cpython_5array_5array_2__releasebuffer__(CYTHON_UNUSED arrayobject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
@@ -2905,7 +2936,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_16_memoryviewslice_4base___get__
 static PyObject *__pyx_pf___pyx_memoryviewslice___reduce_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_15View_dot_MemoryView___pyx_unpickle_Enum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_29cython_virtual_memory_toolkit_7process_Application(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_29cython_virtual_memory_toolkit_7process_AppHandle(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_Enum(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -2954,12 +2985,14 @@ static PyObject *__pyx_tuple__41;
 static PyObject *__pyx_tuple__42;
 static PyObject *__pyx_tuple__43;
 static PyObject *__pyx_tuple__48;
-static PyObject *__pyx_tuple__49;
 static PyObject *__pyx_tuple__50;
 static PyObject *__pyx_tuple__51;
 static PyObject *__pyx_tuple__52;
 static PyObject *__pyx_tuple__53;
-static PyObject *__pyx_codeobj__54;
+static PyObject *__pyx_tuple__54;
+static PyObject *__pyx_tuple__55;
+static PyObject *__pyx_codeobj__49;
+static PyObject *__pyx_codeobj__56;
 /* Late includes */
 
 /* "process.pyx":111
@@ -4470,25 +4503,26 @@ static MODULEENTRY32 *__pyx_f_29cython_virtual_memory_toolkit_7process_collect_a
   return __pyx_r;
 }
 
-/* "process.pyx":317
- *     _py_modules_dict: dict[bytes, int] = {}
+/* "process.pyx":318
  * 
- *     def __cinit__(self, char* window_name_substring, bint is_verbose = False):             # <<<<<<<<<<<<<<
- * 
- *         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
+ *     @staticmethod
+ *     def from_window_name(char* window_name_substring, bint is_verbose = False) -> AppHandle:             # <<<<<<<<<<<<<<
+ *         cdef AppHandle app = AppHandle.__new__(AppHandle)
+ *         cdef unsigned long error_code
  */
 
 /* Python wrapper */
-static int __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_1from_window_name(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_29cython_virtual_memory_toolkit_7process_9AppHandle_1from_window_name = {"from_window_name", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_1from_window_name, METH_VARARGS|METH_KEYWORDS, 0};
+static struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_1from_window_name(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   char *__pyx_v_window_name_substring;
   int __pyx_v_is_verbose;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  int __pyx_r;
+  struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
+  __Pyx_RefNannySetupContext("from_window_name (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_window_name_substring,&__pyx_n_s_is_verbose,0};
     PyObject* values[2] = {0,0};
@@ -4516,7 +4550,7 @@ static int __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_1__ci
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 317, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "from_window_name") < 0)) __PYX_ERR(0, 318, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -4527,40 +4561,40 @@ static int __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_1__ci
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_window_name_substring = __Pyx_PyObject_AsWritableString(values[0]); if (unlikely((!__pyx_v_window_name_substring) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L3_error)
+    __pyx_v_window_name_substring = __Pyx_PyObject_AsWritableString(values[0]); if (unlikely((!__pyx_v_window_name_substring) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L3_error)
     if (values[1]) {
-      __pyx_v_is_verbose = __Pyx_PyObject_IsTrue(values[1]); if (unlikely((__pyx_v_is_verbose == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 317, __pyx_L3_error)
+      __pyx_v_is_verbose = __Pyx_PyObject_IsTrue(values[1]); if (unlikely((__pyx_v_is_verbose == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L3_error)
     } else {
       __pyx_v_is_verbose = ((int)0);
     }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 317, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("from_window_name", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 318, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.from_window_name", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
-  return -1;
+  return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application___cinit__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_window_name_substring, __pyx_v_is_verbose);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_from_window_name(__pyx_v_window_name_substring, __pyx_v_is_verbose);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "process.pyx":372
- *                 self._py_modules_dict[cur_mod.szModule] = <unsigned long long>cur_mod.modBaseAddr
+/* "process.pyx":388
+ *                 app._py_modules_dict[cur_mod.szModule] = <unsigned long long>cur_mod.modBaseAddr
  * 
- *         self._py_modules_ordered_list.sort(key = lambda x: x[1])             # <<<<<<<<<<<<<<
+ *         app._py_modules_ordered_list.sort(key = lambda x: x[1])             # <<<<<<<<<<<<<<
  * 
- *     def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes) -> int:
+ *         return app
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_9__cinit___lambda(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_29cython_virtual_memory_toolkit_7process_11Application_9__cinit___lambda = {"lambda", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_9__cinit___lambda, METH_O, 0};
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_9__cinit___lambda(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_16from_window_name_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_29cython_virtual_memory_toolkit_7process_9AppHandle_16from_window_name_lambda = {"lambda", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_16from_window_name_lambda, METH_O, 0};
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_16from_window_name_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("lambda (wrapper)", 0);
@@ -4580,7 +4614,7 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("lambda", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 388, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -4589,7 +4623,7 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.__cinit__.lambda", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.from_window_name.lambda", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -4597,260 +4631,329 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
   return __pyx_r;
 }
 
-/* "process.pyx":317
- *     _py_modules_dict: dict[bytes, int] = {}
+/* "process.pyx":318
  * 
- *     def __cinit__(self, char* window_name_substring, bint is_verbose = False):             # <<<<<<<<<<<<<<
- * 
- *         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
+ *     @staticmethod
+ *     def from_window_name(char* window_name_substring, bint is_verbose = False) -> AppHandle:             # <<<<<<<<<<<<<<
+ *         cdef AppHandle app = AppHandle.__new__(AppHandle)
+ *         cdef unsigned long error_code
  */
 
-static int __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application___cinit__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, char *__pyx_v_window_name_substring, int __pyx_v_is_verbose) {
-  struct __pyx_t_29cython_virtual_memory_toolkit_7process_EnumWindowCallbackLParam __pyx_v_window_data;
+static struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_from_window_name(char *__pyx_v_window_name_substring, int __pyx_v_is_verbose) {
+  struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_app = 0;
   unsigned long __pyx_v_error_code;
+  struct __pyx_t_29cython_virtual_memory_toolkit_7process_EnumWindowCallbackLParam __pyx_v_window_data;
   MODULEENTRY32 __pyx_v_cur_mod;
   int __pyx_v_i;
-  int __pyx_r;
+  struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  HANDLE __pyx_t_1;
-  HWND __pyx_t_2;
-  char *__pyx_t_3;
-  DWORD __pyx_t_4;
-  int __pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  int __pyx_t_8;
-  int __pyx_t_9;
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  HANDLE __pyx_t_6;
+  HWND __pyx_t_7;
+  char *__pyx_t_8;
+  DWORD __pyx_t_9;
   int __pyx_t_10;
-  PyObject *__pyx_t_11 = NULL;
-  PyObject *__pyx_t_12 = NULL;
+  int __pyx_t_11;
+  int __pyx_t_12;
   int __pyx_t_13;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__cinit__", 0);
+  __Pyx_RefNannySetupContext("from_window_name", 0);
 
   /* "process.pyx":319
- *     def __cinit__(self, char* window_name_substring, bint is_verbose = False):
+ *     @staticmethod
+ *     def from_window_name(char* window_name_substring, bint is_verbose = False) -> AppHandle:
+ *         cdef AppHandle app = AppHandle.__new__(AppHandle)             # <<<<<<<<<<<<<<
+ *         cdef unsigned long error_code
  * 
- *         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)             # <<<<<<<<<<<<<<
- *         cdef unsigned long error_code
- *         self._process_handle = window_data.out_all_access_process_handle
  */
-  __pyx_v_window_data = __pyx_f_29cython_virtual_memory_toolkit_7process_find_process(__pyx_v_window_name_substring);
-
-  /* "process.pyx":321
- *         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
- *         cdef unsigned long error_code
- *         self._process_handle = window_data.out_all_access_process_handle             # <<<<<<<<<<<<<<
- *         self._window_handle = window_data.out_window_handle
- *         self._window_name = window_data.out_full_window_name
- */
-  __pyx_t_1 = __pyx_v_window_data.out_all_access_process_handle;
-  __pyx_v_self->_process_handle = __pyx_t_1;
+  __pyx_t_1 = ((PyObject *)__pyx_tp_new_29cython_virtual_memory_toolkit_7process_AppHandle(((PyTypeObject *)__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle), __pyx_empty_tuple, NULL)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 319, __pyx_L1_error)
+  __Pyx_GOTREF(((PyObject *)__pyx_t_1));
+  __pyx_v_app = ((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_t_1);
+  __pyx_t_1 = 0;
 
   /* "process.pyx":322
  *         cdef unsigned long error_code
- *         self._process_handle = window_data.out_all_access_process_handle
- *         self._window_handle = window_data.out_window_handle             # <<<<<<<<<<<<<<
- *         self._window_name = window_data.out_full_window_name
- *         self._pid = window_data.out_pid
+ * 
+ *         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)             # <<<<<<<<<<<<<<
+ *         if not window_data.out_window_handle:
+ *             raise UnableToAcquireHandle(f"Unable to find window with substring {window_name_substring}")
  */
-  __pyx_t_2 = __pyx_v_window_data.out_window_handle;
-  __pyx_v_self->_window_handle = __pyx_t_2;
+  __pyx_v_window_data = __pyx_f_29cython_virtual_memory_toolkit_7process_find_process(__pyx_v_window_name_substring);
 
   /* "process.pyx":323
- *         self._process_handle = window_data.out_all_access_process_handle
- *         self._window_handle = window_data.out_window_handle
- *         self._window_name = window_data.out_full_window_name             # <<<<<<<<<<<<<<
- *         self._pid = window_data.out_pid
- *         self.is_verbose = is_verbose
- */
-  __pyx_t_3 = __pyx_v_window_data.out_full_window_name;
-  __pyx_v_self->_window_name = __pyx_t_3;
-
-  /* "process.pyx":324
- *         self._window_handle = window_data.out_window_handle
- *         self._window_name = window_data.out_full_window_name
- *         self._pid = window_data.out_pid             # <<<<<<<<<<<<<<
- *         self.is_verbose = is_verbose
  * 
+ *         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
+ *         if not window_data.out_window_handle:             # <<<<<<<<<<<<<<
+ *             raise UnableToAcquireHandle(f"Unable to find window with substring {window_name_substring}")
+ *         app._process_handle = window_data.out_all_access_process_handle
  */
-  __pyx_t_4 = __pyx_v_window_data.out_pid;
-  __pyx_v_self->_pid = __pyx_t_4;
+  __pyx_t_2 = ((!(__pyx_v_window_data.out_window_handle != 0)) != 0);
+  if (unlikely(__pyx_t_2)) {
+
+    /* "process.pyx":324
+ *         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
+ *         if not window_data.out_window_handle:
+ *             raise UnableToAcquireHandle(f"Unable to find window with substring {window_name_substring}")             # <<<<<<<<<<<<<<
+ *         app._process_handle = window_data.out_all_access_process_handle
+ *         app._window_handle = window_data.out_window_handle
+ */
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_UnableToAcquireHandle); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_window_name_substring); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_4, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_4 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Unable_to_find_window_with_subst, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_5 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_5)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        __Pyx_INCREF(__pyx_t_5);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_3, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_5, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __PYX_ERR(0, 324, __pyx_L1_error)
+
+    /* "process.pyx":323
+ * 
+ *         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
+ *         if not window_data.out_window_handle:             # <<<<<<<<<<<<<<
+ *             raise UnableToAcquireHandle(f"Unable to find window with substring {window_name_substring}")
+ *         app._process_handle = window_data.out_all_access_process_handle
+ */
+  }
 
   /* "process.pyx":325
- *         self._window_name = window_data.out_full_window_name
- *         self._pid = window_data.out_pid
- *         self.is_verbose = is_verbose             # <<<<<<<<<<<<<<
- * 
- *         self._process_image_filename = <char*>malloc(sizeof(char) * MAX_PATH)
+ *         if not window_data.out_window_handle:
+ *             raise UnableToAcquireHandle(f"Unable to find window with substring {window_name_substring}")
+ *         app._process_handle = window_data.out_all_access_process_handle             # <<<<<<<<<<<<<<
+ *         app._window_handle = window_data.out_window_handle
+ *         app._window_name = window_data.out_full_window_name
  */
-  __pyx_v_self->is_verbose = __pyx_v_is_verbose;
+  __pyx_t_6 = __pyx_v_window_data.out_all_access_process_handle;
+  __pyx_v_app->_process_handle = __pyx_t_6;
+
+  /* "process.pyx":326
+ *             raise UnableToAcquireHandle(f"Unable to find window with substring {window_name_substring}")
+ *         app._process_handle = window_data.out_all_access_process_handle
+ *         app._window_handle = window_data.out_window_handle             # <<<<<<<<<<<<<<
+ *         app._window_name = window_data.out_full_window_name
+ *         app._pid = window_data.out_pid
+ */
+  __pyx_t_7 = __pyx_v_window_data.out_window_handle;
+  __pyx_v_app->_window_handle = __pyx_t_7;
 
   /* "process.pyx":327
- *         self.is_verbose = is_verbose
- * 
- *         self._process_image_filename = <char*>malloc(sizeof(char) * MAX_PATH)             # <<<<<<<<<<<<<<
- *         GetProcessImageFileNameA(self._process_handle, self._process_image_filename, sizeof(char) * MAX_PATH)
- * 
+ *         app._process_handle = window_data.out_all_access_process_handle
+ *         app._window_handle = window_data.out_window_handle
+ *         app._window_name = window_data.out_full_window_name             # <<<<<<<<<<<<<<
+ *         app._pid = window_data.out_pid
+ *         app.is_verbose = is_verbose
  */
-  __pyx_v_self->_process_image_filename = ((char *)malloc(((sizeof(char)) * MAX_PATH)));
+  __pyx_t_8 = __pyx_v_window_data.out_full_window_name;
+  __pyx_v_app->_window_name = __pyx_t_8;
 
   /* "process.pyx":328
+ *         app._window_handle = window_data.out_window_handle
+ *         app._window_name = window_data.out_full_window_name
+ *         app._pid = window_data.out_pid             # <<<<<<<<<<<<<<
+ *         app.is_verbose = is_verbose
  * 
- *         self._process_image_filename = <char*>malloc(sizeof(char) * MAX_PATH)
- *         GetProcessImageFileNameA(self._process_handle, self._process_image_filename, sizeof(char) * MAX_PATH)             # <<<<<<<<<<<<<<
- * 
- *         self._snapshot32_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE, self._pid)
  */
-  (void)(GetProcessImageFileNameA(__pyx_v_self->_process_handle, __pyx_v_self->_process_image_filename, ((sizeof(char)) * MAX_PATH)));
+  __pyx_t_9 = __pyx_v_window_data.out_pid;
+  __pyx_v_app->_pid = __pyx_t_9;
 
-  /* "process.pyx":330
- *         GetProcessImageFileNameA(self._process_handle, self._process_image_filename, sizeof(char) * MAX_PATH)
+  /* "process.pyx":329
+ *         app._window_name = window_data.out_full_window_name
+ *         app._pid = window_data.out_pid
+ *         app.is_verbose = is_verbose             # <<<<<<<<<<<<<<
  * 
- *         self._snapshot32_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE, self._pid)             # <<<<<<<<<<<<<<
- * 
- *         self._modules_info = collect_all_module_information(self._snapshot32_handle)
+ *         app._process_image_filename = <char*>malloc(
  */
-  __pyx_v_self->_snapshot32_handle = CreateToolhelp32Snapshot((TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE), __pyx_v_self->_pid);
+  __pyx_v_app->is_verbose = __pyx_v_is_verbose;
 
-  /* "process.pyx":332
- *         self._snapshot32_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE, self._pid)
+  /* "process.pyx":331
+ *         app.is_verbose = is_verbose
  * 
- *         self._modules_info = collect_all_module_information(self._snapshot32_handle)             # <<<<<<<<<<<<<<
- * 
- *         if not self._window_handle:
+ *         app._process_image_filename = <char*>malloc(             # <<<<<<<<<<<<<<
+ *             sizeof(char) * MAX_PATH
+ *         )
  */
-  __pyx_v_self->_modules_info = __pyx_f_29cython_virtual_memory_toolkit_7process_collect_all_module_information(__pyx_v_self->_snapshot32_handle);
+  __pyx_v_app->_process_image_filename = ((char *)malloc(((sizeof(char)) * MAX_PATH)));
 
-  /* "process.pyx":334
- *         self._modules_info = collect_all_module_information(self._snapshot32_handle)
+  /* "process.pyx":335
+ *         )
  * 
- *         if not self._window_handle:             # <<<<<<<<<<<<<<
+ *         GetProcessImageFileNameA(             # <<<<<<<<<<<<<<
+ *             app._process_handle,
+ *             app._process_image_filename,
+ */
+  (void)(GetProcessImageFileNameA(__pyx_v_app->_process_handle, __pyx_v_app->_process_image_filename, ((sizeof(char)) * MAX_PATH)));
+
+  /* "process.pyx":341
+ *         )
+ * 
+ *         app._snapshot32_handle = CreateToolhelp32Snapshot(             # <<<<<<<<<<<<<<
+ *             TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE,
+ *             app._pid
+ */
+  __pyx_v_app->_snapshot32_handle = CreateToolhelp32Snapshot((TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE), __pyx_v_app->_pid);
+
+  /* "process.pyx":346
+ *         )
+ * 
+ *         app._modules_info = collect_all_module_information(             # <<<<<<<<<<<<<<
+ *             app._snapshot32_handle
+ *         )
+ */
+  __pyx_v_app->_modules_info = __pyx_f_29cython_virtual_memory_toolkit_7process_collect_all_module_information(__pyx_v_app->_snapshot32_handle);
+
+  /* "process.pyx":350
+ *         )
+ * 
+ *         if not app._window_handle:             # <<<<<<<<<<<<<<
  *             if is_verbose:
  *                 print("=================================================")
  */
-  __pyx_t_5 = ((!(__pyx_v_self->_window_handle != 0)) != 0);
-  if (__pyx_t_5) {
+  __pyx_t_2 = ((!(__pyx_v_app->_window_handle != 0)) != 0);
+  if (__pyx_t_2) {
 
-    /* "process.pyx":335
+    /* "process.pyx":351
  * 
- *         if not self._window_handle:
+ *         if not app._window_handle:
  *             if is_verbose:             # <<<<<<<<<<<<<<
  *                 print("=================================================")
  *                 print(" Cannot find window name with substring: ", window_name_substring)
  */
-    __pyx_t_5 = (__pyx_v_is_verbose != 0);
-    if (__pyx_t_5) {
+    __pyx_t_2 = (__pyx_v_is_verbose != 0);
+    if (__pyx_t_2) {
 
-      /* "process.pyx":336
- *         if not self._window_handle:
+      /* "process.pyx":352
+ *         if not app._window_handle:
  *             if is_verbose:
  *                 print("=================================================")             # <<<<<<<<<<<<<<
  *                 print(" Cannot find window name with substring: ", window_name_substring)
  *                 print("=================================================")
  */
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 336, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "process.pyx":337
+      /* "process.pyx":353
  *             if is_verbose:
  *                 print("=================================================")
  *                 print(" Cannot find window name with substring: ", window_name_substring)             # <<<<<<<<<<<<<<
  *                 print("=================================================")
  *             raise MemoryError("Cannot find window with name with substring: ", window_name_substring)
  */
-      __pyx_t_6 = __Pyx_PyBytes_FromString(__pyx_v_window_name_substring); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 337, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 337, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_1 = __Pyx_PyBytes_FromString(__pyx_v_window_name_substring); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
       __Pyx_INCREF(__pyx_kp_u_Cannot_find_window_name_with_su);
       __Pyx_GIVEREF(__pyx_kp_u_Cannot_find_window_name_with_su);
-      PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_kp_u_Cannot_find_window_name_with_su);
-      __Pyx_GIVEREF(__pyx_t_6);
-      PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_6);
-      __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_7, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 337, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_kp_u_Cannot_find_window_name_with_su);
+      __Pyx_GIVEREF(__pyx_t_1);
+      PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_1);
+      __pyx_t_1 = 0;
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "process.pyx":338
+      /* "process.pyx":354
  *                 print("=================================================")
  *                 print(" Cannot find window name with substring: ", window_name_substring)
  *                 print("=================================================")             # <<<<<<<<<<<<<<
  *             raise MemoryError("Cannot find window with name with substring: ", window_name_substring)
  * 
  */
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 338, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 354, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "process.pyx":335
+      /* "process.pyx":351
  * 
- *         if not self._window_handle:
+ *         if not app._window_handle:
  *             if is_verbose:             # <<<<<<<<<<<<<<
  *                 print("=================================================")
  *                 print(" Cannot find window name with substring: ", window_name_substring)
  */
     }
 
-    /* "process.pyx":339
+    /* "process.pyx":355
  *                 print(" Cannot find window name with substring: ", window_name_substring)
  *                 print("=================================================")
  *             raise MemoryError("Cannot find window with name with substring: ", window_name_substring)             # <<<<<<<<<<<<<<
  * 
- *         if not self._process_handle:
+ *         if not app._process_handle:
  */
-    __pyx_t_6 = __Pyx_PyBytes_FromString(__pyx_v_window_name_substring); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 339, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 339, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_1 = __Pyx_PyBytes_FromString(__pyx_v_window_name_substring); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_kp_u_Cannot_find_window_with_name_wit);
     __Pyx_GIVEREF(__pyx_kp_u_Cannot_find_window_with_name_wit);
-    PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_kp_u_Cannot_find_window_with_name_wit);
-    __Pyx_GIVEREF(__pyx_t_6);
-    PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_6);
-    __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_t_7, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 339, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_Raise(__pyx_t_6, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 339, __pyx_L1_error)
+    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_kp_u_Cannot_find_window_with_name_wit);
+    __Pyx_GIVEREF(__pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_1);
+    __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __PYX_ERR(0, 355, __pyx_L1_error)
 
-    /* "process.pyx":334
- *         self._modules_info = collect_all_module_information(self._snapshot32_handle)
+    /* "process.pyx":350
+ *         )
  * 
- *         if not self._window_handle:             # <<<<<<<<<<<<<<
+ *         if not app._window_handle:             # <<<<<<<<<<<<<<
  *             if is_verbose:
  *                 print("=================================================")
  */
   }
 
-  /* "process.pyx":341
+  /* "process.pyx":357
  *             raise MemoryError("Cannot find window with name with substring: ", window_name_substring)
  * 
- *         if not self._process_handle:             # <<<<<<<<<<<<<<
+ *         if not app._process_handle:             # <<<<<<<<<<<<<<
  *             error_code = GetLastError()
  *             if error_code == 5 or error_code == 6:
  */
-  __pyx_t_5 = ((!(__pyx_v_self->_process_handle != 0)) != 0);
-  if (__pyx_t_5) {
+  __pyx_t_2 = ((!(__pyx_v_app->_process_handle != 0)) != 0);
+  if (__pyx_t_2) {
 
-    /* "process.pyx":342
+    /* "process.pyx":358
  * 
- *         if not self._process_handle:
+ *         if not app._process_handle:
  *             error_code = GetLastError()             # <<<<<<<<<<<<<<
  *             if error_code == 5 or error_code == 6:
  *                 if is_verbose:
  */
     __pyx_v_error_code = GetLastError();
 
-    /* "process.pyx":343
- *         if not self._process_handle:
+    /* "process.pyx":359
+ *         if not app._process_handle:
  *             error_code = GetLastError()
  *             if error_code == 5 or error_code == 6:             # <<<<<<<<<<<<<<
  *                 if is_verbose:
@@ -4860,61 +4963,61 @@ static int __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application___cin
       case 5:
       case 6:
 
-      /* "process.pyx":344
+      /* "process.pyx":360
  *             error_code = GetLastError()
  *             if error_code == 5 or error_code == 6:
  *                 if is_verbose:             # <<<<<<<<<<<<<<
  *                     print("=================================================")
  *                     print(" Unable to get a privilaged handle to target ")
  */
-      __pyx_t_5 = (__pyx_v_is_verbose != 0);
-      if (__pyx_t_5) {
+      __pyx_t_2 = (__pyx_v_is_verbose != 0);
+      if (__pyx_t_2) {
 
-        /* "process.pyx":345
+        /* "process.pyx":361
  *             if error_code == 5 or error_code == 6:
  *                 if is_verbose:
  *                     print("=================================================")             # <<<<<<<<<<<<<<
  *                     print(" Unable to get a privilaged handle to target ")
  *                     print(" process, please re-run using administrator :) ")
  */
-        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 345, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_6);
-        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 361, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "process.pyx":346
+        /* "process.pyx":362
  *                 if is_verbose:
  *                     print("=================================================")
  *                     print(" Unable to get a privilaged handle to target ")             # <<<<<<<<<<<<<<
  *                     print(" process, please re-run using administrator :) ")
  *                     print("=================================================")
  */
-        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 346, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_6);
-        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 362, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "process.pyx":347
+        /* "process.pyx":363
  *                     print("=================================================")
  *                     print(" Unable to get a privilaged handle to target ")
  *                     print(" process, please re-run using administrator :) ")             # <<<<<<<<<<<<<<
  *                     print("=================================================")
  *                 raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")
  */
-        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 347, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_6);
-        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "process.pyx":348
+        /* "process.pyx":364
  *                     print(" Unable to get a privilaged handle to target ")
  *                     print(" process, please re-run using administrator :) ")
  *                     print("=================================================")             # <<<<<<<<<<<<<<
  *                 raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")
  *             if is_verbose:
  */
-        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 348, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_6);
-        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 364, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "process.pyx":344
+        /* "process.pyx":360
  *             error_code = GetLastError()
  *             if error_code == 5 or error_code == 6:
  *                 if is_verbose:             # <<<<<<<<<<<<<<
@@ -4923,21 +5026,21 @@ static int __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application___cin
  */
       }
 
-      /* "process.pyx":349
+      /* "process.pyx":365
  *                     print(" process, please re-run using administrator :) ")
  *                     print("=================================================")
  *                 raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")             # <<<<<<<<<<<<<<
  *             if is_verbose:
  *                 print("=================================================")
  */
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 349, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_Raise(__pyx_t_6, 0, 0, 0);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __PYX_ERR(0, 349, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 365, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __PYX_ERR(0, 365, __pyx_L1_error)
 
-      /* "process.pyx":343
- *         if not self._process_handle:
+      /* "process.pyx":359
+ *         if not app._process_handle:
  *             error_code = GetLastError()
  *             if error_code == 5 or error_code == 6:             # <<<<<<<<<<<<<<
  *                 if is_verbose:
@@ -4947,70 +5050,70 @@ static int __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application___cin
       default: break;
     }
 
-    /* "process.pyx":350
+    /* "process.pyx":366
  *                     print("=================================================")
  *                 raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")
  *             if is_verbose:             # <<<<<<<<<<<<<<
  *                 print("=================================================")
  *                 print(" Unable to get a privilaged handle to target ")
  */
-    __pyx_t_5 = (__pyx_v_is_verbose != 0);
-    if (__pyx_t_5) {
+    __pyx_t_2 = (__pyx_v_is_verbose != 0);
+    if (__pyx_t_2) {
 
-      /* "process.pyx":351
+      /* "process.pyx":367
  *                 raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")
  *             if is_verbose:
  *                 print("=================================================")             # <<<<<<<<<<<<<<
  *                 print(" Unable to get a privilaged handle to target ")
  *                 print(" process, unknown error. Error code: " + str(error_code) )
  */
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 351, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 367, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "process.pyx":352
+      /* "process.pyx":368
  *             if is_verbose:
  *                 print("=================================================")
  *                 print(" Unable to get a privilaged handle to target ")             # <<<<<<<<<<<<<<
  *                 print(" process, unknown error. Error code: " + str(error_code) )
  *                 print("=================================================")
  */
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 352, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 368, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "process.pyx":353
+      /* "process.pyx":369
  *                 print("=================================================")
  *                 print(" Unable to get a privilaged handle to target ")
  *                 print(" process, unknown error. Error code: " + str(error_code) )             # <<<<<<<<<<<<<<
  *                 print("=================================================")
  * 
  */
-      __pyx_t_6 = __Pyx_PyInt_From_unsigned_long(__pyx_v_error_code); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 353, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 353, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_process_unknown_error_Error_cod, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 353, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = __Pyx_PyObject_CallOneArg(__pyx_builtin_print, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 353, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __pyx_t_1 = __Pyx_PyInt_From_unsigned_long(__pyx_v_error_code); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 369, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 369, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_kp_u_process_unknown_error_Error_cod, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 369, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_print, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 369, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "process.pyx":354
+      /* "process.pyx":370
  *                 print(" Unable to get a privilaged handle to target ")
  *                 print(" process, unknown error. Error code: " + str(error_code) )
  *                 print("=================================================")             # <<<<<<<<<<<<<<
  * 
  *             raise RuntimeError("Unable to get a privilaged handle to target process, unknown error. Error code: " + str(error_code) + ". You can find the reason for the error by querying the error code here: https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes")
  */
-      __pyx_t_7 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 354, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 370, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "process.pyx":350
+      /* "process.pyx":366
  *                     print("=================================================")
  *                 raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")
  *             if is_verbose:             # <<<<<<<<<<<<<<
@@ -5019,205 +5122,217 @@ static int __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application___cin
  */
     }
 
-    /* "process.pyx":356
+    /* "process.pyx":372
  *                 print("=================================================")
  * 
  *             raise RuntimeError("Unable to get a privilaged handle to target process, unknown error. Error code: " + str(error_code) + ". You can find the reason for the error by querying the error code here: https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes")             # <<<<<<<<<<<<<<
  * 
  *         cdef MODULEENTRY32 cur_mod
  */
-    __pyx_t_7 = __Pyx_PyInt_From_unsigned_long(__pyx_v_error_code); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 356, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 356, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Unable_to_get_a_privilaged_handl_2, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 356, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_t_7, __pyx_kp_u_You_can_find_the_reason_for_the); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 356, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = __Pyx_PyObject_CallOneArg(__pyx_builtin_RuntimeError, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 356, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_Raise(__pyx_t_7, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __PYX_ERR(0, 356, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_unsigned_long(__pyx_v_error_code); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Unable_to_get_a_privilaged_handl_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_t_3, __pyx_kp_u_You_can_find_the_reason_for_the); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_RuntimeError, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_Raise(__pyx_t_3, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __PYX_ERR(0, 372, __pyx_L1_error)
 
-    /* "process.pyx":341
+    /* "process.pyx":357
  *             raise MemoryError("Cannot find window with name with substring: ", window_name_substring)
  * 
- *         if not self._process_handle:             # <<<<<<<<<<<<<<
+ *         if not app._process_handle:             # <<<<<<<<<<<<<<
  *             error_code = GetLastError()
  *             if error_code == 5 or error_code == 6:
  */
   }
 
-  /* "process.pyx":360
+  /* "process.pyx":376
  *         cdef MODULEENTRY32 cur_mod
  * 
  *         for i in range(MAX_MODULES):             # <<<<<<<<<<<<<<
- *             cur_mod = self._modules_info[i]
+ *             cur_mod = app._modules_info[i]
  *             if cur_mod.modBaseSize != 0:
  */
-  __pyx_t_8 = __pyx_v_29cython_virtual_memory_toolkit_7process_MAX_MODULES;
-  __pyx_t_9 = __pyx_t_8;
-  for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
-    __pyx_v_i = __pyx_t_10;
+  __pyx_t_10 = __pyx_v_29cython_virtual_memory_toolkit_7process_MAX_MODULES;
+  __pyx_t_11 = __pyx_t_10;
+  for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_11; __pyx_t_12+=1) {
+    __pyx_v_i = __pyx_t_12;
 
-    /* "process.pyx":361
+    /* "process.pyx":377
  * 
  *         for i in range(MAX_MODULES):
- *             cur_mod = self._modules_info[i]             # <<<<<<<<<<<<<<
+ *             cur_mod = app._modules_info[i]             # <<<<<<<<<<<<<<
  *             if cur_mod.modBaseSize != 0:
- *                 self._py_modules_ordered_list.append(
+ *                 app._py_modules_ordered_list.append(
  */
-    __pyx_v_cur_mod = (__pyx_v_self->_modules_info[__pyx_v_i]);
+    __pyx_v_cur_mod = (__pyx_v_app->_modules_info[__pyx_v_i]);
 
-    /* "process.pyx":362
+    /* "process.pyx":378
  *         for i in range(MAX_MODULES):
- *             cur_mod = self._modules_info[i]
+ *             cur_mod = app._modules_info[i]
  *             if cur_mod.modBaseSize != 0:             # <<<<<<<<<<<<<<
- *                 self._py_modules_ordered_list.append(
+ *                 app._py_modules_ordered_list.append(
  *                     (
  */
-    __pyx_t_5 = ((__pyx_v_cur_mod.modBaseSize != 0) != 0);
-    if (__pyx_t_5) {
+    __pyx_t_2 = ((__pyx_v_cur_mod.modBaseSize != 0) != 0);
+    if (__pyx_t_2) {
 
-      /* "process.pyx":363
- *             cur_mod = self._modules_info[i]
+      /* "process.pyx":379
+ *             cur_mod = app._modules_info[i]
  *             if cur_mod.modBaseSize != 0:
- *                 self._py_modules_ordered_list.append(             # <<<<<<<<<<<<<<
+ *                 app._py_modules_ordered_list.append(             # <<<<<<<<<<<<<<
  *                     (
  *                         cur_mod.szModule,
  */
-      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_py_modules_ordered_list); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 363, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_app), __pyx_n_s_py_modules_ordered_list); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 379, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
 
-      /* "process.pyx":365
- *                 self._py_modules_ordered_list.append(
+      /* "process.pyx":381
+ *                 app._py_modules_ordered_list.append(
  *                     (
  *                         cur_mod.szModule,             # <<<<<<<<<<<<<<
  *                         <unsigned long long>cur_mod.modBaseAddr
  *                     )
  */
-      __pyx_t_6 = __Pyx_PyBytes_FromString(__pyx_v_cur_mod.szModule); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 365, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_1 = __Pyx_PyBytes_FromString(__pyx_v_cur_mod.szModule); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 381, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
 
-      /* "process.pyx":366
+      /* "process.pyx":382
  *                     (
  *                         cur_mod.szModule,
  *                         <unsigned long long>cur_mod.modBaseAddr             # <<<<<<<<<<<<<<
  *                     )
  *                 )
  */
-      __pyx_t_11 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_cur_mod.modBaseAddr)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 366, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_11);
+      __pyx_t_4 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_cur_mod.modBaseAddr)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 382, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
 
-      /* "process.pyx":365
- *                 self._py_modules_ordered_list.append(
+      /* "process.pyx":381
+ *                 app._py_modules_ordered_list.append(
  *                     (
  *                         cur_mod.szModule,             # <<<<<<<<<<<<<<
  *                         <unsigned long long>cur_mod.modBaseAddr
  *                     )
  */
-      __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 365, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_12);
-      __Pyx_GIVEREF(__pyx_t_6);
-      PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_6);
-      __Pyx_GIVEREF(__pyx_t_11);
-      PyTuple_SET_ITEM(__pyx_t_12, 1, __pyx_t_11);
-      __pyx_t_6 = 0;
-      __pyx_t_11 = 0;
+      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 381, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_GIVEREF(__pyx_t_1);
+      PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_1);
+      __Pyx_GIVEREF(__pyx_t_4);
+      PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_4);
+      __pyx_t_1 = 0;
+      __pyx_t_4 = 0;
 
-      /* "process.pyx":363
- *             cur_mod = self._modules_info[i]
+      /* "process.pyx":379
+ *             cur_mod = app._modules_info[i]
  *             if cur_mod.modBaseSize != 0:
- *                 self._py_modules_ordered_list.append(             # <<<<<<<<<<<<<<
+ *                 app._py_modules_ordered_list.append(             # <<<<<<<<<<<<<<
  *                     (
  *                         cur_mod.szModule,
  */
-      __pyx_t_13 = __Pyx_PyObject_Append(__pyx_t_7, __pyx_t_12); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 363, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+      __pyx_t_13 = __Pyx_PyObject_Append(__pyx_t_3, __pyx_t_5); if (unlikely(__pyx_t_13 == ((int)-1))) __PYX_ERR(0, 379, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "process.pyx":370
+      /* "process.pyx":386
  *                 )
  * 
- *                 self._py_modules_dict[cur_mod.szModule] = <unsigned long long>cur_mod.modBaseAddr             # <<<<<<<<<<<<<<
+ *                 app._py_modules_dict[cur_mod.szModule] = <unsigned long long>cur_mod.modBaseAddr             # <<<<<<<<<<<<<<
  * 
- *         self._py_modules_ordered_list.sort(key = lambda x: x[1])
+ *         app._py_modules_ordered_list.sort(key = lambda x: x[1])
  */
-      __pyx_t_12 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_cur_mod.modBaseAddr)); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 370, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_py_modules_dict); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 370, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_11 = __Pyx_PyBytes_FromString(__pyx_v_cur_mod.szModule); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 370, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_11);
-      if (unlikely(PyObject_SetItem(__pyx_t_7, __pyx_t_11, __pyx_t_12) < 0)) __PYX_ERR(0, 370, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+      __pyx_t_5 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_cur_mod.modBaseAddr)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 386, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_app), __pyx_n_s_py_modules_dict); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 386, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_cur_mod.szModule); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 386, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      if (unlikely(PyObject_SetItem(__pyx_t_3, __pyx_t_4, __pyx_t_5) < 0)) __PYX_ERR(0, 386, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "process.pyx":362
+      /* "process.pyx":378
  *         for i in range(MAX_MODULES):
- *             cur_mod = self._modules_info[i]
+ *             cur_mod = app._modules_info[i]
  *             if cur_mod.modBaseSize != 0:             # <<<<<<<<<<<<<<
- *                 self._py_modules_ordered_list.append(
+ *                 app._py_modules_ordered_list.append(
  *                     (
  */
     }
   }
 
-  /* "process.pyx":372
- *                 self._py_modules_dict[cur_mod.szModule] = <unsigned long long>cur_mod.modBaseAddr
+  /* "process.pyx":388
+ *                 app._py_modules_dict[cur_mod.szModule] = <unsigned long long>cur_mod.modBaseAddr
  * 
- *         self._py_modules_ordered_list.sort(key = lambda x: x[1])             # <<<<<<<<<<<<<<
+ *         app._py_modules_ordered_list.sort(key = lambda x: x[1])             # <<<<<<<<<<<<<<
+ * 
+ *         return app
+ */
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_app), __pyx_n_s_py_modules_ordered_list); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 388, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_sort); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 388, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 388, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_29cython_virtual_memory_toolkit_7process_9AppHandle_16from_window_name_lambda, 0, __pyx_n_s_from_window_name_locals_lambda, NULL, __pyx_n_s_cython_virtual_memory_toolkit_pr, __pyx_d, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 388, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_key, __pyx_t_3) < 0) __PYX_ERR(0, 388, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 388, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "process.pyx":390
+ *         app._py_modules_ordered_list.sort(key = lambda x: x[1])
+ * 
+ *         return app             # <<<<<<<<<<<<<<
  * 
  *     def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes) -> int:
  */
-  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_py_modules_ordered_list); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 372, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_sort); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 372, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 372, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_29cython_virtual_memory_toolkit_7process_11Application_9__cinit___lambda, 0, __pyx_n_s_cinit___locals_lambda, NULL, __pyx_n_s_cython_virtual_memory_toolkit_pr, __pyx_d, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 372, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_key, __pyx_t_7) < 0) __PYX_ERR(0, 372, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_11, __pyx_empty_tuple, __pyx_t_12); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 372, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __Pyx_XDECREF(((PyObject *)__pyx_r));
+  __Pyx_INCREF(((PyObject *)__pyx_v_app));
+  __pyx_r = __pyx_v_app;
+  goto __pyx_L0;
 
-  /* "process.pyx":317
- *     _py_modules_dict: dict[bytes, int] = {}
+  /* "process.pyx":318
  * 
- *     def __cinit__(self, char* window_name_substring, bint is_verbose = False):             # <<<<<<<<<<<<<<
- * 
- *         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
+ *     @staticmethod
+ *     def from_window_name(char* window_name_substring, bint is_verbose = False) -> AppHandle:             # <<<<<<<<<<<<<<
+ *         cdef AppHandle app = AppHandle.__new__(AppHandle)
+ *         cdef unsigned long error_code
  */
 
   /* function exit code */
-  __pyx_r = 0;
-  goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_XDECREF(__pyx_t_12);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.from_window_name", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XDECREF((PyObject *)__pyx_v_app);
+  __Pyx_XGIVEREF((PyObject *)__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "process.pyx":374
- *         self._py_modules_ordered_list.sort(key = lambda x: x[1])
+/* "process.pyx":392
+ *         return app
  * 
  *     def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes) -> int:             # <<<<<<<<<<<<<<
  *         if not search_bytes:
@@ -5225,8 +5340,8 @@ static int __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application___cin
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_3search_process_memory(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_3search_process_memory(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_3search_process_memory(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_3search_process_memory(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   SIZE_T __pyx_v_start_address;
   SIZE_T __pyx_v_end_address;
   PyObject *__pyx_v_search_bytes = 0;
@@ -5261,17 +5376,17 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_end_address)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("search_process_memory", 1, 3, 3, 1); __PYX_ERR(0, 374, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("search_process_memory", 1, 3, 3, 1); __PYX_ERR(0, 392, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_search_bytes)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("search_process_memory", 1, 3, 3, 2); __PYX_ERR(0, 374, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("search_process_memory", 1, 3, 3, 2); __PYX_ERR(0, 392, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "search_process_memory") < 0)) __PYX_ERR(0, 374, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "search_process_memory") < 0)) __PYX_ERR(0, 392, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -5280,20 +5395,20 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
-    __pyx_v_start_address = __Pyx_PyInt_As_ULONG_PTR(values[0]); if (unlikely((__pyx_v_start_address == ((SIZE_T)-1)) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L3_error)
-    __pyx_v_end_address = __Pyx_PyInt_As_ULONG_PTR(values[1]); if (unlikely((__pyx_v_end_address == ((SIZE_T)-1)) && PyErr_Occurred())) __PYX_ERR(0, 374, __pyx_L3_error)
+    __pyx_v_start_address = __Pyx_PyInt_As_ULONG_PTR(values[0]); if (unlikely((__pyx_v_start_address == ((SIZE_T)-1)) && PyErr_Occurred())) __PYX_ERR(0, 392, __pyx_L3_error)
+    __pyx_v_end_address = __Pyx_PyInt_As_ULONG_PTR(values[1]); if (unlikely((__pyx_v_end_address == ((SIZE_T)-1)) && PyErr_Occurred())) __PYX_ERR(0, 392, __pyx_L3_error)
     __pyx_v_search_bytes = ((PyObject*)values[2]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("search_process_memory", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 374, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("search_process_memory", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 392, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.search_process_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.search_process_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_search_bytes), (&PyBytes_Type), 1, "search_bytes", 1))) __PYX_ERR(0, 374, __pyx_L1_error)
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_2search_process_memory(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_start_address, __pyx_v_end_address, __pyx_v_search_bytes);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_search_bytes), (&PyBytes_Type), 1, "search_bytes", 1))) __PYX_ERR(0, 392, __pyx_L1_error)
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_2search_process_memory(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_start_address, __pyx_v_end_address, __pyx_v_search_bytes);
 
   /* function exit code */
   goto __pyx_L0;
@@ -5304,7 +5419,7 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_2search_process_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, SIZE_T __pyx_v_start_address, SIZE_T __pyx_v_end_address, PyObject *__pyx_v_search_bytes) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_2search_process_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, SIZE_T __pyx_v_start_address, SIZE_T __pyx_v_end_address, PyObject *__pyx_v_search_bytes) {
   size_t __pyx_v_num_bytes;
   PBYTE __pyx_v_c_search_bytes;
   size_t __pyx_v_i;
@@ -5324,7 +5439,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("search_process_memory", 0);
 
-  /* "process.pyx":375
+  /* "process.pyx":393
  * 
  *     def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes) -> int:
  *         if not search_bytes:             # <<<<<<<<<<<<<<
@@ -5335,20 +5450,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_2 = ((!__pyx_t_1) != 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "process.pyx":376
+    /* "process.pyx":394
  *     def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes) -> int:
  *         if not search_bytes:
  *             raise ValueError("Search bytes must not be empty.")             # <<<<<<<<<<<<<<
  * 
  *         cdef size_t num_bytes = len(search_bytes)
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 376, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 394, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 376, __pyx_L1_error)
+    __PYX_ERR(0, 394, __pyx_L1_error)
 
-    /* "process.pyx":375
+    /* "process.pyx":393
  * 
  *     def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes) -> int:
  *         if not search_bytes:             # <<<<<<<<<<<<<<
@@ -5357,7 +5472,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":378
+  /* "process.pyx":396
  *             raise ValueError("Search bytes must not be empty.")
  * 
  *         cdef size_t num_bytes = len(search_bytes)             # <<<<<<<<<<<<<<
@@ -5366,12 +5481,12 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   if (unlikely(__pyx_v_search_bytes == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 378, __pyx_L1_error)
+    __PYX_ERR(0, 396, __pyx_L1_error)
   }
-  __pyx_t_4 = PyBytes_GET_SIZE(__pyx_v_search_bytes); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 378, __pyx_L1_error)
+  __pyx_t_4 = PyBytes_GET_SIZE(__pyx_v_search_bytes); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 396, __pyx_L1_error)
   __pyx_v_num_bytes = __pyx_t_4;
 
-  /* "process.pyx":380
+  /* "process.pyx":398
  *         cdef size_t num_bytes = len(search_bytes)
  * 
  *         cdef PBYTE c_search_bytes = <PBYTE>calloc(num_bytes, sizeof(BYTE))             # <<<<<<<<<<<<<<
@@ -5380,7 +5495,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_c_search_bytes = ((PBYTE)calloc(__pyx_v_num_bytes, (sizeof(BYTE))));
 
-  /* "process.pyx":381
+  /* "process.pyx":399
  * 
  *         cdef PBYTE c_search_bytes = <PBYTE>calloc(num_bytes, sizeof(BYTE))
  *         if not c_search_bytes:             # <<<<<<<<<<<<<<
@@ -5390,20 +5505,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_2 = ((!(__pyx_v_c_search_bytes != 0)) != 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "process.pyx":382
+    /* "process.pyx":400
  *         cdef PBYTE c_search_bytes = <PBYTE>calloc(num_bytes, sizeof(BYTE))
  *         if not c_search_bytes:
  *             raise MemoryError("Cannot allocate memory for search bytes.")             # <<<<<<<<<<<<<<
  * 
  *         for i in range(num_bytes):
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 382, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 400, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 382, __pyx_L1_error)
+    __PYX_ERR(0, 400, __pyx_L1_error)
 
-    /* "process.pyx":381
+    /* "process.pyx":399
  * 
  *         cdef PBYTE c_search_bytes = <PBYTE>calloc(num_bytes, sizeof(BYTE))
  *         if not c_search_bytes:             # <<<<<<<<<<<<<<
@@ -5412,7 +5527,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":384
+  /* "process.pyx":402
  *             raise MemoryError("Cannot allocate memory for search bytes.")
  * 
  *         for i in range(num_bytes):             # <<<<<<<<<<<<<<
@@ -5424,21 +5539,21 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
     __pyx_v_i = __pyx_t_7;
 
-    /* "process.pyx":385
+    /* "process.pyx":403
  * 
  *         for i in range(num_bytes):
  *             c_search_bytes[i] = <BYTE>search_bytes[i]             # <<<<<<<<<<<<<<
  * 
  *         cdef SIZE_T found_address
  */
-    __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_search_bytes, __pyx_v_i, size_t, 0, __Pyx_PyInt_FromSize_t, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 385, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_search_bytes, __pyx_v_i, size_t, 0, __Pyx_PyInt_FromSize_t, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 403, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_8 = __Pyx_PyInt_As_BYTE(__pyx_t_3); if (unlikely((__pyx_t_8 == ((BYTE)-1)) && PyErr_Occurred())) __PYX_ERR(0, 385, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_BYTE(__pyx_t_3); if (unlikely((__pyx_t_8 == ((BYTE)-1)) && PyErr_Occurred())) __PYX_ERR(0, 403, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     (__pyx_v_c_search_bytes[__pyx_v_i]) = ((BYTE)__pyx_t_8);
   }
 
-  /* "process.pyx":388
+  /* "process.pyx":406
  * 
  *         cdef SIZE_T found_address
  *         try:             # <<<<<<<<<<<<<<
@@ -5447,7 +5562,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   /*try:*/ {
 
-    /* "process.pyx":390
+    /* "process.pyx":408
  *         try:
  *             # Call the search function with the C bytes array
  *             found_address = search_memory(             # <<<<<<<<<<<<<<
@@ -5457,7 +5572,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_v_found_address = __pyx_f_29cython_virtual_memory_toolkit_7process_search_memory(__pyx_v_self->_process_handle, __pyx_v_start_address, __pyx_v_end_address, __pyx_v_c_search_bytes, __pyx_v_num_bytes);
   }
 
-  /* "process.pyx":399
+  /* "process.pyx":417
  *         finally:
  *             # Ensure memory is freed even if the search throws an exception
  *             free(c_search_bytes)             # <<<<<<<<<<<<<<
@@ -5472,7 +5587,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_L9:;
   }
 
-  /* "process.pyx":401
+  /* "process.pyx":419
  *             free(c_search_bytes)
  * 
  *         return found_address             # <<<<<<<<<<<<<<
@@ -5480,14 +5595,14 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     def write_memory_bytes(self, unsigned long long address, bytes bytes_to_write) -> None:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_3 = __Pyx_PyInt_From_ULONG_PTR(__pyx_v_found_address); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 401, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_ULONG_PTR(__pyx_v_found_address); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 419, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":374
- *         self._py_modules_ordered_list.sort(key = lambda x: x[1])
+  /* "process.pyx":392
+ *         return app
  * 
  *     def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes) -> int:             # <<<<<<<<<<<<<<
  *         if not search_bytes:
@@ -5497,7 +5612,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.search_process_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.search_process_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -5505,7 +5620,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":403
+/* "process.pyx":421
  *         return found_address
  * 
  *     def write_memory_bytes(self, unsigned long long address, bytes bytes_to_write) -> None:             # <<<<<<<<<<<<<<
@@ -5514,8 +5629,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_5write_memory_bytes(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_5write_memory_bytes(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_5write_memory_bytes(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_5write_memory_bytes(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   PyObject *__pyx_v_bytes_to_write = 0;
   int __pyx_lineno = 0;
@@ -5547,11 +5662,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_bytes_to_write)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_bytes", 1, 2, 2, 1); __PYX_ERR(0, 403, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_bytes", 1, 2, 2, 1); __PYX_ERR(0, 421, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_bytes") < 0)) __PYX_ERR(0, 403, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_bytes") < 0)) __PYX_ERR(0, 421, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -5559,19 +5674,19 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 403, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 421, __pyx_L3_error)
     __pyx_v_bytes_to_write = ((PyObject*)values[1]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_bytes", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 403, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_bytes", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 421, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_bytes", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_bytes", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_bytes_to_write), (&PyBytes_Type), 1, "bytes_to_write", 1))) __PYX_ERR(0, 403, __pyx_L1_error)
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_4write_memory_bytes(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_bytes_to_write);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_bytes_to_write), (&PyBytes_Type), 1, "bytes_to_write", 1))) __PYX_ERR(0, 421, __pyx_L1_error)
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_4write_memory_bytes(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_bytes_to_write);
 
   /* function exit code */
   goto __pyx_L0;
@@ -5582,7 +5697,7 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_4write_memory_bytes(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, PyObject *__pyx_v_bytes_to_write) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_4write_memory_bytes(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, PyObject *__pyx_v_bytes_to_write) {
   char *__pyx_v_write_buffer;
   SIZE_T __pyx_v_num_bytes_written;
   Py_ssize_t __pyx_v_i;
@@ -5602,7 +5717,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("write_memory_bytes", 0);
 
-  /* "process.pyx":408
+  /* "process.pyx":426
  *         cdef SIZE_T num_bytes_written
  * 
  *         write_buffer = <char*>malloc(sizeof(char) * len(bytes_to_write))             # <<<<<<<<<<<<<<
@@ -5611,12 +5726,12 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   if (unlikely(__pyx_v_bytes_to_write == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 408, __pyx_L1_error)
+    __PYX_ERR(0, 426, __pyx_L1_error)
   }
-  __pyx_t_1 = PyBytes_GET_SIZE(__pyx_v_bytes_to_write); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 408, __pyx_L1_error)
+  __pyx_t_1 = PyBytes_GET_SIZE(__pyx_v_bytes_to_write); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 426, __pyx_L1_error)
   __pyx_v_write_buffer = ((char *)malloc(((sizeof(char)) * __pyx_t_1)));
 
-  /* "process.pyx":410
+  /* "process.pyx":428
  *         write_buffer = <char*>malloc(sizeof(char) * len(bytes_to_write))
  * 
  *         for i in range(len(bytes_to_write)):             # <<<<<<<<<<<<<<
@@ -5625,14 +5740,14 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   if (unlikely(__pyx_v_bytes_to_write == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 410, __pyx_L1_error)
+    __PYX_ERR(0, 428, __pyx_L1_error)
   }
-  __pyx_t_1 = PyBytes_GET_SIZE(__pyx_v_bytes_to_write); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 410, __pyx_L1_error)
+  __pyx_t_1 = PyBytes_GET_SIZE(__pyx_v_bytes_to_write); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 428, __pyx_L1_error)
   __pyx_t_2 = __pyx_t_1;
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "process.pyx":411
+    /* "process.pyx":429
  * 
  *         for i in range(len(bytes_to_write)):
  *             write_buffer[i] = bytes_to_write[i]             # <<<<<<<<<<<<<<
@@ -5641,13 +5756,13 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
     if (unlikely(__pyx_v_bytes_to_write == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 411, __pyx_L1_error)
+      __PYX_ERR(0, 429, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_PyBytes_GetItemInt(__pyx_v_bytes_to_write, __pyx_v_i, 1); if (unlikely(__pyx_t_4 == ((char)((char)-1)) && PyErr_Occurred())) __PYX_ERR(0, 411, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyBytes_GetItemInt(__pyx_v_bytes_to_write, __pyx_v_i, 1); if (unlikely(__pyx_t_4 == ((char)((char)-1)) && PyErr_Occurred())) __PYX_ERR(0, 429, __pyx_L1_error)
     (__pyx_v_write_buffer[__pyx_v_i]) = __pyx_t_4;
   }
 
-  /* "process.pyx":413
+  /* "process.pyx":431
  *             write_buffer[i] = bytes_to_write[i]
  * 
  *         if not write_buffer:             # <<<<<<<<<<<<<<
@@ -5657,20 +5772,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_5 = ((!(__pyx_v_write_buffer != 0)) != 0);
   if (unlikely(__pyx_t_5)) {
 
-    /* "process.pyx":414
+    /* "process.pyx":432
  * 
  *         if not write_buffer:
  *             raise MemoryError("Failed to allocate memory.")             # <<<<<<<<<<<<<<
  * 
  *         num_bytes_written = write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, len(bytes_to_write))
  */
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 414, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 432, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 414, __pyx_L1_error)
+    __PYX_ERR(0, 432, __pyx_L1_error)
 
-    /* "process.pyx":413
+    /* "process.pyx":431
  *             write_buffer[i] = bytes_to_write[i]
  * 
  *         if not write_buffer:             # <<<<<<<<<<<<<<
@@ -5679,7 +5794,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":416
+  /* "process.pyx":434
  *             raise MemoryError("Failed to allocate memory.")
  * 
  *         num_bytes_written = write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, len(bytes_to_write))             # <<<<<<<<<<<<<<
@@ -5688,12 +5803,12 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   if (unlikely(__pyx_v_bytes_to_write == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 416, __pyx_L1_error)
+    __PYX_ERR(0, 434, __pyx_L1_error)
   }
-  __pyx_t_1 = PyBytes_GET_SIZE(__pyx_v_bytes_to_write); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 416, __pyx_L1_error)
+  __pyx_t_1 = PyBytes_GET_SIZE(__pyx_v_bytes_to_write); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 434, __pyx_L1_error)
   __pyx_v_num_bytes_written = __pyx_f_29cython_virtual_memory_toolkit_7process_write_process_memory(__pyx_v_self->_process_handle, ((LPVOID)__pyx_v_address), ((LPCVOID)__pyx_v_write_buffer), __pyx_t_1);
 
-  /* "process.pyx":418
+  /* "process.pyx":436
  *         num_bytes_written = write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, len(bytes_to_write))
  * 
  *         if num_bytes_written != len(bytes_to_write):             # <<<<<<<<<<<<<<
@@ -5702,20 +5817,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   if (unlikely(__pyx_v_bytes_to_write == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 418, __pyx_L1_error)
+    __PYX_ERR(0, 436, __pyx_L1_error)
   }
-  __pyx_t_1 = PyBytes_GET_SIZE(__pyx_v_bytes_to_write); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 418, __pyx_L1_error)
+  __pyx_t_1 = PyBytes_GET_SIZE(__pyx_v_bytes_to_write); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 436, __pyx_L1_error)
   __pyx_t_5 = ((__pyx_v_num_bytes_written != __pyx_t_1) != 0);
   if (unlikely(__pyx_t_5)) {
 
-    /* "process.pyx":419
+    /* "process.pyx":437
  * 
  *         if num_bytes_written != len(bytes_to_write):
  *             raise MemoryError(f"Error writing to memory. Written bytes: {num_bytes_written}. Bytes instructed to write: {len(bytes_to_write)}.")             # <<<<<<<<<<<<<<
  * 
  * 
  */
-    __pyx_t_6 = PyTuple_New(5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 419, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 437, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_1 = 0;
     __pyx_t_7 = 127;
@@ -5723,9 +5838,9 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_t_1 += 40;
     __Pyx_GIVEREF(__pyx_kp_u_Error_writing_to_memory_Written);
     PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_kp_u_Error_writing_to_memory_Written);
-    __pyx_t_8 = __Pyx_PyInt_From_ULONG_PTR(__pyx_v_num_bytes_written); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 419, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_From_ULONG_PTR(__pyx_v_num_bytes_written); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 437, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_9 = __Pyx_PyObject_FormatSimple(__pyx_t_8, __pyx_empty_unicode); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 419, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_FormatSimple(__pyx_t_8, __pyx_empty_unicode); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 437, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __pyx_t_7 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_9) > __pyx_t_7) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_9) : __pyx_t_7;
@@ -5739,10 +5854,10 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_kp_u_Bytes_instructed_to_write);
     if (unlikely(__pyx_v_bytes_to_write == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 419, __pyx_L1_error)
+      __PYX_ERR(0, 437, __pyx_L1_error)
     }
-    __pyx_t_2 = PyBytes_GET_SIZE(__pyx_v_bytes_to_write); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 419, __pyx_L1_error)
-    __pyx_t_9 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_2, 0, ' ', 'd'); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 419, __pyx_L1_error)
+    __pyx_t_2 = PyBytes_GET_SIZE(__pyx_v_bytes_to_write); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 437, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_2, 0, ' ', 'd'); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 437, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __pyx_t_1 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_9);
     __Pyx_GIVEREF(__pyx_t_9);
@@ -5752,17 +5867,17 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_t_1 += 1;
     __Pyx_GIVEREF(__pyx_kp_u__13);
     PyTuple_SET_ITEM(__pyx_t_6, 4, __pyx_kp_u__13);
-    __pyx_t_9 = __Pyx_PyUnicode_Join(__pyx_t_6, 5, __pyx_t_1, __pyx_t_7); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 419, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyUnicode_Join(__pyx_t_6, 5, __pyx_t_1, __pyx_t_7); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 437, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_MemoryError, __pyx_t_9); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 419, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_MemoryError, __pyx_t_9); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 437, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 419, __pyx_L1_error)
+    __PYX_ERR(0, 437, __pyx_L1_error)
 
-    /* "process.pyx":418
+    /* "process.pyx":436
  *         num_bytes_written = write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, len(bytes_to_write))
  * 
  *         if num_bytes_written != len(bytes_to_write):             # <<<<<<<<<<<<<<
@@ -5771,7 +5886,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":422
+  /* "process.pyx":440
  * 
  * 
  *         free(write_buffer)             # <<<<<<<<<<<<<<
@@ -5780,7 +5895,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   free(__pyx_v_write_buffer);
 
-  /* "process.pyx":424
+  /* "process.pyx":442
  *         free(write_buffer)
  * 
  *         return             # <<<<<<<<<<<<<<
@@ -5791,7 +5906,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
 
-  /* "process.pyx":403
+  /* "process.pyx":421
  *         return found_address
  * 
  *     def write_memory_bytes(self, unsigned long long address, bytes bytes_to_write) -> None:             # <<<<<<<<<<<<<<
@@ -5804,7 +5919,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_bytes", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_bytes", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -5812,7 +5927,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":426
+/* "process.pyx":444
  *         return
  * 
  *     def write_memory_float32(self, unsigned long long address, float value) -> None:             # <<<<<<<<<<<<<<
@@ -5821,8 +5936,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_7write_memory_float32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_7write_memory_float32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_7write_memory_float32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_7write_memory_float32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   float __pyx_v_value;
   int __pyx_lineno = 0;
@@ -5854,11 +5969,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_float32", 1, 2, 2, 1); __PYX_ERR(0, 426, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_float32", 1, 2, 2, 1); __PYX_ERR(0, 444, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_float32") < 0)) __PYX_ERR(0, 426, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_float32") < 0)) __PYX_ERR(0, 444, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -5866,25 +5981,25 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 426, __pyx_L3_error)
-    __pyx_v_value = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 426, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 444, __pyx_L3_error)
+    __pyx_v_value = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 444, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_float32", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 426, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_float32", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 444, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_float32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_float32", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_6write_memory_float32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_6write_memory_float32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_6write_memory_float32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, float __pyx_v_value) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_6write_memory_float32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, float __pyx_v_value) {
   float __pyx_v_c_value;
   void *__pyx_v_write_buffer;
   PyObject *__pyx_r = NULL;
@@ -5896,7 +6011,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("write_memory_float32", 0);
 
-  /* "process.pyx":428
+  /* "process.pyx":446
  *     def write_memory_float32(self, unsigned long long address, float value) -> None:
  * 
  *         cdef float c_value = <float>value             # <<<<<<<<<<<<<<
@@ -5905,7 +6020,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_c_value = ((float)__pyx_v_value);
 
-  /* "process.pyx":431
+  /* "process.pyx":449
  * 
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*>malloc(4)  # Size for float is 4 bytes             # <<<<<<<<<<<<<<
@@ -5914,7 +6029,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_write_buffer = ((void *)malloc(4));
 
-  /* "process.pyx":432
+  /* "process.pyx":450
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*>malloc(4)  # Size for float is 4 bytes
  *         if not write_buffer:             # <<<<<<<<<<<<<<
@@ -5924,20 +6039,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_1 = ((!(__pyx_v_write_buffer != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":433
+    /* "process.pyx":451
  *         cdef void* write_buffer = <void*>malloc(4)  # Size for float is 4 bytes
  *         if not write_buffer:
  *             raise MemoryError("Failed to allocate memory buffer.")             # <<<<<<<<<<<<<<
  * 
  *         # Copy the Cython/C float value into the buffer
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 433, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 451, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 433, __pyx_L1_error)
+    __PYX_ERR(0, 451, __pyx_L1_error)
 
-    /* "process.pyx":432
+    /* "process.pyx":450
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*>malloc(4)  # Size for float is 4 bytes
  *         if not write_buffer:             # <<<<<<<<<<<<<<
@@ -5946,7 +6061,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":436
+  /* "process.pyx":454
  * 
  *         # Copy the Cython/C float value into the buffer
  *         memcpy(write_buffer, <void*>&c_value, <size_t>4)             # <<<<<<<<<<<<<<
@@ -5955,7 +6070,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   (void)(memcpy(__pyx_v_write_buffer, ((void *)(&__pyx_v_c_value)), ((size_t)4)));
 
-  /* "process.pyx":439
+  /* "process.pyx":457
  * 
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>4):             # <<<<<<<<<<<<<<
@@ -5965,7 +6080,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_1 = ((!(__pyx_f_29cython_virtual_memory_toolkit_7process_write_process_memory(__pyx_v_self->_process_handle, ((LPVOID)__pyx_v_address), ((LPCVOID)__pyx_v_write_buffer), ((size_t)4)) != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":440
+    /* "process.pyx":458
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>4):
  *             free(write_buffer)  # Ensure to free allocated memory in case of failure             # <<<<<<<<<<<<<<
@@ -5974,20 +6089,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
     free(__pyx_v_write_buffer);
 
-    /* "process.pyx":441
+    /* "process.pyx":459
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>4):
  *             free(write_buffer)  # Ensure to free allocated memory in case of failure
  *             raise OSError("Failed to write to process memory.")             # <<<<<<<<<<<<<<
  * 
  *         # Free the allocated memory
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 441, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 459, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 441, __pyx_L1_error)
+    __PYX_ERR(0, 459, __pyx_L1_error)
 
-    /* "process.pyx":439
+    /* "process.pyx":457
  * 
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>4):             # <<<<<<<<<<<<<<
@@ -5996,7 +6111,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":444
+  /* "process.pyx":462
  * 
  *         # Free the allocated memory
  *         free(write_buffer)             # <<<<<<<<<<<<<<
@@ -6005,7 +6120,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   free(__pyx_v_write_buffer);
 
-  /* "process.pyx":426
+  /* "process.pyx":444
  *         return
  * 
  *     def write_memory_float32(self, unsigned long long address, float value) -> None:             # <<<<<<<<<<<<<<
@@ -6018,7 +6133,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_float32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_float32", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -6026,7 +6141,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":446
+/* "process.pyx":464
  *         free(write_buffer)
  * 
  *     def write_memory_float64(self, unsigned long long address, double value) -> None:             # <<<<<<<<<<<<<<
@@ -6035,8 +6150,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_9write_memory_float64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_9write_memory_float64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_9write_memory_float64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_9write_memory_float64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   double __pyx_v_value;
   int __pyx_lineno = 0;
@@ -6068,11 +6183,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_float64", 1, 2, 2, 1); __PYX_ERR(0, 446, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_float64", 1, 2, 2, 1); __PYX_ERR(0, 464, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_float64") < 0)) __PYX_ERR(0, 446, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_float64") < 0)) __PYX_ERR(0, 464, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -6080,25 +6195,25 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 446, __pyx_L3_error)
-    __pyx_v_value = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 446, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 464, __pyx_L3_error)
+    __pyx_v_value = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 464, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_float64", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 446, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_float64", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 464, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_float64", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_float64", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_8write_memory_float64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_8write_memory_float64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_8write_memory_float64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, double __pyx_v_value) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_8write_memory_float64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, double __pyx_v_value) {
   double __pyx_v_c_value;
   void *__pyx_v_write_buffer;
   PyObject *__pyx_r = NULL;
@@ -6110,7 +6225,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("write_memory_float64", 0);
 
-  /* "process.pyx":448
+  /* "process.pyx":466
  *     def write_memory_float64(self, unsigned long long address, double value) -> None:
  * 
  *         cdef double c_value = <double>value             # <<<<<<<<<<<<<<
@@ -6119,7 +6234,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_c_value = ((double)__pyx_v_value);
 
-  /* "process.pyx":451
+  /* "process.pyx":469
  * 
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*>malloc(8)  # Size for float is 4 bytes             # <<<<<<<<<<<<<<
@@ -6128,7 +6243,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_write_buffer = ((void *)malloc(8));
 
-  /* "process.pyx":452
+  /* "process.pyx":470
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*>malloc(8)  # Size for float is 4 bytes
  *         if not write_buffer:             # <<<<<<<<<<<<<<
@@ -6138,20 +6253,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_1 = ((!(__pyx_v_write_buffer != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":453
+    /* "process.pyx":471
  *         cdef void* write_buffer = <void*>malloc(8)  # Size for float is 4 bytes
  *         if not write_buffer:
  *             raise MemoryError("Failed to allocate memory buffer.")             # <<<<<<<<<<<<<<
  * 
  *         # Copy the Cython/C float value into the buffer
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 453, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 471, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 453, __pyx_L1_error)
+    __PYX_ERR(0, 471, __pyx_L1_error)
 
-    /* "process.pyx":452
+    /* "process.pyx":470
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*>malloc(8)  # Size for float is 4 bytes
  *         if not write_buffer:             # <<<<<<<<<<<<<<
@@ -6160,7 +6275,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":456
+  /* "process.pyx":474
  * 
  *         # Copy the Cython/C float value into the buffer
  *         memcpy(write_buffer, <void*>&c_value, <size_t>8)             # <<<<<<<<<<<<<<
@@ -6169,7 +6284,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   (void)(memcpy(__pyx_v_write_buffer, ((void *)(&__pyx_v_c_value)), ((size_t)8)));
 
-  /* "process.pyx":459
+  /* "process.pyx":477
  * 
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>8):             # <<<<<<<<<<<<<<
@@ -6179,7 +6294,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_1 = ((!(__pyx_f_29cython_virtual_memory_toolkit_7process_write_process_memory(__pyx_v_self->_process_handle, ((LPVOID)__pyx_v_address), ((LPCVOID)__pyx_v_write_buffer), ((size_t)8)) != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":460
+    /* "process.pyx":478
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>8):
  *             free(write_buffer)  # Ensure to free allocated memory in case of failure             # <<<<<<<<<<<<<<
@@ -6188,20 +6303,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
     free(__pyx_v_write_buffer);
 
-    /* "process.pyx":461
+    /* "process.pyx":479
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>8):
  *             free(write_buffer)  # Ensure to free allocated memory in case of failure
  *             raise OSError("Failed to write to process memory.")             # <<<<<<<<<<<<<<
  * 
  *         # Free the allocated memory
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 461, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 479, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 461, __pyx_L1_error)
+    __PYX_ERR(0, 479, __pyx_L1_error)
 
-    /* "process.pyx":459
+    /* "process.pyx":477
  * 
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>8):             # <<<<<<<<<<<<<<
@@ -6210,7 +6325,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":464
+  /* "process.pyx":482
  * 
  *         # Free the allocated memory
  *         free(write_buffer)             # <<<<<<<<<<<<<<
@@ -6219,7 +6334,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   free(__pyx_v_write_buffer);
 
-  /* "process.pyx":446
+  /* "process.pyx":464
  *         free(write_buffer)
  * 
  *     def write_memory_float64(self, unsigned long long address, double value) -> None:             # <<<<<<<<<<<<<<
@@ -6232,7 +6347,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_float64", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_float64", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -6240,7 +6355,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":466
+/* "process.pyx":484
  *         free(write_buffer)
  * 
  *     cdef void write_memory_int(self, unsigned long long address, long long value, int bytes_to_write):             # <<<<<<<<<<<<<<
@@ -6248,7 +6363,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *         # Convert Python int value to Cython/C long long value
  */
 
-static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write_memory_int(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, PY_LONG_LONG __pyx_v_value, int __pyx_v_bytes_to_write) {
+static void __pyx_f_29cython_virtual_memory_toolkit_7process_9AppHandle_write_memory_int(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, PY_LONG_LONG __pyx_v_value, int __pyx_v_bytes_to_write) {
   void *__pyx_v_write_buffer;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -6258,7 +6373,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("write_memory_int", 0);
 
-  /* "process.pyx":471
+  /* "process.pyx":489
  * 
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*> malloc(bytes_to_write)             # <<<<<<<<<<<<<<
@@ -6267,7 +6382,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
   __pyx_v_write_buffer = ((void *)malloc(__pyx_v_bytes_to_write));
 
-  /* "process.pyx":472
+  /* "process.pyx":490
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*> malloc(bytes_to_write)
  *         if not write_buffer:             # <<<<<<<<<<<<<<
@@ -6277,20 +6392,20 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
   __pyx_t_1 = ((!(__pyx_v_write_buffer != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":473
+    /* "process.pyx":491
  *         cdef void* write_buffer = <void*> malloc(bytes_to_write)
  *         if not write_buffer:
  *             raise MemoryError("Failed to allocate memory buffer.")             # <<<<<<<<<<<<<<
  * 
  *         # Copy the Cython/C long long value into the buffer
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 473, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 491, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 473, __pyx_L1_error)
+    __PYX_ERR(0, 491, __pyx_L1_error)
 
-    /* "process.pyx":472
+    /* "process.pyx":490
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*> malloc(bytes_to_write)
  *         if not write_buffer:             # <<<<<<<<<<<<<<
@@ -6299,7 +6414,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
   }
 
-  /* "process.pyx":476
+  /* "process.pyx":494
  * 
  *         # Copy the Cython/C long long value into the buffer
  *         memcpy(write_buffer, &value, <size_t>bytes_to_write)             # <<<<<<<<<<<<<<
@@ -6308,7 +6423,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
   (void)(memcpy(__pyx_v_write_buffer, (&__pyx_v_value), ((size_t)__pyx_v_bytes_to_write)));
 
-  /* "process.pyx":479
+  /* "process.pyx":497
  * 
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>bytes_to_write):             # <<<<<<<<<<<<<<
@@ -6318,7 +6433,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
   __pyx_t_1 = ((!(__pyx_f_29cython_virtual_memory_toolkit_7process_write_process_memory(__pyx_v_self->_process_handle, ((LPVOID)__pyx_v_address), ((LPCVOID)__pyx_v_write_buffer), ((size_t)__pyx_v_bytes_to_write)) != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":480
+    /* "process.pyx":498
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>bytes_to_write):
  *             free(write_buffer)  # Ensure to free allocated memory in case of failure             # <<<<<<<<<<<<<<
@@ -6327,20 +6442,20 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
     free(__pyx_v_write_buffer);
 
-    /* "process.pyx":481
+    /* "process.pyx":499
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>bytes_to_write):
  *             free(write_buffer)  # Ensure to free allocated memory in case of failure
  *             raise OSError("Failed to write to process memory.")             # <<<<<<<<<<<<<<
  * 
  *         # Free the allocated memory
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 481, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 499, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 481, __pyx_L1_error)
+    __PYX_ERR(0, 499, __pyx_L1_error)
 
-    /* "process.pyx":479
+    /* "process.pyx":497
  * 
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>bytes_to_write):             # <<<<<<<<<<<<<<
@@ -6349,7 +6464,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
   }
 
-  /* "process.pyx":484
+  /* "process.pyx":502
  * 
  *         # Free the allocated memory
  *         free(write_buffer)             # <<<<<<<<<<<<<<
@@ -6358,7 +6473,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
   free(__pyx_v_write_buffer);
 
-  /* "process.pyx":466
+  /* "process.pyx":484
  *         free(write_buffer)
  * 
  *     cdef void write_memory_int(self, unsigned long long address, long long value, int bytes_to_write):             # <<<<<<<<<<<<<<
@@ -6370,12 +6485,12 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_WriteUnraisable("cython_virtual_memory_toolkit.process.Application.write_memory_int", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("cython_virtual_memory_toolkit.process.AppHandle.write_memory_int", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
 }
 
-/* "process.pyx":486
+/* "process.pyx":504
  *         free(write_buffer)
  * 
  *     cdef void write_memory_uint(self, unsigned long long address, unsigned long long value, int bytes_to_write):             # <<<<<<<<<<<<<<
@@ -6383,7 +6498,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  *         # Convert Python int value to Cython/C long long value
  */
 
-static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write_memory_uint(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned PY_LONG_LONG __pyx_v_value, int __pyx_v_bytes_to_write) {
+static void __pyx_f_29cython_virtual_memory_toolkit_7process_9AppHandle_write_memory_uint(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned PY_LONG_LONG __pyx_v_value, int __pyx_v_bytes_to_write) {
   void *__pyx_v_write_buffer;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -6393,7 +6508,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("write_memory_uint", 0);
 
-  /* "process.pyx":491
+  /* "process.pyx":509
  * 
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*> malloc(bytes_to_write)             # <<<<<<<<<<<<<<
@@ -6402,7 +6517,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
   __pyx_v_write_buffer = ((void *)malloc(__pyx_v_bytes_to_write));
 
-  /* "process.pyx":492
+  /* "process.pyx":510
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*> malloc(bytes_to_write)
  *         if not write_buffer:             # <<<<<<<<<<<<<<
@@ -6412,20 +6527,20 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
   __pyx_t_1 = ((!(__pyx_v_write_buffer != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":493
+    /* "process.pyx":511
  *         cdef void* write_buffer = <void*> malloc(bytes_to_write)
  *         if not write_buffer:
  *             raise MemoryError("Failed to allocate memory buffer.")             # <<<<<<<<<<<<<<
  * 
  *         # Copy the Cython/C long long value into the buffer
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 493, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 511, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 493, __pyx_L1_error)
+    __PYX_ERR(0, 511, __pyx_L1_error)
 
-    /* "process.pyx":492
+    /* "process.pyx":510
  *         # Allocate buffer for writing memory
  *         cdef void* write_buffer = <void*> malloc(bytes_to_write)
  *         if not write_buffer:             # <<<<<<<<<<<<<<
@@ -6434,7 +6549,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
   }
 
-  /* "process.pyx":496
+  /* "process.pyx":514
  * 
  *         # Copy the Cython/C long long value into the buffer
  *         memcpy(write_buffer, &value, <size_t>bytes_to_write)             # <<<<<<<<<<<<<<
@@ -6443,7 +6558,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
   (void)(memcpy(__pyx_v_write_buffer, (&__pyx_v_value), ((size_t)__pyx_v_bytes_to_write)));
 
-  /* "process.pyx":499
+  /* "process.pyx":517
  * 
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>bytes_to_write):             # <<<<<<<<<<<<<<
@@ -6453,7 +6568,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
   __pyx_t_1 = ((!(__pyx_f_29cython_virtual_memory_toolkit_7process_write_process_memory(__pyx_v_self->_process_handle, ((LPVOID)__pyx_v_address), ((LPCVOID)__pyx_v_write_buffer), ((size_t)__pyx_v_bytes_to_write)) != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":500
+    /* "process.pyx":518
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>bytes_to_write):
  *             free(write_buffer)  # Ensure to free allocated memory in case of failure             # <<<<<<<<<<<<<<
@@ -6462,20 +6577,20 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
     free(__pyx_v_write_buffer);
 
-    /* "process.pyx":501
+    /* "process.pyx":519
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>bytes_to_write):
  *             free(write_buffer)  # Ensure to free allocated memory in case of failure
  *             raise OSError("Failed to write to process memory.")             # <<<<<<<<<<<<<<
  * 
  *         # Free the allocated memory
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 501, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 519, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 501, __pyx_L1_error)
+    __PYX_ERR(0, 519, __pyx_L1_error)
 
-    /* "process.pyx":499
+    /* "process.pyx":517
  * 
  *         # Write the buffer to process memory
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>bytes_to_write):             # <<<<<<<<<<<<<<
@@ -6484,7 +6599,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
   }
 
-  /* "process.pyx":504
+  /* "process.pyx":522
  * 
  *         # Free the allocated memory
  *         free(write_buffer)             # <<<<<<<<<<<<<<
@@ -6493,7 +6608,7 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
   free(__pyx_v_write_buffer);
 
-  /* "process.pyx":486
+  /* "process.pyx":504
  *         free(write_buffer)
  * 
  *     cdef void write_memory_uint(self, unsigned long long address, unsigned long long value, int bytes_to_write):             # <<<<<<<<<<<<<<
@@ -6505,12 +6620,12 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_WriteUnraisable("cython_virtual_memory_toolkit.process.Application.write_memory_uint", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("cython_virtual_memory_toolkit.process.AppHandle.write_memory_uint", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
 }
 
-/* "process.pyx":506
+/* "process.pyx":524
  *         free(write_buffer)
  * 
  *     def write_memory_int8(self, unsigned long long address, long value) -> None:             # <<<<<<<<<<<<<<
@@ -6519,8 +6634,8 @@ static void __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_11write_memory_int8(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_11write_memory_int8(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_11write_memory_int8(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_11write_memory_int8(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   long __pyx_v_value;
   int __pyx_lineno = 0;
@@ -6552,11 +6667,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_int8", 1, 2, 2, 1); __PYX_ERR(0, 506, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_int8", 1, 2, 2, 1); __PYX_ERR(0, 524, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_int8") < 0)) __PYX_ERR(0, 506, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_int8") < 0)) __PYX_ERR(0, 524, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -6564,39 +6679,39 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 506, __pyx_L3_error)
-    __pyx_v_value = __Pyx_PyInt_As_long(values[1]); if (unlikely((__pyx_v_value == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 506, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 524, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyInt_As_long(values[1]); if (unlikely((__pyx_v_value == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 524, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_int8", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 506, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_int8", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 524, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_int8", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_int8", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_10write_memory_int8(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_10write_memory_int8(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_10write_memory_int8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_10write_memory_int8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("write_memory_int8", 0);
 
-  /* "process.pyx":507
+  /* "process.pyx":525
  * 
  *     def write_memory_int8(self, unsigned long long address, long value) -> None:
  *         self.write_memory_int(address, <long long>value, 1)             # <<<<<<<<<<<<<<
  * 
  *     def write_memory_int16(self, unsigned long long address, long value) -> None:
  */
-  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->write_memory_int(__pyx_v_self, __pyx_v_address, ((PY_LONG_LONG)__pyx_v_value), 1);
+  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->write_memory_int(__pyx_v_self, __pyx_v_address, ((PY_LONG_LONG)__pyx_v_value), 1);
 
-  /* "process.pyx":506
+  /* "process.pyx":524
  *         free(write_buffer)
  * 
  *     def write_memory_int8(self, unsigned long long address, long value) -> None:             # <<<<<<<<<<<<<<
@@ -6611,7 +6726,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":509
+/* "process.pyx":527
  *         self.write_memory_int(address, <long long>value, 1)
  * 
  *     def write_memory_int16(self, unsigned long long address, long value) -> None:             # <<<<<<<<<<<<<<
@@ -6620,8 +6735,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_13write_memory_int16(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_13write_memory_int16(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_13write_memory_int16(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_13write_memory_int16(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   long __pyx_v_value;
   int __pyx_lineno = 0;
@@ -6653,11 +6768,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_int16", 1, 2, 2, 1); __PYX_ERR(0, 509, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_int16", 1, 2, 2, 1); __PYX_ERR(0, 527, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_int16") < 0)) __PYX_ERR(0, 509, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_int16") < 0)) __PYX_ERR(0, 527, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -6665,39 +6780,39 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 509, __pyx_L3_error)
-    __pyx_v_value = __Pyx_PyInt_As_long(values[1]); if (unlikely((__pyx_v_value == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 509, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 527, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyInt_As_long(values[1]); if (unlikely((__pyx_v_value == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 527, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_int16", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 509, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_int16", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 527, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_int16", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_int16", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_12write_memory_int16(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_12write_memory_int16(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_12write_memory_int16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_12write_memory_int16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("write_memory_int16", 0);
 
-  /* "process.pyx":510
+  /* "process.pyx":528
  * 
  *     def write_memory_int16(self, unsigned long long address, long value) -> None:
  *         self.write_memory_int(address, <long long>value, 2)             # <<<<<<<<<<<<<<
  * 
  *     def write_memory_int32(self, unsigned long long address, long value) -> None:
  */
-  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->write_memory_int(__pyx_v_self, __pyx_v_address, ((PY_LONG_LONG)__pyx_v_value), 2);
+  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->write_memory_int(__pyx_v_self, __pyx_v_address, ((PY_LONG_LONG)__pyx_v_value), 2);
 
-  /* "process.pyx":509
+  /* "process.pyx":527
  *         self.write_memory_int(address, <long long>value, 1)
  * 
  *     def write_memory_int16(self, unsigned long long address, long value) -> None:             # <<<<<<<<<<<<<<
@@ -6712,7 +6827,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":512
+/* "process.pyx":530
  *         self.write_memory_int(address, <long long>value, 2)
  * 
  *     def write_memory_int32(self, unsigned long long address, long value) -> None:             # <<<<<<<<<<<<<<
@@ -6721,8 +6836,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_15write_memory_int32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_15write_memory_int32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_15write_memory_int32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_15write_memory_int32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   long __pyx_v_value;
   int __pyx_lineno = 0;
@@ -6754,11 +6869,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_int32", 1, 2, 2, 1); __PYX_ERR(0, 512, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_int32", 1, 2, 2, 1); __PYX_ERR(0, 530, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_int32") < 0)) __PYX_ERR(0, 512, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_int32") < 0)) __PYX_ERR(0, 530, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -6766,39 +6881,39 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 512, __pyx_L3_error)
-    __pyx_v_value = __Pyx_PyInt_As_long(values[1]); if (unlikely((__pyx_v_value == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 512, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 530, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyInt_As_long(values[1]); if (unlikely((__pyx_v_value == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 530, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_int32", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 512, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_int32", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 530, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_int32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_int32", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_14write_memory_int32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_14write_memory_int32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_14write_memory_int32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_14write_memory_int32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("write_memory_int32", 0);
 
-  /* "process.pyx":513
+  /* "process.pyx":531
  * 
  *     def write_memory_int32(self, unsigned long long address, long value) -> None:
  *         self.write_memory_int(address, <long long>value, 4)             # <<<<<<<<<<<<<<
  * 
  *     def write_memory_int64(self, unsigned long long address, long value) -> None:
  */
-  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->write_memory_int(__pyx_v_self, __pyx_v_address, ((PY_LONG_LONG)__pyx_v_value), 4);
+  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->write_memory_int(__pyx_v_self, __pyx_v_address, ((PY_LONG_LONG)__pyx_v_value), 4);
 
-  /* "process.pyx":512
+  /* "process.pyx":530
  *         self.write_memory_int(address, <long long>value, 2)
  * 
  *     def write_memory_int32(self, unsigned long long address, long value) -> None:             # <<<<<<<<<<<<<<
@@ -6813,7 +6928,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":515
+/* "process.pyx":533
  *         self.write_memory_int(address, <long long>value, 4)
  * 
  *     def write_memory_int64(self, unsigned long long address, long value) -> None:             # <<<<<<<<<<<<<<
@@ -6822,8 +6937,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_17write_memory_int64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_17write_memory_int64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_17write_memory_int64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_17write_memory_int64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   long __pyx_v_value;
   int __pyx_lineno = 0;
@@ -6855,11 +6970,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_int64", 1, 2, 2, 1); __PYX_ERR(0, 515, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_int64", 1, 2, 2, 1); __PYX_ERR(0, 533, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_int64") < 0)) __PYX_ERR(0, 515, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_int64") < 0)) __PYX_ERR(0, 533, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -6867,39 +6982,39 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 515, __pyx_L3_error)
-    __pyx_v_value = __Pyx_PyInt_As_long(values[1]); if (unlikely((__pyx_v_value == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 515, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 533, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyInt_As_long(values[1]); if (unlikely((__pyx_v_value == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 533, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_int64", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 515, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_int64", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 533, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_int64", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_int64", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_16write_memory_int64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_16write_memory_int64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_16write_memory_int64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_16write_memory_int64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, long __pyx_v_value) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("write_memory_int64", 0);
 
-  /* "process.pyx":516
+  /* "process.pyx":534
  * 
  *     def write_memory_int64(self, unsigned long long address, long value) -> None:
  *         self.write_memory_int(address, <long long>value, 8)             # <<<<<<<<<<<<<<
  * 
  *     def write_memory_uint8(self, unsigned long long address, unsigned long value) -> None:
  */
-  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->write_memory_int(__pyx_v_self, __pyx_v_address, ((PY_LONG_LONG)__pyx_v_value), 8);
+  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->write_memory_int(__pyx_v_self, __pyx_v_address, ((PY_LONG_LONG)__pyx_v_value), 8);
 
-  /* "process.pyx":515
+  /* "process.pyx":533
  *         self.write_memory_int(address, <long long>value, 4)
  * 
  *     def write_memory_int64(self, unsigned long long address, long value) -> None:             # <<<<<<<<<<<<<<
@@ -6914,7 +7029,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":518
+/* "process.pyx":536
  *         self.write_memory_int(address, <long long>value, 8)
  * 
  *     def write_memory_uint8(self, unsigned long long address, unsigned long value) -> None:             # <<<<<<<<<<<<<<
@@ -6923,8 +7038,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_19write_memory_uint8(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_19write_memory_uint8(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_19write_memory_uint8(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_19write_memory_uint8(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   unsigned long __pyx_v_value;
   int __pyx_lineno = 0;
@@ -6956,11 +7071,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_uint8", 1, 2, 2, 1); __PYX_ERR(0, 518, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_uint8", 1, 2, 2, 1); __PYX_ERR(0, 536, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_uint8") < 0)) __PYX_ERR(0, 518, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_uint8") < 0)) __PYX_ERR(0, 536, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -6968,39 +7083,39 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 518, __pyx_L3_error)
-    __pyx_v_value = __Pyx_PyInt_As_unsigned_long(values[1]); if (unlikely((__pyx_v_value == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 518, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 536, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyInt_As_unsigned_long(values[1]); if (unlikely((__pyx_v_value == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 536, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_uint8", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 518, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_uint8", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 536, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_uint8", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_uint8", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_18write_memory_uint8(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_18write_memory_uint8(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_18write_memory_uint8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_18write_memory_uint8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("write_memory_uint8", 0);
 
-  /* "process.pyx":519
+  /* "process.pyx":537
  * 
  *     def write_memory_uint8(self, unsigned long long address, unsigned long value) -> None:
  *         self.write_memory_uint(address, <unsigned long long>value, 1)             # <<<<<<<<<<<<<<
  * 
  *     def write_memory_uint16(self, unsigned long long address, unsigned long value) -> None:
  */
-  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->write_memory_uint(__pyx_v_self, __pyx_v_address, ((unsigned PY_LONG_LONG)__pyx_v_value), 1);
+  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->write_memory_uint(__pyx_v_self, __pyx_v_address, ((unsigned PY_LONG_LONG)__pyx_v_value), 1);
 
-  /* "process.pyx":518
+  /* "process.pyx":536
  *         self.write_memory_int(address, <long long>value, 8)
  * 
  *     def write_memory_uint8(self, unsigned long long address, unsigned long value) -> None:             # <<<<<<<<<<<<<<
@@ -7015,7 +7130,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":521
+/* "process.pyx":539
  *         self.write_memory_uint(address, <unsigned long long>value, 1)
  * 
  *     def write_memory_uint16(self, unsigned long long address, unsigned long value) -> None:             # <<<<<<<<<<<<<<
@@ -7024,8 +7139,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_21write_memory_uint16(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_21write_memory_uint16(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_21write_memory_uint16(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_21write_memory_uint16(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   unsigned long __pyx_v_value;
   int __pyx_lineno = 0;
@@ -7057,11 +7172,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_uint16", 1, 2, 2, 1); __PYX_ERR(0, 521, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_uint16", 1, 2, 2, 1); __PYX_ERR(0, 539, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_uint16") < 0)) __PYX_ERR(0, 521, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_uint16") < 0)) __PYX_ERR(0, 539, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -7069,39 +7184,39 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 521, __pyx_L3_error)
-    __pyx_v_value = __Pyx_PyInt_As_unsigned_long(values[1]); if (unlikely((__pyx_v_value == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 521, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 539, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyInt_As_unsigned_long(values[1]); if (unlikely((__pyx_v_value == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 539, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_uint16", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 521, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_uint16", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 539, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_uint16", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_uint16", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_20write_memory_uint16(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_20write_memory_uint16(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_20write_memory_uint16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_20write_memory_uint16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("write_memory_uint16", 0);
 
-  /* "process.pyx":522
+  /* "process.pyx":540
  * 
  *     def write_memory_uint16(self, unsigned long long address, unsigned long value) -> None:
  *         self.write_memory_uint(address, <unsigned long long>value, 2)             # <<<<<<<<<<<<<<
  * 
  *     def write_memory_uint32(self, unsigned long long address, unsigned long value) -> None:
  */
-  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->write_memory_uint(__pyx_v_self, __pyx_v_address, ((unsigned PY_LONG_LONG)__pyx_v_value), 2);
+  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->write_memory_uint(__pyx_v_self, __pyx_v_address, ((unsigned PY_LONG_LONG)__pyx_v_value), 2);
 
-  /* "process.pyx":521
+  /* "process.pyx":539
  *         self.write_memory_uint(address, <unsigned long long>value, 1)
  * 
  *     def write_memory_uint16(self, unsigned long long address, unsigned long value) -> None:             # <<<<<<<<<<<<<<
@@ -7116,7 +7231,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":524
+/* "process.pyx":542
  *         self.write_memory_uint(address, <unsigned long long>value, 2)
  * 
  *     def write_memory_uint32(self, unsigned long long address, unsigned long value) -> None:             # <<<<<<<<<<<<<<
@@ -7125,8 +7240,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_23write_memory_uint32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_23write_memory_uint32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_23write_memory_uint32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_23write_memory_uint32(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   unsigned long __pyx_v_value;
   int __pyx_lineno = 0;
@@ -7158,11 +7273,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_uint32", 1, 2, 2, 1); __PYX_ERR(0, 524, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_uint32", 1, 2, 2, 1); __PYX_ERR(0, 542, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_uint32") < 0)) __PYX_ERR(0, 524, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_uint32") < 0)) __PYX_ERR(0, 542, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -7170,39 +7285,39 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 524, __pyx_L3_error)
-    __pyx_v_value = __Pyx_PyInt_As_unsigned_long(values[1]); if (unlikely((__pyx_v_value == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 524, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 542, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyInt_As_unsigned_long(values[1]); if (unlikely((__pyx_v_value == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 542, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_uint32", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 524, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_uint32", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 542, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_uint32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_uint32", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_22write_memory_uint32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_22write_memory_uint32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_22write_memory_uint32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_22write_memory_uint32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("write_memory_uint32", 0);
 
-  /* "process.pyx":525
+  /* "process.pyx":543
  * 
  *     def write_memory_uint32(self, unsigned long long address, unsigned long value) -> None:
  *         self.write_memory_uint(address, <unsigned long long>value, 4)             # <<<<<<<<<<<<<<
  * 
  *     def write_memory_uint64(self, unsigned long long address, unsigned long value) -> None:
  */
-  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->write_memory_uint(__pyx_v_self, __pyx_v_address, ((unsigned PY_LONG_LONG)__pyx_v_value), 4);
+  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->write_memory_uint(__pyx_v_self, __pyx_v_address, ((unsigned PY_LONG_LONG)__pyx_v_value), 4);
 
-  /* "process.pyx":524
+  /* "process.pyx":542
  *         self.write_memory_uint(address, <unsigned long long>value, 2)
  * 
  *     def write_memory_uint32(self, unsigned long long address, unsigned long value) -> None:             # <<<<<<<<<<<<<<
@@ -7217,7 +7332,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":527
+/* "process.pyx":545
  *         self.write_memory_uint(address, <unsigned long long>value, 4)
  * 
  *     def write_memory_uint64(self, unsigned long long address, unsigned long value) -> None:             # <<<<<<<<<<<<<<
@@ -7226,8 +7341,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_25write_memory_uint64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_25write_memory_uint64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_25write_memory_uint64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_25write_memory_uint64(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   unsigned long __pyx_v_value;
   int __pyx_lineno = 0;
@@ -7259,11 +7374,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("write_memory_uint64", 1, 2, 2, 1); __PYX_ERR(0, 527, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("write_memory_uint64", 1, 2, 2, 1); __PYX_ERR(0, 545, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_uint64") < 0)) __PYX_ERR(0, 527, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "write_memory_uint64") < 0)) __PYX_ERR(0, 545, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -7271,39 +7386,39 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 527, __pyx_L3_error)
-    __pyx_v_value = __Pyx_PyInt_As_unsigned_long(values[1]); if (unlikely((__pyx_v_value == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 527, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 545, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyInt_As_unsigned_long(values[1]); if (unlikely((__pyx_v_value == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 545, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("write_memory_uint64", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 527, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("write_memory_uint64", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 545, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.write_memory_uint64", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.write_memory_uint64", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_24write_memory_uint64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_24write_memory_uint64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_24write_memory_uint64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_24write_memory_uint64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned long __pyx_v_value) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("write_memory_uint64", 0);
 
-  /* "process.pyx":528
+  /* "process.pyx":546
  * 
  *     def write_memory_uint64(self, unsigned long long address, unsigned long value) -> None:
  *         self.write_memory_uint(address, <unsigned long long>value, 8)             # <<<<<<<<<<<<<<
  * 
  *     def read_memory_bytes(self, unsigned long long address, int bytes_to_read) -> bytes:
  */
-  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->write_memory_uint(__pyx_v_self, __pyx_v_address, ((unsigned PY_LONG_LONG)__pyx_v_value), 8);
+  ((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->write_memory_uint(__pyx_v_self, __pyx_v_address, ((unsigned PY_LONG_LONG)__pyx_v_value), 8);
 
-  /* "process.pyx":527
+  /* "process.pyx":545
  *         self.write_memory_uint(address, <unsigned long long>value, 4)
  * 
  *     def write_memory_uint64(self, unsigned long long address, unsigned long value) -> None:             # <<<<<<<<<<<<<<
@@ -7318,7 +7433,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":530
+/* "process.pyx":548
  *         self.write_memory_uint(address, <unsigned long long>value, 8)
  * 
  *     def read_memory_bytes(self, unsigned long long address, int bytes_to_read) -> bytes:             # <<<<<<<<<<<<<<
@@ -7327,8 +7442,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_27read_memory_bytes(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_27read_memory_bytes(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_27read_memory_bytes(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_27read_memory_bytes(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_address;
   int __pyx_v_bytes_to_read;
   int __pyx_lineno = 0;
@@ -7360,11 +7475,11 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_bytes_to_read)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("read_memory_bytes", 1, 2, 2, 1); __PYX_ERR(0, 530, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("read_memory_bytes", 1, 2, 2, 1); __PYX_ERR(0, 548, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "read_memory_bytes") < 0)) __PYX_ERR(0, 530, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "read_memory_bytes") < 0)) __PYX_ERR(0, 548, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -7372,25 +7487,25 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 530, __pyx_L3_error)
-    __pyx_v_bytes_to_read = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_bytes_to_read == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 530, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 548, __pyx_L3_error)
+    __pyx_v_bytes_to_read = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_bytes_to_read == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 548, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("read_memory_bytes", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 530, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("read_memory_bytes", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 548, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_bytes", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_bytes", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_26read_memory_bytes(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_address, __pyx_v_bytes_to_read);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_26read_memory_bytes(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_address, __pyx_v_bytes_to_read);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_26read_memory_bytes(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, int __pyx_v_bytes_to_read) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_26read_memory_bytes(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, int __pyx_v_bytes_to_read) {
   char *__pyx_v_read_buffer;
   SIZE_T __pyx_v_num_bytes_read;
   PyObject *__pyx_v_py_memory = 0;
@@ -7408,7 +7523,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("read_memory_bytes", 0);
 
-  /* "process.pyx":536
+  /* "process.pyx":554
  *         cdef bytes py_memory
  * 
  *         read_buffer = <char*>malloc(bytes_to_read)             # <<<<<<<<<<<<<<
@@ -7417,7 +7532,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_read_buffer = ((char *)malloc(__pyx_v_bytes_to_read));
 
-  /* "process.pyx":538
+  /* "process.pyx":556
  *         read_buffer = <char*>malloc(bytes_to_read)
  * 
  *         if not read_buffer:             # <<<<<<<<<<<<<<
@@ -7427,20 +7542,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_1 = ((!(__pyx_v_read_buffer != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":539
+    /* "process.pyx":557
  * 
  *         if not read_buffer:
  *             raise MemoryError("Failed to allocate memory.")             # <<<<<<<<<<<<<<
  * 
  *         num_bytes_read = read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, bytes_to_read)
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 539, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 557, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 539, __pyx_L1_error)
+    __PYX_ERR(0, 557, __pyx_L1_error)
 
-    /* "process.pyx":538
+    /* "process.pyx":556
  *         read_buffer = <char*>malloc(bytes_to_read)
  * 
  *         if not read_buffer:             # <<<<<<<<<<<<<<
@@ -7449,7 +7564,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":541
+  /* "process.pyx":559
  *             raise MemoryError("Failed to allocate memory.")
  * 
  *         num_bytes_read = read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, bytes_to_read)             # <<<<<<<<<<<<<<
@@ -7458,7 +7573,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_num_bytes_read = __pyx_f_29cython_virtual_memory_toolkit_7process_read_process_memory(__pyx_v_self->_process_handle, ((LPCVOID)__pyx_v_address), ((LPVOID)__pyx_v_read_buffer), __pyx_v_bytes_to_read);
 
-  /* "process.pyx":543
+  /* "process.pyx":561
  *         num_bytes_read = read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, bytes_to_read)
  * 
  *         if num_bytes_read != bytes_to_read:             # <<<<<<<<<<<<<<
@@ -7468,14 +7583,14 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_1 = ((__pyx_v_num_bytes_read != __pyx_v_bytes_to_read) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":544
+    /* "process.pyx":562
  * 
  *         if num_bytes_read != bytes_to_read:
  *             raise MemoryError(f"Error reading memory. Read bytes: {num_bytes_read}. Bytes instructed to read: {bytes_to_read}.")             # <<<<<<<<<<<<<<
  * 
  *         py_memory = bytes(<char[:bytes_to_read]>read_buffer)
  */
-    __pyx_t_2 = PyTuple_New(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 544, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 562, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = 0;
     __pyx_t_4 = 127;
@@ -7483,9 +7598,9 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_t_3 += 34;
     __Pyx_GIVEREF(__pyx_kp_u_Error_reading_memory_Read_bytes);
     PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_kp_u_Error_reading_memory_Read_bytes);
-    __pyx_t_5 = __Pyx_PyInt_From_ULONG_PTR(__pyx_v_num_bytes_read); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 544, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_From_ULONG_PTR(__pyx_v_num_bytes_read); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 562, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = __Pyx_PyObject_FormatSimple(__pyx_t_5, __pyx_empty_unicode); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 544, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_FormatSimple(__pyx_t_5, __pyx_empty_unicode); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 562, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_4 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_6) > __pyx_t_4) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_6) : __pyx_t_4;
@@ -7497,7 +7612,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_t_3 += 28;
     __Pyx_GIVEREF(__pyx_kp_u_Bytes_instructed_to_read);
     PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_kp_u_Bytes_instructed_to_read);
-    __pyx_t_6 = __Pyx_PyUnicode_From_int(__pyx_v_bytes_to_read, 0, ' ', 'd'); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 544, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyUnicode_From_int(__pyx_v_bytes_to_read, 0, ' ', 'd'); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 562, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_3 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_6);
     __Pyx_GIVEREF(__pyx_t_6);
@@ -7507,17 +7622,17 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_t_3 += 1;
     __Pyx_GIVEREF(__pyx_kp_u__13);
     PyTuple_SET_ITEM(__pyx_t_2, 4, __pyx_kp_u__13);
-    __pyx_t_6 = __Pyx_PyUnicode_Join(__pyx_t_2, 5, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 544, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyUnicode_Join(__pyx_t_2, 5, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 562, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_MemoryError, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 544, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_MemoryError, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 562, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 544, __pyx_L1_error)
+    __PYX_ERR(0, 562, __pyx_L1_error)
 
-    /* "process.pyx":543
+    /* "process.pyx":561
  *         num_bytes_read = read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, bytes_to_read)
  * 
  *         if num_bytes_read != bytes_to_read:             # <<<<<<<<<<<<<<
@@ -7526,7 +7641,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":546
+  /* "process.pyx":564
  *             raise MemoryError(f"Error reading memory. Read bytes: {num_bytes_read}. Bytes instructed to read: {bytes_to_read}.")
  * 
  *         py_memory = bytes(<char[:bytes_to_read]>read_buffer)             # <<<<<<<<<<<<<<
@@ -7535,24 +7650,24 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   if (!__pyx_v_read_buffer) {
     PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
-    __PYX_ERR(0, 546, __pyx_L1_error)
+    __PYX_ERR(0, 564, __pyx_L1_error)
   }
-  __pyx_t_6 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_char); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __pyx_t_6 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_char); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 564, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_2 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_bytes_to_read)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __pyx_t_2 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_bytes_to_read)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 564, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_7 = __pyx_array_new(__pyx_t_2, sizeof(char), PyBytes_AS_STRING(__pyx_t_6), (char *) "c", (char *) __pyx_v_read_buffer);
-  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 546, __pyx_L1_error)
+  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 564, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyBytes_Type)), ((PyObject *)__pyx_t_7)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyBytes_Type)), ((PyObject *)__pyx_t_7)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 564, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(((PyObject *)__pyx_t_7)); __pyx_t_7 = 0;
   __pyx_v_py_memory = ((PyObject*)__pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "process.pyx":548
+  /* "process.pyx":566
  *         py_memory = bytes(<char[:bytes_to_read]>read_buffer)
  * 
  *         free(read_buffer)             # <<<<<<<<<<<<<<
@@ -7561,7 +7676,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   free(__pyx_v_read_buffer);
 
-  /* "process.pyx":550
+  /* "process.pyx":568
  *         free(read_buffer)
  * 
  *         return py_memory             # <<<<<<<<<<<<<<
@@ -7573,7 +7688,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_r = __pyx_v_py_memory;
   goto __pyx_L0;
 
-  /* "process.pyx":530
+  /* "process.pyx":548
  *         self.write_memory_uint(address, <unsigned long long>value, 8)
  * 
  *     def read_memory_bytes(self, unsigned long long address, int bytes_to_read) -> bytes:             # <<<<<<<<<<<<<<
@@ -7587,7 +7702,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(((PyObject *)__pyx_t_7));
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_bytes", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_bytes", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_py_memory);
@@ -7596,7 +7711,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":552
+/* "process.pyx":570
  *         return py_memory
  * 
  *     def read_memory_float32(self, unsigned long long address) -> float:             # <<<<<<<<<<<<<<
@@ -7605,8 +7720,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_29read_memory_float32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_29read_memory_float32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_29read_memory_float32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_29read_memory_float32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
   unsigned PY_LONG_LONG __pyx_v_address;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -7615,22 +7730,22 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("read_memory_float32 (wrapper)", 0);
   assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 552, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 570, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_float32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_float32", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_28read_memory_float32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_28read_memory_float32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_28read_memory_float32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_28read_memory_float32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
   void *__pyx_v_read_buffer;
   float __pyx_v_result;
   PyObject *__pyx_r = NULL;
@@ -7642,7 +7757,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("read_memory_float32", 0);
 
-  /* "process.pyx":555
+  /* "process.pyx":573
  * 
  *         # Allocate buffer for reading memory
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>4)             # <<<<<<<<<<<<<<
@@ -7651,7 +7766,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_read_buffer = ((void *)malloc(((SIZE_T)4)));
 
-  /* "process.pyx":556
+  /* "process.pyx":574
  *         # Allocate buffer for reading memory
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>4)
  *         if not read_buffer:             # <<<<<<<<<<<<<<
@@ -7661,20 +7776,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_1 = ((!(__pyx_v_read_buffer != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":557
+    /* "process.pyx":575
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>4)
  *         if not read_buffer:
  *             raise MemoryError("Failed to allocate memory buffer.")             # <<<<<<<<<<<<<<
  * 
  *         # Read process memory into the buffer
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 557, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 575, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 557, __pyx_L1_error)
+    __PYX_ERR(0, 575, __pyx_L1_error)
 
-    /* "process.pyx":556
+    /* "process.pyx":574
  *         # Allocate buffer for reading memory
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>4)
  *         if not read_buffer:             # <<<<<<<<<<<<<<
@@ -7683,7 +7798,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":561
+  /* "process.pyx":579
  *         # Read process memory into the buffer
  * 
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>4):             # <<<<<<<<<<<<<<
@@ -7693,7 +7808,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_1 = ((!(__pyx_f_29cython_virtual_memory_toolkit_7process_read_process_memory(__pyx_v_self->_process_handle, ((LPCVOID)__pyx_v_address), ((LPVOID)__pyx_v_read_buffer), ((SIZE_T)4)) != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":562
+    /* "process.pyx":580
  * 
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>4):
  *             free(read_buffer)  # Ensure to free allocated memory in case of failure             # <<<<<<<<<<<<<<
@@ -7702,20 +7817,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
     free(__pyx_v_read_buffer);
 
-    /* "process.pyx":563
+    /* "process.pyx":581
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>4):
  *             free(read_buffer)  # Ensure to free allocated memory in case of failure
  *             raise OSError("Failed to read process memory.")             # <<<<<<<<<<<<<<
  * 
  *         cdef float result
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 563, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 581, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 563, __pyx_L1_error)
+    __PYX_ERR(0, 581, __pyx_L1_error)
 
-    /* "process.pyx":561
+    /* "process.pyx":579
  *         # Read process memory into the buffer
  * 
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>4):             # <<<<<<<<<<<<<<
@@ -7724,7 +7839,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":567
+  /* "process.pyx":585
  *         cdef float result
  * 
  *         memcpy(&result, read_buffer, <SIZE_T>4)             # <<<<<<<<<<<<<<
@@ -7733,7 +7848,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   (void)(memcpy((&__pyx_v_result), __pyx_v_read_buffer, ((SIZE_T)4)));
 
-  /* "process.pyx":570
+  /* "process.pyx":588
  * 
  *         # Free the allocated memory
  *         free(read_buffer)             # <<<<<<<<<<<<<<
@@ -7742,7 +7857,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   free(__pyx_v_read_buffer);
 
-  /* "process.pyx":573
+  /* "process.pyx":591
  * 
  *         # Return the float result
  *         return result             # <<<<<<<<<<<<<<
@@ -7750,13 +7865,13 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     def read_memory_float64(self, unsigned long long address) -> float:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_result); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 573, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_result); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 591, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":552
+  /* "process.pyx":570
  *         return py_memory
  * 
  *     def read_memory_float32(self, unsigned long long address) -> float:             # <<<<<<<<<<<<<<
@@ -7767,7 +7882,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_float32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_float32", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -7775,7 +7890,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":575
+/* "process.pyx":593
  *         return result
  * 
  *     def read_memory_float64(self, unsigned long long address) -> float:             # <<<<<<<<<<<<<<
@@ -7784,8 +7899,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_31read_memory_float64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_31read_memory_float64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_31read_memory_float64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_31read_memory_float64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
   unsigned PY_LONG_LONG __pyx_v_address;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -7794,22 +7909,22 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("read_memory_float64 (wrapper)", 0);
   assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 575, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 593, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_float64", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_float64", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_30read_memory_float64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_30read_memory_float64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_30read_memory_float64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_30read_memory_float64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
   void *__pyx_v_read_buffer;
   double __pyx_v_result;
   PyObject *__pyx_r = NULL;
@@ -7821,7 +7936,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("read_memory_float64", 0);
 
-  /* "process.pyx":578
+  /* "process.pyx":596
  * 
  *         # Allocate buffer for reading memory
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>8)             # <<<<<<<<<<<<<<
@@ -7830,7 +7945,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_read_buffer = ((void *)malloc(((SIZE_T)8)));
 
-  /* "process.pyx":579
+  /* "process.pyx":597
  *         # Allocate buffer for reading memory
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>8)
  *         if not read_buffer:             # <<<<<<<<<<<<<<
@@ -7840,20 +7955,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_1 = ((!(__pyx_v_read_buffer != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":580
+    /* "process.pyx":598
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>8)
  *         if not read_buffer:
  *             raise MemoryError("Failed to allocate memory buffer.")             # <<<<<<<<<<<<<<
  * 
  *         # Read process memory into the buffer
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 580, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 598, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 580, __pyx_L1_error)
+    __PYX_ERR(0, 598, __pyx_L1_error)
 
-    /* "process.pyx":579
+    /* "process.pyx":597
  *         # Allocate buffer for reading memory
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>8)
  *         if not read_buffer:             # <<<<<<<<<<<<<<
@@ -7862,7 +7977,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":584
+  /* "process.pyx":602
  *         # Read process memory into the buffer
  * 
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>8):             # <<<<<<<<<<<<<<
@@ -7872,7 +7987,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_1 = ((!(__pyx_f_29cython_virtual_memory_toolkit_7process_read_process_memory(__pyx_v_self->_process_handle, ((LPCVOID)__pyx_v_address), ((LPVOID)__pyx_v_read_buffer), ((SIZE_T)8)) != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":585
+    /* "process.pyx":603
  * 
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>8):
  *             free(read_buffer)  # Ensure to free allocated memory in case of failure             # <<<<<<<<<<<<<<
@@ -7881,20 +7996,20 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
     free(__pyx_v_read_buffer);
 
-    /* "process.pyx":586
+    /* "process.pyx":604
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>8):
  *             free(read_buffer)  # Ensure to free allocated memory in case of failure
  *             raise OSError("Failed to read process memory.")             # <<<<<<<<<<<<<<
  * 
  *         cdef double result
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 586, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 604, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 586, __pyx_L1_error)
+    __PYX_ERR(0, 604, __pyx_L1_error)
 
-    /* "process.pyx":584
+    /* "process.pyx":602
  *         # Read process memory into the buffer
  * 
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>8):             # <<<<<<<<<<<<<<
@@ -7903,7 +8018,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   }
 
-  /* "process.pyx":590
+  /* "process.pyx":608
  *         cdef double result
  * 
  *         memcpy(&result, read_buffer, <SIZE_T>8)             # <<<<<<<<<<<<<<
@@ -7912,7 +8027,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   (void)(memcpy((&__pyx_v_result), __pyx_v_read_buffer, ((SIZE_T)8)));
 
-  /* "process.pyx":593
+  /* "process.pyx":611
  * 
  *         # Free the allocated memory
  *         free(read_buffer)             # <<<<<<<<<<<<<<
@@ -7921,7 +8036,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   free(__pyx_v_read_buffer);
 
-  /* "process.pyx":596
+  /* "process.pyx":614
  * 
  *         # Return the float result
  *         return result             # <<<<<<<<<<<<<<
@@ -7929,13 +8044,13 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     cdef long long read_memory_int(self, unsigned long long address, unsigned short bytes_in_int):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_result); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 596, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_result); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 614, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":575
+  /* "process.pyx":593
  *         return result
  * 
  *     def read_memory_float64(self, unsigned long long address) -> float:             # <<<<<<<<<<<<<<
@@ -7946,7 +8061,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_float64", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_float64", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -7954,7 +8069,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":598
+/* "process.pyx":616
  *         return result
  * 
  *     cdef long long read_memory_int(self, unsigned long long address, unsigned short bytes_in_int):             # <<<<<<<<<<<<<<
@@ -7962,7 +8077,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *         if bytes_in_int > 8:
  */
 
-static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Application_read_memory_int(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned short __pyx_v_bytes_in_int) {
+static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_9AppHandle_read_memory_int(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address, unsigned short __pyx_v_bytes_in_int) {
   void *__pyx_v_read_buffer;
   PY_LONG_LONG __pyx_v_result;
   PY_LONG_LONG __pyx_r;
@@ -7975,7 +8090,7 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("read_memory_int", 0);
 
-  /* "process.pyx":600
+  /* "process.pyx":618
  *     cdef long long read_memory_int(self, unsigned long long address, unsigned short bytes_in_int):
  * 
  *         if bytes_in_int > 8:             # <<<<<<<<<<<<<<
@@ -7985,32 +8100,32 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
   __pyx_t_1 = ((__pyx_v_bytes_in_int > 8) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":601
+    /* "process.pyx":619
  * 
  *         if bytes_in_int > 8:
  *             raise MemoryError("Too many bytes requested, requested: " + str(bytes_in_int) + ". Maximum is 8.")             # <<<<<<<<<<<<<<
  * 
  *         # Allocate buffer for reading memory
  */
-    __pyx_t_2 = __Pyx_PyInt_From_unsigned_short(__pyx_v_bytes_in_int); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 601, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_unsigned_short(__pyx_v_bytes_in_int); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 619, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 601, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 619, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Too_many_bytes_requested_request, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 601, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Too_many_bytes_requested_request, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 619, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_t_2, __pyx_kp_u_Maximum_is_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 601, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_t_2, __pyx_kp_u_Maximum_is_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 619, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_MemoryError, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 601, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_MemoryError, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 619, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 601, __pyx_L1_error)
+    __PYX_ERR(0, 619, __pyx_L1_error)
 
-    /* "process.pyx":600
+    /* "process.pyx":618
  *     cdef long long read_memory_int(self, unsigned long long address, unsigned short bytes_in_int):
  * 
  *         if bytes_in_int > 8:             # <<<<<<<<<<<<<<
@@ -8019,7 +8134,7 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
  */
   }
 
-  /* "process.pyx":604
+  /* "process.pyx":622
  * 
  *         # Allocate buffer for reading memory
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>bytes_in_int)             # <<<<<<<<<<<<<<
@@ -8028,7 +8143,7 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
  */
   __pyx_v_read_buffer = ((void *)malloc(((SIZE_T)__pyx_v_bytes_in_int)));
 
-  /* "process.pyx":605
+  /* "process.pyx":623
  *         # Allocate buffer for reading memory
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>bytes_in_int)
  *         if not read_buffer:             # <<<<<<<<<<<<<<
@@ -8038,20 +8153,20 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
   __pyx_t_1 = ((!(__pyx_v_read_buffer != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":606
+    /* "process.pyx":624
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>bytes_in_int)
  *         if not read_buffer:
  *             raise MemoryError("Failed to allocate memory buffer.")             # <<<<<<<<<<<<<<
  * 
  *         # Read process memory into the buffer
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 606, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 624, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 606, __pyx_L1_error)
+    __PYX_ERR(0, 624, __pyx_L1_error)
 
-    /* "process.pyx":605
+    /* "process.pyx":623
  *         # Allocate buffer for reading memory
  *         cdef void* read_buffer = <void*> malloc(<SIZE_T>bytes_in_int)
  *         if not read_buffer:             # <<<<<<<<<<<<<<
@@ -8060,7 +8175,7 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
  */
   }
 
-  /* "process.pyx":610
+  /* "process.pyx":628
  *         # Read process memory into the buffer
  * 
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>bytes_in_int):             # <<<<<<<<<<<<<<
@@ -8070,7 +8185,7 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
   __pyx_t_1 = ((!(__pyx_f_29cython_virtual_memory_toolkit_7process_read_process_memory(__pyx_v_self->_process_handle, ((LPCVOID)__pyx_v_address), ((LPVOID)__pyx_v_read_buffer), ((SIZE_T)__pyx_v_bytes_in_int)) != 0)) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "process.pyx":611
+    /* "process.pyx":629
  * 
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>bytes_in_int):
  *             free(read_buffer)  # Ensure to free allocated memory in case of failure             # <<<<<<<<<<<<<<
@@ -8079,20 +8194,20 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
  */
     free(__pyx_v_read_buffer);
 
-    /* "process.pyx":612
+    /* "process.pyx":630
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>bytes_in_int):
  *             free(read_buffer)  # Ensure to free allocated memory in case of failure
  *             raise OSError("Failed to read process memory.")             # <<<<<<<<<<<<<<
  * 
  *         # Convert the buffer to a float
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 612, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_OSError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 630, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 612, __pyx_L1_error)
+    __PYX_ERR(0, 630, __pyx_L1_error)
 
-    /* "process.pyx":610
+    /* "process.pyx":628
  *         # Read process memory into the buffer
  * 
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>bytes_in_int):             # <<<<<<<<<<<<<<
@@ -8101,7 +8216,7 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
  */
   }
 
-  /* "process.pyx":616
+  /* "process.pyx":634
  *         # Convert the buffer to a float
  *         cdef long long result
  *         memcpy(&result, read_buffer, <SIZE_T>bytes_in_int)             # <<<<<<<<<<<<<<
@@ -8110,7 +8225,7 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
  */
   (void)(memcpy((&__pyx_v_result), __pyx_v_read_buffer, ((SIZE_T)__pyx_v_bytes_in_int)));
 
-  /* "process.pyx":619
+  /* "process.pyx":637
  * 
  *         # Free the allocated memory
  *         free(read_buffer)             # <<<<<<<<<<<<<<
@@ -8119,7 +8234,7 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
  */
   free(__pyx_v_read_buffer);
 
-  /* "process.pyx":622
+  /* "process.pyx":640
  * 
  *         # Return the float result
  *         return result             # <<<<<<<<<<<<<<
@@ -8129,7 +8244,7 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "process.pyx":598
+  /* "process.pyx":616
  *         return result
  * 
  *     cdef long long read_memory_int(self, unsigned long long address, unsigned short bytes_in_int):             # <<<<<<<<<<<<<<
@@ -8141,14 +8256,14 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_WriteUnraisable("cython_virtual_memory_toolkit.process.Application.read_memory_int", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("cython_virtual_memory_toolkit.process.AppHandle.read_memory_int", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "process.pyx":624
+/* "process.pyx":642
  *         return result
  * 
  *     def read_memory_int8(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
@@ -8157,8 +8272,8 @@ static PY_LONG_LONG __pyx_f_29cython_virtual_memory_toolkit_7process_11Applicati
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_33read_memory_int8(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_33read_memory_int8(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_33read_memory_int8(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_33read_memory_int8(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
   unsigned PY_LONG_LONG __pyx_v_address;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -8167,22 +8282,22 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("read_memory_int8 (wrapper)", 0);
   assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 624, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 642, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_int8", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_int8", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_32read_memory_int8(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_32read_memory_int8(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_32read_memory_int8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_32read_memory_int8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -8191,7 +8306,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("read_memory_int8", 0);
 
-  /* "process.pyx":625
+  /* "process.pyx":643
  * 
  *     def read_memory_int8(self, unsigned long long address) -> int:
  *        return <char>self.read_memory_int(address, 1)             # <<<<<<<<<<<<<<
@@ -8199,13 +8314,13 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     def read_memory_int16(self, unsigned long long address) -> int:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_char(((char)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 1))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 625, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_char(((char)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 1))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 643, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":624
+  /* "process.pyx":642
  *         return result
  * 
  *     def read_memory_int8(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
@@ -8216,463 +8331,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_int8", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "process.pyx":627
- *        return <char>self.read_memory_int(address, 1)
- * 
- *     def read_memory_int16(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *         return <short>self.read_memory_int(address, 2)
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_35read_memory_int16(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_35read_memory_int16(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
-  unsigned PY_LONG_LONG __pyx_v_address;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("read_memory_int16 (wrapper)", 0);
-  assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 627, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_int16", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_34read_memory_int16(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_34read_memory_int16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("read_memory_int16", 0);
-
-  /* "process.pyx":628
- * 
- *     def read_memory_int16(self, unsigned long long address) -> int:
- *         return <short>self.read_memory_int(address, 2)             # <<<<<<<<<<<<<<
- * 
- *     def read_memory_int32(self, unsigned long long address) -> int:
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_short(((short)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 2))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 628, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "process.pyx":627
- *        return <char>self.read_memory_int(address, 1)
- * 
- *     def read_memory_int16(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *         return <short>self.read_memory_int(address, 2)
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_int16", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "process.pyx":630
- *         return <short>self.read_memory_int(address, 2)
- * 
- *     def read_memory_int32(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <int>self.read_memory_int(address, 4)
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_37read_memory_int32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_37read_memory_int32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
-  unsigned PY_LONG_LONG __pyx_v_address;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("read_memory_int32 (wrapper)", 0);
-  assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 630, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_int32", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_36read_memory_int32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_36read_memory_int32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("read_memory_int32", 0);
-
-  /* "process.pyx":631
- * 
- *     def read_memory_int32(self, unsigned long long address) -> int:
- *        return <int>self.read_memory_int(address, 4)             # <<<<<<<<<<<<<<
- * 
- *     def read_memory_int64(self, unsigned long long address) -> int:
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(((int)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 4))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 631, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "process.pyx":630
- *         return <short>self.read_memory_int(address, 2)
- * 
- *     def read_memory_int32(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <int>self.read_memory_int(address, 4)
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_int32", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "process.pyx":633
- *        return <int>self.read_memory_int(address, 4)
- * 
- *     def read_memory_int64(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <long long>self.read_memory_int(address, 8)
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_39read_memory_int64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_39read_memory_int64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
-  unsigned PY_LONG_LONG __pyx_v_address;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("read_memory_int64 (wrapper)", 0);
-  assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 633, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_int64", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_38read_memory_int64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_38read_memory_int64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("read_memory_int64", 0);
-
-  /* "process.pyx":634
- * 
- *     def read_memory_int64(self, unsigned long long address) -> int:
- *        return <long long>self.read_memory_int(address, 8)             # <<<<<<<<<<<<<<
- * 
- *     def read_memory_uint8(self, unsigned long long address) -> int:
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_PY_LONG_LONG(((PY_LONG_LONG)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 8))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 634, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "process.pyx":633
- *        return <int>self.read_memory_int(address, 4)
- * 
- *     def read_memory_int64(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <long long>self.read_memory_int(address, 8)
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_int64", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "process.pyx":636
- *        return <long long>self.read_memory_int(address, 8)
- * 
- *     def read_memory_uint8(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <unsigned char>self.read_memory_int(address, 1)
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_41read_memory_uint8(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_41read_memory_uint8(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
-  unsigned PY_LONG_LONG __pyx_v_address;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("read_memory_uint8 (wrapper)", 0);
-  assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 636, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_uint8", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_40read_memory_uint8(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_40read_memory_uint8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("read_memory_uint8", 0);
-
-  /* "process.pyx":637
- * 
- *     def read_memory_uint8(self, unsigned long long address) -> int:
- *        return <unsigned char>self.read_memory_int(address, 1)             # <<<<<<<<<<<<<<
- * 
- *     def read_memory_uint16(self, unsigned long long address) -> int:
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_char(((unsigned char)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 1))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 637, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "process.pyx":636
- *        return <long long>self.read_memory_int(address, 8)
- * 
- *     def read_memory_uint8(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *        return <unsigned char>self.read_memory_int(address, 1)
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_uint8", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "process.pyx":639
- *        return <unsigned char>self.read_memory_int(address, 1)
- * 
- *     def read_memory_uint16(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *         return <unsigned short>self.read_memory_int(address, 2)
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_43read_memory_uint16(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_43read_memory_uint16(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
-  unsigned PY_LONG_LONG __pyx_v_address;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("read_memory_uint16 (wrapper)", 0);
-  assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 639, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_uint16", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_42read_memory_uint16(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_42read_memory_uint16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("read_memory_uint16", 0);
-
-  /* "process.pyx":640
- * 
- *     def read_memory_uint16(self, unsigned long long address) -> int:
- *         return <unsigned short>self.read_memory_int(address, 2)             # <<<<<<<<<<<<<<
- * 
- *     def read_memory_uint32(self, unsigned long long address) -> int:
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_short(((unsigned short)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 2))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 640, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "process.pyx":639
- *        return <unsigned char>self.read_memory_int(address, 1)
- * 
- *     def read_memory_uint16(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *         return <unsigned short>self.read_memory_int(address, 2)
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_uint16", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "process.pyx":642
- *         return <unsigned short>self.read_memory_int(address, 2)
- * 
- *     def read_memory_uint32(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *         return <unsigned int>self.read_memory_int(address, 4)
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_45read_memory_uint32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_45read_memory_uint32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
-  unsigned PY_LONG_LONG __pyx_v_address;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("read_memory_uint32 (wrapper)", 0);
-  assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 642, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_uint32", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_44read_memory_uint32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_44read_memory_uint32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("read_memory_uint32", 0);
-
-  /* "process.pyx":643
- * 
- *     def read_memory_uint32(self, unsigned long long address) -> int:
- *         return <unsigned int>self.read_memory_int(address, 4)             # <<<<<<<<<<<<<<
- * 
- *     def read_memory_uint64(self, unsigned long long address) -> int:
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_int(((unsigned int)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 4))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 643, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "process.pyx":642
- *         return <unsigned short>self.read_memory_int(address, 2)
- * 
- *     def read_memory_uint32(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
- *         return <unsigned int>self.read_memory_int(address, 4)
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_uint32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_int8", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -8681,6 +8340,462 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 }
 
 /* "process.pyx":645
+ *        return <char>self.read_memory_int(address, 1)
+ * 
+ *     def read_memory_int16(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *         return <short>self.read_memory_int(address, 2)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_35read_memory_int16(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_35read_memory_int16(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+  unsigned PY_LONG_LONG __pyx_v_address;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("read_memory_int16 (wrapper)", 0);
+  assert(__pyx_arg_address); {
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 645, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_int16", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_34read_memory_int16(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_34read_memory_int16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("read_memory_int16", 0);
+
+  /* "process.pyx":646
+ * 
+ *     def read_memory_int16(self, unsigned long long address) -> int:
+ *         return <short>self.read_memory_int(address, 2)             # <<<<<<<<<<<<<<
+ * 
+ *     def read_memory_int32(self, unsigned long long address) -> int:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_short(((short)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 2))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 646, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "process.pyx":645
+ *        return <char>self.read_memory_int(address, 1)
+ * 
+ *     def read_memory_int16(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *         return <short>self.read_memory_int(address, 2)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_int16", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "process.pyx":648
+ *         return <short>self.read_memory_int(address, 2)
+ * 
+ *     def read_memory_int32(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *        return <int>self.read_memory_int(address, 4)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_37read_memory_int32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_37read_memory_int32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+  unsigned PY_LONG_LONG __pyx_v_address;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("read_memory_int32 (wrapper)", 0);
+  assert(__pyx_arg_address); {
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 648, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_int32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_36read_memory_int32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_36read_memory_int32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("read_memory_int32", 0);
+
+  /* "process.pyx":649
+ * 
+ *     def read_memory_int32(self, unsigned long long address) -> int:
+ *        return <int>self.read_memory_int(address, 4)             # <<<<<<<<<<<<<<
+ * 
+ *     def read_memory_int64(self, unsigned long long address) -> int:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_int(((int)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 4))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 649, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "process.pyx":648
+ *         return <short>self.read_memory_int(address, 2)
+ * 
+ *     def read_memory_int32(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *        return <int>self.read_memory_int(address, 4)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_int32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "process.pyx":651
+ *        return <int>self.read_memory_int(address, 4)
+ * 
+ *     def read_memory_int64(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *        return <long long>self.read_memory_int(address, 8)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_39read_memory_int64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_39read_memory_int64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+  unsigned PY_LONG_LONG __pyx_v_address;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("read_memory_int64 (wrapper)", 0);
+  assert(__pyx_arg_address); {
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 651, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_int64", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_38read_memory_int64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_38read_memory_int64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("read_memory_int64", 0);
+
+  /* "process.pyx":652
+ * 
+ *     def read_memory_int64(self, unsigned long long address) -> int:
+ *        return <long long>self.read_memory_int(address, 8)             # <<<<<<<<<<<<<<
+ * 
+ *     def read_memory_uint8(self, unsigned long long address) -> int:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_PY_LONG_LONG(((PY_LONG_LONG)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 8))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 652, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "process.pyx":651
+ *        return <int>self.read_memory_int(address, 4)
+ * 
+ *     def read_memory_int64(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *        return <long long>self.read_memory_int(address, 8)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_int64", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "process.pyx":654
+ *        return <long long>self.read_memory_int(address, 8)
+ * 
+ *     def read_memory_uint8(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *        return <unsigned char>self.read_memory_int(address, 1)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_41read_memory_uint8(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_41read_memory_uint8(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+  unsigned PY_LONG_LONG __pyx_v_address;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("read_memory_uint8 (wrapper)", 0);
+  assert(__pyx_arg_address); {
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 654, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_uint8", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_40read_memory_uint8(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_40read_memory_uint8(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("read_memory_uint8", 0);
+
+  /* "process.pyx":655
+ * 
+ *     def read_memory_uint8(self, unsigned long long address) -> int:
+ *        return <unsigned char>self.read_memory_int(address, 1)             # <<<<<<<<<<<<<<
+ * 
+ *     def read_memory_uint16(self, unsigned long long address) -> int:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_char(((unsigned char)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 1))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 655, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "process.pyx":654
+ *        return <long long>self.read_memory_int(address, 8)
+ * 
+ *     def read_memory_uint8(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *        return <unsigned char>self.read_memory_int(address, 1)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_uint8", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "process.pyx":657
+ *        return <unsigned char>self.read_memory_int(address, 1)
+ * 
+ *     def read_memory_uint16(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *         return <unsigned short>self.read_memory_int(address, 2)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_43read_memory_uint16(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_43read_memory_uint16(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+  unsigned PY_LONG_LONG __pyx_v_address;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("read_memory_uint16 (wrapper)", 0);
+  assert(__pyx_arg_address); {
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 657, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_uint16", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_42read_memory_uint16(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_42read_memory_uint16(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("read_memory_uint16", 0);
+
+  /* "process.pyx":658
+ * 
+ *     def read_memory_uint16(self, unsigned long long address) -> int:
+ *         return <unsigned short>self.read_memory_int(address, 2)             # <<<<<<<<<<<<<<
+ * 
+ *     def read_memory_uint32(self, unsigned long long address) -> int:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_short(((unsigned short)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 2))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 658, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "process.pyx":657
+ *        return <unsigned char>self.read_memory_int(address, 1)
+ * 
+ *     def read_memory_uint16(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *         return <unsigned short>self.read_memory_int(address, 2)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_uint16", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "process.pyx":660
+ *         return <unsigned short>self.read_memory_int(address, 2)
+ * 
+ *     def read_memory_uint32(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *         return <unsigned int>self.read_memory_int(address, 4)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_45read_memory_uint32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_45read_memory_uint32(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+  unsigned PY_LONG_LONG __pyx_v_address;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("read_memory_uint32 (wrapper)", 0);
+  assert(__pyx_arg_address); {
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 660, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_uint32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_44read_memory_uint32(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_44read_memory_uint32(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("read_memory_uint32", 0);
+
+  /* "process.pyx":661
+ * 
+ *     def read_memory_uint32(self, unsigned long long address) -> int:
+ *         return <unsigned int>self.read_memory_int(address, 4)             # <<<<<<<<<<<<<<
+ * 
+ *     def read_memory_uint64(self, unsigned long long address) -> int:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_int(((unsigned int)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 4))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 661, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "process.pyx":660
+ *         return <unsigned short>self.read_memory_int(address, 2)
+ * 
+ *     def read_memory_uint32(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
+ *         return <unsigned int>self.read_memory_int(address, 4)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_uint32", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "process.pyx":663
  *         return <unsigned int>self.read_memory_int(address, 4)
  * 
  *     def read_memory_uint64(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
@@ -8689,8 +8804,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_47read_memory_uint64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_47read_memory_uint64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_47read_memory_uint64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_47read_memory_uint64(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
   unsigned PY_LONG_LONG __pyx_v_address;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -8699,22 +8814,22 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("read_memory_uint64 (wrapper)", 0);
   assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 645, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 663, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_uint64", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_uint64", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_46read_memory_uint64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_46read_memory_uint64(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_46read_memory_uint64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_46read_memory_uint64(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -8723,7 +8838,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("read_memory_uint64", 0);
 
-  /* "process.pyx":646
+  /* "process.pyx":664
  * 
  *     def read_memory_uint64(self, unsigned long long address) -> int:
  *        return <unsigned long long>self.read_memory_int(address, 8)             # <<<<<<<<<<<<<<
@@ -8731,13 +8846,13 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     def alloc_memory(self, unsigned long long size, unsigned long long min_address = 0, unsigned int allocation_type = MEM_COMMIT, unsigned int protection_type = PAGE_EXECUTE_READWRITE) -> int:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 8))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 646, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)((struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self->__pyx_vtab)->read_memory_int(__pyx_v_self, __pyx_v_address, 8))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 664, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":645
+  /* "process.pyx":663
  *         return <unsigned int>self.read_memory_int(address, 4)
  * 
  *     def read_memory_uint64(self, unsigned long long address) -> int:             # <<<<<<<<<<<<<<
@@ -8748,7 +8863,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.read_memory_uint64", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.read_memory_uint64", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -8756,7 +8871,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":648
+/* "process.pyx":666
  *        return <unsigned long long>self.read_memory_int(address, 8)
  * 
  *     def alloc_memory(self, unsigned long long size, unsigned long long min_address = 0, unsigned int allocation_type = MEM_COMMIT, unsigned int protection_type = PAGE_EXECUTE_READWRITE) -> int:             # <<<<<<<<<<<<<<
@@ -8765,8 +8880,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_49alloc_memory(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_49alloc_memory(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_49alloc_memory(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_49alloc_memory(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   unsigned PY_LONG_LONG __pyx_v_size;
   unsigned PY_LONG_LONG __pyx_v_min_address;
   unsigned int __pyx_v_allocation_type;
@@ -8820,7 +8935,7 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "alloc_memory") < 0)) __PYX_ERR(0, 648, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "alloc_memory") < 0)) __PYX_ERR(0, 666, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -8835,39 +8950,39 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_size = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_size == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 648, __pyx_L3_error)
+    __pyx_v_size = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[0]); if (unlikely((__pyx_v_size == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 666, __pyx_L3_error)
     if (values[1]) {
-      __pyx_v_min_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[1]); if (unlikely((__pyx_v_min_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 648, __pyx_L3_error)
+      __pyx_v_min_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(values[1]); if (unlikely((__pyx_v_min_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 666, __pyx_L3_error)
     } else {
       __pyx_v_min_address = ((unsigned PY_LONG_LONG)0);
     }
     if (values[2]) {
-      __pyx_v_allocation_type = __Pyx_PyInt_As_unsigned_int(values[2]); if (unlikely((__pyx_v_allocation_type == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(0, 648, __pyx_L3_error)
+      __pyx_v_allocation_type = __Pyx_PyInt_As_unsigned_int(values[2]); if (unlikely((__pyx_v_allocation_type == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(0, 666, __pyx_L3_error)
     } else {
       __pyx_v_allocation_type = __pyx_k__17;
     }
     if (values[3]) {
-      __pyx_v_protection_type = __Pyx_PyInt_As_unsigned_int(values[3]); if (unlikely((__pyx_v_protection_type == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(0, 648, __pyx_L3_error)
+      __pyx_v_protection_type = __Pyx_PyInt_As_unsigned_int(values[3]); if (unlikely((__pyx_v_protection_type == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(0, 666, __pyx_L3_error)
     } else {
       __pyx_v_protection_type = __pyx_k__18;
     }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("alloc_memory", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 648, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("alloc_memory", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 666, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.alloc_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.alloc_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_48alloc_memory(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), __pyx_v_size, __pyx_v_min_address, __pyx_v_allocation_type, __pyx_v_protection_type);
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_48alloc_memory(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), __pyx_v_size, __pyx_v_min_address, __pyx_v_allocation_type, __pyx_v_protection_type);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_48alloc_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_size, unsigned PY_LONG_LONG __pyx_v_min_address, unsigned int __pyx_v_allocation_type, unsigned int __pyx_v_protection_type) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_48alloc_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_size, unsigned PY_LONG_LONG __pyx_v_min_address, unsigned int __pyx_v_allocation_type, unsigned int __pyx_v_protection_type) {
   unsigned PY_LONG_LONG __pyx_v_address;
   struct __pyx_t_29cython_virtual_memory_toolkit_7process_MemoryBlock __pyx_v_mem_block;
   PyObject *__pyx_r = NULL;
@@ -8878,7 +8993,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("alloc_memory", 0);
 
-  /* "process.pyx":649
+  /* "process.pyx":667
  * 
  *     def alloc_memory(self, unsigned long long size, unsigned long long min_address = 0, unsigned int allocation_type = MEM_COMMIT, unsigned int protection_type = PAGE_EXECUTE_READWRITE) -> int:
  *         cdef unsigned long long address = <unsigned long long>VirtualAllocEx(             # <<<<<<<<<<<<<<
@@ -8887,7 +9002,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_address = ((unsigned PY_LONG_LONG)VirtualAllocEx(__pyx_v_self->_process_handle, ((void *)__pyx_v_min_address), ((SIZE_T)__pyx_v_size), ((DWORD)__pyx_v_allocation_type), ((DWORD)__pyx_v_protection_type)));
 
-  /* "process.pyx":658
+  /* "process.pyx":676
  * 
  *         cdef MemoryBlock mem_block
  *         mem_block.address = <void*>address             # <<<<<<<<<<<<<<
@@ -8896,19 +9011,19 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_mem_block.address = ((void *)__pyx_v_address);
 
-  /* "process.pyx":659
+  /* "process.pyx":677
  *         cdef MemoryBlock mem_block
  *         mem_block.address = <void*>address
  *         mem_block.process_handle = <void*>self.process_handle             # <<<<<<<<<<<<<<
  *         mem_block.size = <SIZE_T>size
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_process_handle); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 659, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_process_handle); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 677, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_mem_block.process_handle = ((void *)__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "process.pyx":660
+  /* "process.pyx":678
  *         mem_block.address = <void*>address
  *         mem_block.process_handle = <void*>self.process_handle
  *         mem_block.size = <SIZE_T>size             # <<<<<<<<<<<<<<
@@ -8917,7 +9032,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_mem_block.size = ((SIZE_T)__pyx_v_size);
 
-  /* "process.pyx":662
+  /* "process.pyx":680
  *         mem_block.size = <SIZE_T>size
  * 
  *         self._allocated_memory_blocks.push_back(mem_block)             # <<<<<<<<<<<<<<
@@ -8928,10 +9043,10 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_v_self->_allocated_memory_blocks.push_back(__pyx_v_mem_block);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 662, __pyx_L1_error)
+    __PYX_ERR(0, 680, __pyx_L1_error)
   }
 
-  /* "process.pyx":664
+  /* "process.pyx":682
  *         self._allocated_memory_blocks.push_back(mem_block)
  * 
  *         return address             # <<<<<<<<<<<<<<
@@ -8939,13 +9054,13 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     def dealloc_memory(self, unsigned long long address) -> None:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(__pyx_v_address); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 664, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(__pyx_v_address); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 682, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":648
+  /* "process.pyx":666
  *        return <unsigned long long>self.read_memory_int(address, 8)
  * 
  *     def alloc_memory(self, unsigned long long size, unsigned long long min_address = 0, unsigned int allocation_type = MEM_COMMIT, unsigned int protection_type = PAGE_EXECUTE_READWRITE) -> int:             # <<<<<<<<<<<<<<
@@ -8956,7 +9071,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.alloc_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.alloc_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -8964,7 +9079,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":666
+/* "process.pyx":684
  *         return address
  * 
  *     def dealloc_memory(self, unsigned long long address) -> None:             # <<<<<<<<<<<<<<
@@ -8973,8 +9088,8 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_51dealloc_memory(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_51dealloc_memory(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_51dealloc_memory(PyObject *__pyx_v_self, PyObject *__pyx_arg_address); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_51dealloc_memory(PyObject *__pyx_v_self, PyObject *__pyx_arg_address) {
   unsigned PY_LONG_LONG __pyx_v_address;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -8983,22 +9098,22 @@ static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("dealloc_memory (wrapper)", 0);
   assert(__pyx_arg_address); {
-    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 666, __pyx_L3_error)
+    __pyx_v_address = __Pyx_PyInt_As_unsigned_PY_LONG_LONG(__pyx_arg_address); if (unlikely((__pyx_v_address == (unsigned PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 684, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.dealloc_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.dealloc_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_50dealloc_memory(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_50dealloc_memory(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((unsigned PY_LONG_LONG)__pyx_v_address));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_50dealloc_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_50dealloc_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, unsigned PY_LONG_LONG __pyx_v_address) {
   int __pyx_v_i;
   SIZE_T __pyx_v_mem_size;
   char __pyx_v_found;
@@ -9016,7 +9131,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("dealloc_memory", 0);
 
-  /* "process.pyx":667
+  /* "process.pyx":685
  * 
  *     def dealloc_memory(self, unsigned long long address) -> None:
  *         cdef int i = 0             # <<<<<<<<<<<<<<
@@ -9025,7 +9140,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_i = 0;
 
-  /* "process.pyx":668
+  /* "process.pyx":686
  *     def dealloc_memory(self, unsigned long long address) -> None:
  *         cdef int i = 0
  *         cdef SIZE_T mem_size = 0             # <<<<<<<<<<<<<<
@@ -9034,7 +9149,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_mem_size = 0;
 
-  /* "process.pyx":669
+  /* "process.pyx":687
  *         cdef int i = 0
  *         cdef SIZE_T mem_size = 0
  *         cdef char found = 0             # <<<<<<<<<<<<<<
@@ -9043,7 +9158,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
   __pyx_v_found = 0;
 
-  /* "process.pyx":673
+  /* "process.pyx":691
  * 
  *         # Iterate in reverse order to safely remove elements without affecting the iteration
  *         for i in range(self._allocated_memory_blocks.size() - 1, -1, -1):             # <<<<<<<<<<<<<<
@@ -9053,7 +9168,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   for (__pyx_t_1 = (__pyx_v_self->_allocated_memory_blocks.size() - 1); __pyx_t_1 > -1; __pyx_t_1-=1) {
     __pyx_v_i = __pyx_t_1;
 
-    /* "process.pyx":674
+    /* "process.pyx":692
  *         # Iterate in reverse order to safely remove elements without affecting the iteration
  *         for i in range(self._allocated_memory_blocks.size() - 1, -1, -1):
  *             mem_block = self._allocated_memory_blocks.at(i)             # <<<<<<<<<<<<<<
@@ -9064,11 +9179,11 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
       __pyx_t_2 = __pyx_v_self->_allocated_memory_blocks.at(__pyx_v_i);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(0, 674, __pyx_L1_error)
+      __PYX_ERR(0, 692, __pyx_L1_error)
     }
     __pyx_v_mem_block = __pyx_t_2;
 
-    /* "process.pyx":675
+    /* "process.pyx":693
  *         for i in range(self._allocated_memory_blocks.size() - 1, -1, -1):
  *             mem_block = self._allocated_memory_blocks.at(i)
  *             if <SIZE_T>mem_block.address == address:             # <<<<<<<<<<<<<<
@@ -9078,7 +9193,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_t_3 = ((((SIZE_T)__pyx_v_mem_block.address) == __pyx_v_address) != 0);
     if (__pyx_t_3) {
 
-      /* "process.pyx":677
+      /* "process.pyx":695
  *             if <SIZE_T>mem_block.address == address:
  *                 # Mark that we've found a matching block
  *                 found = 1             # <<<<<<<<<<<<<<
@@ -9087,7 +9202,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
       __pyx_v_found = 1;
 
-      /* "process.pyx":680
+      /* "process.pyx":698
  * 
  *                 # Save the size before erasing the block
  *                 mem_size = mem_block.size             # <<<<<<<<<<<<<<
@@ -9097,7 +9212,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
       __pyx_t_4 = __pyx_v_mem_block.size;
       __pyx_v_mem_size = __pyx_t_4;
 
-      /* "process.pyx":683
+      /* "process.pyx":701
  * 
  *                 # Erase the block from the vector
  *                 self._allocated_memory_blocks.erase(self._allocated_memory_blocks.begin() + i)             # <<<<<<<<<<<<<<
@@ -9106,7 +9221,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
       (void)(__pyx_v_self->_allocated_memory_blocks.erase((__pyx_v_self->_allocated_memory_blocks.begin() + __pyx_v_i)));
 
-      /* "process.pyx":686
+      /* "process.pyx":704
  * 
  *                 # Break after the first match since address should be unique
  *                 break             # <<<<<<<<<<<<<<
@@ -9115,7 +9230,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
       goto __pyx_L4_break;
 
-      /* "process.pyx":675
+      /* "process.pyx":693
  *         for i in range(self._allocated_memory_blocks.size() - 1, -1, -1):
  *             mem_block = self._allocated_memory_blocks.at(i)
  *             if <SIZE_T>mem_block.address == address:             # <<<<<<<<<<<<<<
@@ -9126,7 +9241,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   }
   __pyx_L4_break:;
 
-  /* "process.pyx":689
+  /* "process.pyx":707
  * 
  *         # Only attempt to free memory if a matching block was found
  *         if found:             # <<<<<<<<<<<<<<
@@ -9136,7 +9251,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_t_3 = (__pyx_v_found != 0);
   if (likely(__pyx_t_3)) {
 
-    /* "process.pyx":690
+    /* "process.pyx":708
  *         # Only attempt to free memory if a matching block was found
  *         if found:
  *             if not VirtualFreeEx(self._process_handle, <LPVOID>address, mem_size, MEM_DECOMMIT):             # <<<<<<<<<<<<<<
@@ -9146,32 +9261,32 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_t_3 = ((!(VirtualFreeEx(__pyx_v_self->_process_handle, ((LPVOID)__pyx_v_address), __pyx_v_mem_size, MEM_DECOMMIT) != 0)) != 0);
     if (unlikely(__pyx_t_3)) {
 
-      /* "process.pyx":691
+      /* "process.pyx":709
  *         if found:
  *             if not VirtualFreeEx(self._process_handle, <LPVOID>address, mem_size, MEM_DECOMMIT):
  *                 raise MemoryError(f"Cannot deallocate memory at address {hex(address)}")             # <<<<<<<<<<<<<<
  *         else:
  *             raise ValueError(f"No memory block found at address {hex(address)}")
  */
-      __pyx_t_5 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(__pyx_v_address); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 691, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(__pyx_v_address); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 709, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 691, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 709, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 691, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 709, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Cannot_deallocate_memory_at_addr, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 691, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Cannot_deallocate_memory_at_addr, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 709, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_MemoryError, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 691, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_MemoryError, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 709, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_Raise(__pyx_t_5, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __PYX_ERR(0, 691, __pyx_L1_error)
+      __PYX_ERR(0, 709, __pyx_L1_error)
 
-      /* "process.pyx":690
+      /* "process.pyx":708
  *         # Only attempt to free memory if a matching block was found
  *         if found:
  *             if not VirtualFreeEx(self._process_handle, <LPVOID>address, mem_size, MEM_DECOMMIT):             # <<<<<<<<<<<<<<
@@ -9180,7 +9295,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
     }
 
-    /* "process.pyx":689
+    /* "process.pyx":707
  * 
  *         # Only attempt to free memory if a matching block was found
  *         if found:             # <<<<<<<<<<<<<<
@@ -9190,7 +9305,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     goto __pyx_L6;
   }
 
-  /* "process.pyx":693
+  /* "process.pyx":711
  *                 raise MemoryError(f"Cannot deallocate memory at address {hex(address)}")
  *         else:
  *             raise ValueError(f"No memory block found at address {hex(address)}")             # <<<<<<<<<<<<<<
@@ -9198,27 +9313,27 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     def dealloc_all_memory(self):
  */
   /*else*/ {
-    __pyx_t_5 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(__pyx_v_address); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(__pyx_v_address); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 711, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 711, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 711, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_No_memory_block_found_at_address, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_No_memory_block_found_at_address, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 711, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 711, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_Raise(__pyx_t_5, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __PYX_ERR(0, 693, __pyx_L1_error)
+    __PYX_ERR(0, 711, __pyx_L1_error)
   }
   __pyx_L6:;
 
-  /* "process.pyx":666
+  /* "process.pyx":684
  *         return address
  * 
  *     def dealloc_memory(self, unsigned long long address) -> None:             # <<<<<<<<<<<<<<
@@ -9232,7 +9347,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.dealloc_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.dealloc_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -9240,7 +9355,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":695
+/* "process.pyx":713
  *             raise ValueError(f"No memory block found at address {hex(address)}")
  * 
  *     def dealloc_all_memory(self):             # <<<<<<<<<<<<<<
@@ -9249,19 +9364,19 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_53dealloc_all_memory(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_53dealloc_all_memory(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_53dealloc_all_memory(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_53dealloc_all_memory(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("dealloc_all_memory (wrapper)", 0);
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_52dealloc_all_memory(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_52dealloc_all_memory(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_52dealloc_all_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_52dealloc_all_memory(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self) {
   struct __pyx_t_29cython_virtual_memory_toolkit_7process_MemoryBlock __pyx_v_mem_block;
   std::vector<struct __pyx_t_29cython_virtual_memory_toolkit_7process_MemoryBlock> ::size_type __pyx_v_i;
   PyObject *__pyx_r = NULL;
@@ -9278,7 +9393,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("dealloc_all_memory", 0);
 
-  /* "process.pyx":699
+  /* "process.pyx":717
  *         cdef MemoryBlock mem_block
  * 
  *         for i in range(self._allocated_memory_blocks.size()):             # <<<<<<<<<<<<<<
@@ -9290,7 +9405,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "process.pyx":700
+    /* "process.pyx":718
  * 
  *         for i in range(self._allocated_memory_blocks.size()):
  *             mem_block = self._allocated_memory_blocks.at(i)             # <<<<<<<<<<<<<<
@@ -9301,34 +9416,34 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
       __pyx_t_4 = __pyx_v_self->_allocated_memory_blocks.at(__pyx_v_i);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(0, 700, __pyx_L1_error)
+      __PYX_ERR(0, 718, __pyx_L1_error)
     }
     __pyx_v_mem_block = __pyx_t_4;
 
-    /* "process.pyx":701
+    /* "process.pyx":719
  *         for i in range(self._allocated_memory_blocks.size()):
  *             mem_block = self._allocated_memory_blocks.at(i)
  *             print(f"Dealocating memory at address {hex(<SIZE_T>mem_block.address)}")             # <<<<<<<<<<<<<<
  *             if not VirtualFreeEx(
  *                 self._process_handle,
  */
-    __pyx_t_5 = __Pyx_PyInt_From_ULONG_PTR(((SIZE_T)__pyx_v_mem_block.address)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 701, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_From_ULONG_PTR(((SIZE_T)__pyx_v_mem_block.address)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 719, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 719, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 701, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 719, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Dealocating_memory_at_address, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Dealocating_memory_at_address, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 719, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_print, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 701, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_print, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 719, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "process.pyx":702
+    /* "process.pyx":720
  *             mem_block = self._allocated_memory_blocks.at(i)
  *             print(f"Dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
  *             if not VirtualFreeEx(             # <<<<<<<<<<<<<<
@@ -9338,32 +9453,32 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     __pyx_t_7 = ((!(VirtualFreeEx(__pyx_v_self->_process_handle, __pyx_v_mem_block.address, __pyx_v_mem_block.size, MEM_DECOMMIT) != 0)) != 0);
     if (unlikely(__pyx_t_7)) {
 
-      /* "process.pyx":708
+      /* "process.pyx":726
  *                 MEM_DECOMMIT
  *             ):
  *                 raise MemoryError(f"Unable to free allocated memory block at address {hex(<SIZE_T>mem_block.address)}")             # <<<<<<<<<<<<<<
  * 
- * 
+ *     @property
  */
-      __pyx_t_5 = __Pyx_PyInt_From_ULONG_PTR(((SIZE_T)__pyx_v_mem_block.address)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 708, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_From_ULONG_PTR(((SIZE_T)__pyx_v_mem_block.address)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 726, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 708, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 726, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 708, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 726, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Unable_to_free_allocated_memory, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 708, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Unable_to_free_allocated_memory, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 726, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_MemoryError, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 708, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_MemoryError, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 726, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_Raise(__pyx_t_5, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __PYX_ERR(0, 708, __pyx_L1_error)
+      __PYX_ERR(0, 726, __pyx_L1_error)
 
-      /* "process.pyx":702
+      /* "process.pyx":720
  *             mem_block = self._allocated_memory_blocks.at(i)
  *             print(f"Dealocating memory at address {hex(<SIZE_T>mem_block.address)}")
  *             if not VirtualFreeEx(             # <<<<<<<<<<<<<<
@@ -9373,7 +9488,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
     }
   }
 
-  /* "process.pyx":695
+  /* "process.pyx":713
  *             raise ValueError(f"No memory block found at address {hex(address)}")
  * 
  *     def dealloc_all_memory(self):             # <<<<<<<<<<<<<<
@@ -9387,7 +9502,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.dealloc_all_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.dealloc_all_memory", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -9395,7 +9510,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":713
+/* "process.pyx":729
  * 
  *     @property
  *     def window_handle(self) -> int:             # <<<<<<<<<<<<<<
@@ -9404,19 +9519,19 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_13window_handle_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_13window_handle_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_13window_handle_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_13window_handle_1__get__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_13window_handle___get__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_13window_handle___get__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_13window_handle___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_13window_handle___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -9425,7 +9540,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "process.pyx":714
+  /* "process.pyx":730
  *     @property
  *     def window_handle(self) -> int:
  *         return <unsigned long long>self._window_handle             # <<<<<<<<<<<<<<
@@ -9433,13 +9548,13 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_self->_window_handle)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 714, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_self->_window_handle)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 730, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":713
+  /* "process.pyx":729
  * 
  *     @property
  *     def window_handle(self) -> int:             # <<<<<<<<<<<<<<
@@ -9450,7 +9565,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.window_handle.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.window_handle.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -9458,7 +9573,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":717
+/* "process.pyx":733
  * 
  *     @property
  *     def process_handle(self) -> int:             # <<<<<<<<<<<<<<
@@ -9467,19 +9582,19 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_14process_handle_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_14process_handle_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_14process_handle_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_14process_handle_1__get__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_14process_handle___get__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_14process_handle___get__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_14process_handle___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_14process_handle___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -9488,7 +9603,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "process.pyx":718
+  /* "process.pyx":734
  *     @property
  *     def process_handle(self) -> int:
  *         return <unsigned long long>self._process_handle             # <<<<<<<<<<<<<<
@@ -9496,13 +9611,13 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_self->_process_handle)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 718, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_self->_process_handle)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 734, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":717
+  /* "process.pyx":733
  * 
  *     @property
  *     def process_handle(self) -> int:             # <<<<<<<<<<<<<<
@@ -9513,7 +9628,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.process_handle.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.process_handle.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -9521,7 +9636,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":721
+/* "process.pyx":737
  * 
  *     @property
  *     def pid(self) -> int:             # <<<<<<<<<<<<<<
@@ -9530,19 +9645,19 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_3pid_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_3pid_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_3pid_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_3pid_1__get__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_3pid___get__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_3pid___get__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_3pid___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_3pid___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -9551,7 +9666,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "process.pyx":722
+  /* "process.pyx":738
  *     @property
  *     def pid(self) -> int:
  *         return self._pid             # <<<<<<<<<<<<<<
@@ -9559,13 +9674,13 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_DWORD(__pyx_v_self->_pid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 722, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_DWORD(__pyx_v_self->_pid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 738, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":721
+  /* "process.pyx":737
  * 
  *     @property
  *     def pid(self) -> int:             # <<<<<<<<<<<<<<
@@ -9576,7 +9691,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.pid.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.pid.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -9584,7 +9699,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":725
+/* "process.pyx":741
  * 
  *     @property
  *     def modules(self) -> dict[bytes, int]:             # <<<<<<<<<<<<<<
@@ -9593,19 +9708,19 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_7modules_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_7modules_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_7modules_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_7modules_1__get__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_7modules___get__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_7modules___get__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_7modules___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_7modules___get__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -9614,7 +9729,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "process.pyx":726
+  /* "process.pyx":742
  *     @property
  *     def modules(self) -> dict[bytes, int]:
  *         return self._py_modules_dict             # <<<<<<<<<<<<<<
@@ -9622,13 +9737,13 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     def __str__(self) -> str:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_py_modules_dict); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 726, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_py_modules_dict); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 742, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":725
+  /* "process.pyx":741
  * 
  *     @property
  *     def modules(self) -> dict[bytes, int]:             # <<<<<<<<<<<<<<
@@ -9639,7 +9754,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.modules.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.modules.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -9647,7 +9762,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":728
+/* "process.pyx":744
  *         return self._py_modules_dict
  * 
  *     def __str__(self) -> str:             # <<<<<<<<<<<<<<
@@ -9656,19 +9771,19 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_55__str__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_55__str__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_55__str__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_55__str__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__str__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_54__str__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_54__str__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_54__str__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_54__str__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self) {
   PyObject *__pyx_v_py_str = 0;
   PyObject *__pyx_v_module_name = 0;
   PyObject *__pyx_v_module_addr = 0;
@@ -9687,7 +9802,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__str__", 0);
 
-  /* "process.pyx":731
+  /* "process.pyx":747
  *         cdef MODULEENTRY32 cur_mod
  * 
  *         py_str: str = ""             # <<<<<<<<<<<<<<
@@ -9697,199 +9812,199 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_INCREF(__pyx_kp_u__19);
   __pyx_v_py_str = __pyx_kp_u__19;
 
-  /* "process.pyx":732
+  /* "process.pyx":748
  * 
  *         py_str: str = ""
  *         py_str = py_str + "\n================================================="             # <<<<<<<<<<<<<<
  *         py_str = py_str + "\n|                Application                    |"
  *         py_str = py_str + "\n================================================="
  */
-  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u__20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 732, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u__20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 748, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_1));
   __pyx_t_1 = 0;
 
-  /* "process.pyx":733
+  /* "process.pyx":749
  *         py_str: str = ""
  *         py_str = py_str + "\n================================================="
  *         py_str = py_str + "\n|                Application                    |"             # <<<<<<<<<<<<<<
  *         py_str = py_str + "\n================================================="
  *         py_str = py_str + "\n| Window name      = " + str(<bytes>self._window_name)
  */
-  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Application); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 733, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Application); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 749, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_1));
   __pyx_t_1 = 0;
 
-  /* "process.pyx":734
+  /* "process.pyx":750
  *         py_str = py_str + "\n================================================="
  *         py_str = py_str + "\n|                Application                    |"
  *         py_str = py_str + "\n================================================="             # <<<<<<<<<<<<<<
  *         py_str = py_str + "\n| Window name      = " + str(<bytes>self._window_name)
  *         py_str = py_str + "\n| Process handle   = " + str(<unsigned long long>self._process_handle)
  */
-  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u__20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 734, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u__20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 750, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_1));
   __pyx_t_1 = 0;
 
-  /* "process.pyx":735
+  /* "process.pyx":751
  *         py_str = py_str + "\n|                Application                    |"
  *         py_str = py_str + "\n================================================="
  *         py_str = py_str + "\n| Window name      = " + str(<bytes>self._window_name)             # <<<<<<<<<<<<<<
  *         py_str = py_str + "\n| Process handle   = " + str(<unsigned long long>self._process_handle)
  *         py_str = py_str + "\n| Window handle    = " + str(<unsigned long long>self._window_handle)
  */
-  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Window_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 735, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Window_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 751, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->_window_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 735, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_self->_window_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 751, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 735, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 751, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 735, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 751, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_2));
   __pyx_t_2 = 0;
 
-  /* "process.pyx":736
+  /* "process.pyx":752
  *         py_str = py_str + "\n================================================="
  *         py_str = py_str + "\n| Window name      = " + str(<bytes>self._window_name)
  *         py_str = py_str + "\n| Process handle   = " + str(<unsigned long long>self._process_handle)             # <<<<<<<<<<<<<<
  *         py_str = py_str + "\n| Window handle    = " + str(<unsigned long long>self._window_handle)
  *         py_str = py_str + "\n| PID              = " + str(self._pid)
  */
-  __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Process_handle); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 736, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Process_handle); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 752, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_self->_process_handle)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 736, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_self->_process_handle)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 752, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 736, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 752, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 736, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 752, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_3));
   __pyx_t_3 = 0;
 
-  /* "process.pyx":737
+  /* "process.pyx":753
  *         py_str = py_str + "\n| Window name      = " + str(<bytes>self._window_name)
  *         py_str = py_str + "\n| Process handle   = " + str(<unsigned long long>self._process_handle)
  *         py_str = py_str + "\n| Window handle    = " + str(<unsigned long long>self._window_handle)             # <<<<<<<<<<<<<<
  *         py_str = py_str + "\n| PID              = " + str(self._pid)
  *         py_str = py_str + "\n| Process filename = " + str(self._process_image_filename)
  */
-  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Window_handle); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 737, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Window_handle); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 753, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_self->_window_handle)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 737, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(((unsigned PY_LONG_LONG)__pyx_v_self->_window_handle)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 753, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 737, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 753, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 737, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 753, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_1));
   __pyx_t_1 = 0;
 
-  /* "process.pyx":738
+  /* "process.pyx":754
  *         py_str = py_str + "\n| Process handle   = " + str(<unsigned long long>self._process_handle)
  *         py_str = py_str + "\n| Window handle    = " + str(<unsigned long long>self._window_handle)
  *         py_str = py_str + "\n| PID              = " + str(self._pid)             # <<<<<<<<<<<<<<
  *         py_str = py_str + "\n| Process filename = " + str(self._process_image_filename)
  *         py_str = py_str + "\n================================================="
  */
-  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_PID); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 738, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_PID); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 754, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_From_DWORD(__pyx_v_self->_pid); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 738, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_DWORD(__pyx_v_self->_pid); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 754, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 738, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 754, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 738, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 754, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_2));
   __pyx_t_2 = 0;
 
-  /* "process.pyx":739
+  /* "process.pyx":755
  *         py_str = py_str + "\n| Window handle    = " + str(<unsigned long long>self._window_handle)
  *         py_str = py_str + "\n| PID              = " + str(self._pid)
  *         py_str = py_str + "\n| Process filename = " + str(self._process_image_filename)             # <<<<<<<<<<<<<<
  *         py_str = py_str + "\n================================================="
  *         py_str = py_str + "\n|                 Modules                       |"
  */
-  __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Process_filename); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 739, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Process_filename); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 755, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyBytes_FromString(__pyx_v_self->_process_image_filename); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 739, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyBytes_FromString(__pyx_v_self->_process_image_filename); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 755, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 739, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 755, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 739, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 755, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_3));
   __pyx_t_3 = 0;
 
-  /* "process.pyx":740
+  /* "process.pyx":756
  *         py_str = py_str + "\n| PID              = " + str(self._pid)
  *         py_str = py_str + "\n| Process filename = " + str(self._process_image_filename)
  *         py_str = py_str + "\n================================================="             # <<<<<<<<<<<<<<
  *         py_str = py_str + "\n|                 Modules                       |"
  *         py_str = py_str + "\n================================================="
  */
-  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u__20); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 740, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u__20); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 756, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_3));
   __pyx_t_3 = 0;
 
-  /* "process.pyx":741
+  /* "process.pyx":757
  *         py_str = py_str + "\n| Process filename = " + str(self._process_image_filename)
  *         py_str = py_str + "\n================================================="
  *         py_str = py_str + "\n|                 Modules                       |"             # <<<<<<<<<<<<<<
  *         py_str = py_str + "\n================================================="
  * 
  */
-  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Modules); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 741, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u_Modules); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 757, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_3));
   __pyx_t_3 = 0;
 
-  /* "process.pyx":742
+  /* "process.pyx":758
  *         py_str = py_str + "\n================================================="
  *         py_str = py_str + "\n|                 Modules                       |"
  *         py_str = py_str + "\n================================================="             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u__20); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 742, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_v_py_str, __pyx_kp_u__20); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_3));
   __pyx_t_3 = 0;
 
-  /* "process.pyx":747
+  /* "process.pyx":763
  *         module_name: bytes
  *         module_addr: int
  *         for module_name, module_addr in self._py_modules_ordered_list:             # <<<<<<<<<<<<<<
  *             py_str = py_str + "\n| " + hex(module_addr) + ": " + module_name.decode('utf-8')
  * 
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_py_modules_ordered_list); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 747, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_py_modules_ordered_list); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 763, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   if (likely(PyList_CheckExact(__pyx_t_3)) || PyTuple_CheckExact(__pyx_t_3)) {
     __pyx_t_1 = __pyx_t_3; __Pyx_INCREF(__pyx_t_1); __pyx_t_4 = 0;
     __pyx_t_5 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 747, __pyx_L1_error)
+    __pyx_t_4 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 763, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 747, __pyx_L1_error)
+    __pyx_t_5 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 763, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   for (;;) {
@@ -9897,17 +10012,17 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_3); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 747, __pyx_L1_error)
+        __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_3); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 763, __pyx_L1_error)
         #else
-        __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 747, __pyx_L1_error)
+        __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 763, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         #endif
       } else {
         if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_3); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 747, __pyx_L1_error)
+        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_3); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 763, __pyx_L1_error)
         #else
-        __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 747, __pyx_L1_error)
+        __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 763, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         #endif
       }
@@ -9917,7 +10032,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 747, __pyx_L1_error)
+          else __PYX_ERR(0, 763, __pyx_L1_error)
         }
         break;
       }
@@ -9929,7 +10044,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
       if (unlikely(size != 2)) {
         if (size > 2) __Pyx_RaiseTooManyValuesError(2);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 747, __pyx_L1_error)
+        __PYX_ERR(0, 763, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -9942,15 +10057,15 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
       __Pyx_INCREF(__pyx_t_2);
       __Pyx_INCREF(__pyx_t_6);
       #else
-      __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 747, __pyx_L1_error)
+      __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 763, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_6 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 747, __pyx_L1_error)
+      __pyx_t_6 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 763, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       #endif
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_7 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 747, __pyx_L1_error)
+      __pyx_t_7 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 763, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_8 = Py_TYPE(__pyx_t_7)->tp_iternext;
@@ -9958,7 +10073,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
       __Pyx_GOTREF(__pyx_t_2);
       index = 1; __pyx_t_6 = __pyx_t_8(__pyx_t_7); if (unlikely(!__pyx_t_6)) goto __pyx_L5_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_6);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_8(__pyx_t_7), 2) < 0) __PYX_ERR(0, 747, __pyx_L1_error)
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_8(__pyx_t_7), 2) < 0) __PYX_ERR(0, 763, __pyx_L1_error)
       __pyx_t_8 = NULL;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       goto __pyx_L6_unpacking_done;
@@ -9966,48 +10081,48 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_t_8 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 747, __pyx_L1_error)
+      __PYX_ERR(0, 763, __pyx_L1_error)
       __pyx_L6_unpacking_done:;
     }
-    if (!(likely(PyBytes_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||((void)PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 747, __pyx_L1_error)
+    if (!(likely(PyBytes_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||((void)PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 763, __pyx_L1_error)
     __Pyx_XDECREF_SET(__pyx_v_module_name, ((PyObject*)__pyx_t_2));
     __pyx_t_2 = 0;
     __Pyx_XDECREF_SET(__pyx_v_module_addr, __pyx_t_6);
     __pyx_t_6 = 0;
 
-    /* "process.pyx":748
+    /* "process.pyx":764
  *         module_addr: int
  *         for module_name, module_addr in self._py_modules_ordered_list:
  *             py_str = py_str + "\n| " + hex(module_addr) + ": " + module_name.decode('utf-8')             # <<<<<<<<<<<<<<
  * 
  *         py_str = py_str + "\n================================================="
  */
-    __pyx_t_3 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_py_str, __pyx_kp_u__21); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_py_str, __pyx_kp_u__21); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 764, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_v_module_addr); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_v_module_addr); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 764, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_2 = PyNumber_Add(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_Add(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 764, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = PyNumber_Add(__pyx_t_2, __pyx_kp_u__22); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_6 = PyNumber_Add(__pyx_t_2, __pyx_kp_u__22); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 764, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (unlikely(__pyx_v_module_name == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "decode");
-      __PYX_ERR(0, 748, __pyx_L1_error)
+      __PYX_ERR(0, 764, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_decode_bytes(__pyx_v_module_name, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_decode_bytes(__pyx_v_module_name, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 764, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyNumber_Add(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Add(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 764, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||((void)PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 748, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||((void)PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 764, __pyx_L1_error)
     __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_3));
     __pyx_t_3 = 0;
 
-    /* "process.pyx":747
+    /* "process.pyx":763
  *         module_name: bytes
  *         module_addr: int
  *         for module_name, module_addr in self._py_modules_ordered_list:             # <<<<<<<<<<<<<<
@@ -10017,19 +10132,19 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "process.pyx":750
+  /* "process.pyx":766
  *             py_str = py_str + "\n| " + hex(module_addr) + ": " + module_name.decode('utf-8')
  * 
  *         py_str = py_str + "\n================================================="             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_1 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_py_str, __pyx_kp_u__20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 750, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_py_str, __pyx_kp_u__20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 766, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF_SET(__pyx_v_py_str, ((PyObject*)__pyx_t_1));
   __pyx_t_1 = 0;
 
-  /* "process.pyx":753
+  /* "process.pyx":769
  * 
  * 
  *         return py_str             # <<<<<<<<<<<<<<
@@ -10041,7 +10156,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __pyx_r = __pyx_v_py_str;
   goto __pyx_L0;
 
-  /* "process.pyx":728
+  /* "process.pyx":744
  *         return self._py_modules_dict
  * 
  *     def __str__(self) -> str:             # <<<<<<<<<<<<<<
@@ -10056,7 +10171,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.__str__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.__str__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_py_str);
@@ -10067,7 +10182,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":755
+/* "process.pyx":771
  *         return py_str
  * 
  *     def __repr__(self) -> str:             # <<<<<<<<<<<<<<
@@ -10076,19 +10191,19 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_57__repr__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_57__repr__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_57__repr__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_57__repr__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__repr__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_56__repr__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_56__repr__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_56__repr__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_56__repr__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -10099,7 +10214,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__repr__", 0);
 
-  /* "process.pyx":756
+  /* "process.pyx":772
  * 
  *     def __repr__(self) -> str:
  *         return self.__str__()             # <<<<<<<<<<<<<<
@@ -10107,7 +10222,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
  *     def __dealloc__(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_str); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_str); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 772, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -10121,14 +10236,14 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 756, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 772, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "process.pyx":755
+  /* "process.pyx":771
  *         return py_str
  * 
  *     def __repr__(self) -> str:             # <<<<<<<<<<<<<<
@@ -10141,7 +10256,7 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.__repr__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.__repr__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -10149,26 +10264,26 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   return __pyx_r;
 }
 
-/* "process.pyx":758
+/* "process.pyx":774
  *         return self.__str__()
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
  * 
- * 
+ *         self.dealloc_all_memory()
  */
 
 /* Python wrapper */
-static void __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_59__dealloc__(PyObject *__pyx_v_self); /*proto*/
-static void __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_59__dealloc__(PyObject *__pyx_v_self) {
+static void __pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_59__dealloc__(PyObject *__pyx_v_self); /*proto*/
+static void __pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_59__dealloc__(PyObject *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__ (wrapper)", 0);
-  __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_58__dealloc__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self));
+  __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_58__dealloc__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
 }
 
-static void __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_58__dealloc__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self) {
+static void __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_58__dealloc__(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
@@ -10178,14 +10293,14 @@ static void __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_58__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "process.pyx":761
- * 
+  /* "process.pyx":776
+ *     def __dealloc__(self):
  * 
  *         self.dealloc_all_memory()             # <<<<<<<<<<<<<<
  * 
  *         CloseHandle(self._process_handle)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dealloc_all_memory); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 761, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_dealloc_all_memory); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 776, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -10199,12 +10314,12 @@ static void __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_58__
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 761, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 776, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "process.pyx":763
+  /* "process.pyx":778
  *         self.dealloc_all_memory()
  * 
  *         CloseHandle(self._process_handle)             # <<<<<<<<<<<<<<
@@ -10213,7 +10328,7 @@ static void __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_58__
  */
   (void)(CloseHandle(__pyx_v_self->_process_handle));
 
-  /* "process.pyx":764
+  /* "process.pyx":779
  * 
  *         CloseHandle(self._process_handle)
  *         CloseHandle(self._window_handle)             # <<<<<<<<<<<<<<
@@ -10222,7 +10337,7 @@ static void __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_58__
  */
   (void)(CloseHandle(__pyx_v_self->_window_handle));
 
-  /* "process.pyx":765
+  /* "process.pyx":780
  *         CloseHandle(self._process_handle)
  *         CloseHandle(self._window_handle)
  *         free(self._window_name)             # <<<<<<<<<<<<<<
@@ -10231,7 +10346,7 @@ static void __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_58__
  */
   free(__pyx_v_self->_window_name);
 
-  /* "process.pyx":766
+  /* "process.pyx":781
  *         CloseHandle(self._window_handle)
  *         free(self._window_name)
  *         free(self._process_image_filename)             # <<<<<<<<<<<<<<
@@ -10239,19 +10354,19 @@ static void __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_58__
  */
   free(__pyx_v_self->_process_image_filename);
 
-  /* "process.pyx":767
+  /* "process.pyx":782
  *         free(self._window_name)
  *         free(self._process_image_filename)
  *         free(self._modules_info)             # <<<<<<<<<<<<<<
  */
   free(__pyx_v_self->_modules_info);
 
-  /* "process.pyx":758
+  /* "process.pyx":774
  *         return self.__str__()
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
  * 
- * 
+ *         self.dealloc_all_memory()
  */
 
   /* function exit code */
@@ -10260,31 +10375,31 @@ static void __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_58__
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_WriteUnraisable("cython_virtual_memory_toolkit.process.Application.__dealloc__", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("cython_virtual_memory_toolkit.process.AppHandle.__dealloc__", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
 }
 
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")
  * def __setstate_cython__(self, __pyx_state):
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_61__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_61__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_61__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_61__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_60__reduce_cython__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_60__reduce_cython__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_60__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_60__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -10295,9 +10410,9 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")
  */
   __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__23, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -10307,14 +10422,14 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")
  * def __setstate_cython__(self, __pyx_state):
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -10323,25 +10438,25 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 
 /* "(tree fragment)":3
  * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_63__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_63__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_63__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_63__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_62__setstate_cython__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_62__setstate_cython__(((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application_62__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_9AppHandle_62__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -10351,9 +10466,9 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
   __Pyx_RefNannySetupContext("__setstate_cython__", 0);
 
   /* "(tree fragment)":4
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")
  * def __setstate_cython__(self, __pyx_state):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")             # <<<<<<<<<<<<<<
  */
   __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -10363,15 +10478,15 @@ static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_7process_11Application
 
   /* "(tree fragment)":3
  * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.Application.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cython_virtual_memory_toolkit.process.AppHandle.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -24425,10 +24540,10 @@ static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *__pyx_v_type) {
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
-static struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_Application __pyx_vtable_29cython_virtual_memory_toolkit_7process_Application;
+static struct __pyx_vtabstruct_29cython_virtual_memory_toolkit_7process_AppHandle __pyx_vtable_29cython_virtual_memory_toolkit_7process_AppHandle;
 
-static PyObject *__pyx_tp_new_29cython_virtual_memory_toolkit_7process_Application(PyTypeObject *t, PyObject *a, PyObject *k) {
-  struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *p;
+static PyObject *__pyx_tp_new_29cython_virtual_memory_toolkit_7process_AppHandle(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *p;
   PyObject *o;
   if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
     o = (*t->tp_alloc)(t, 0);
@@ -24436,18 +24551,14 @@ static PyObject *__pyx_tp_new_29cython_virtual_memory_toolkit_7process_Applicati
     o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
   }
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)o);
-  p->__pyx_vtab = __pyx_vtabptr_29cython_virtual_memory_toolkit_7process_Application;
+  p = ((struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)o);
+  p->__pyx_vtab = __pyx_vtabptr_29cython_virtual_memory_toolkit_7process_AppHandle;
   new((void*)&(p->_allocated_memory_blocks)) std::vector<struct __pyx_t_29cython_virtual_memory_toolkit_7process_MemoryBlock> ();
-  if (unlikely(__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_1__cinit__(o, a, k) < 0)) goto bad;
   return o;
-  bad:
-  Py_DECREF(o); o = 0;
-  return NULL;
 }
 
-static void __pyx_tp_dealloc_29cython_virtual_memory_toolkit_7process_Application(PyObject *o) {
-  struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *p = (struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *)o;
+static void __pyx_tp_dealloc_29cython_virtual_memory_toolkit_7process_AppHandle(PyObject *o) {
+  struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *p = (struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *)o;
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -24457,7 +24568,7 @@ static void __pyx_tp_dealloc_29cython_virtual_memory_toolkit_7process_Applicatio
     PyObject *etype, *eval, *etb;
     PyErr_Fetch(&etype, &eval, &etb);
     __Pyx_SET_REFCNT(o, Py_REFCNT(o) + 1);
-    __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_59__dealloc__(o);
+    __pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_59__dealloc__(o);
     __Pyx_SET_REFCNT(o, Py_REFCNT(o) - 1);
     PyErr_Restore(etype, eval, etb);
   }
@@ -24465,68 +24576,69 @@ static void __pyx_tp_dealloc_29cython_virtual_memory_toolkit_7process_Applicatio
   (*Py_TYPE(o)->tp_free)(o);
 }
 
-static PyObject *__pyx_getprop_29cython_virtual_memory_toolkit_7process_11Application_window_handle(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_13window_handle_1__get__(o);
+static PyObject *__pyx_getprop_29cython_virtual_memory_toolkit_7process_9AppHandle_window_handle(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_13window_handle_1__get__(o);
 }
 
-static PyObject *__pyx_getprop_29cython_virtual_memory_toolkit_7process_11Application_process_handle(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_14process_handle_1__get__(o);
+static PyObject *__pyx_getprop_29cython_virtual_memory_toolkit_7process_9AppHandle_process_handle(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_14process_handle_1__get__(o);
 }
 
-static PyObject *__pyx_getprop_29cython_virtual_memory_toolkit_7process_11Application_pid(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_3pid_1__get__(o);
+static PyObject *__pyx_getprop_29cython_virtual_memory_toolkit_7process_9AppHandle_pid(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_3pid_1__get__(o);
 }
 
-static PyObject *__pyx_getprop_29cython_virtual_memory_toolkit_7process_11Application_modules(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_7modules_1__get__(o);
+static PyObject *__pyx_getprop_29cython_virtual_memory_toolkit_7process_9AppHandle_modules(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_7modules_1__get__(o);
 }
 
-static PyMethodDef __pyx_methods_29cython_virtual_memory_toolkit_7process_Application[] = {
-  {"search_process_memory", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_3search_process_memory, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_bytes", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_5write_memory_bytes, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_float32", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_7write_memory_float32, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_float64", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_9write_memory_float64, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_int8", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_11write_memory_int8, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_int16", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_13write_memory_int16, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_int32", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_15write_memory_int32, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_int64", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_17write_memory_int64, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_uint8", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_19write_memory_uint8, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_uint16", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_21write_memory_uint16, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_uint32", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_23write_memory_uint32, METH_VARARGS|METH_KEYWORDS, 0},
-  {"write_memory_uint64", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_25write_memory_uint64, METH_VARARGS|METH_KEYWORDS, 0},
-  {"read_memory_bytes", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_27read_memory_bytes, METH_VARARGS|METH_KEYWORDS, 0},
-  {"read_memory_float32", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_29read_memory_float32, METH_O, 0},
-  {"read_memory_float64", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_31read_memory_float64, METH_O, 0},
-  {"read_memory_int8", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_33read_memory_int8, METH_O, 0},
-  {"read_memory_int16", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_35read_memory_int16, METH_O, 0},
-  {"read_memory_int32", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_37read_memory_int32, METH_O, 0},
-  {"read_memory_int64", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_39read_memory_int64, METH_O, 0},
-  {"read_memory_uint8", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_41read_memory_uint8, METH_O, 0},
-  {"read_memory_uint16", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_43read_memory_uint16, METH_O, 0},
-  {"read_memory_uint32", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_45read_memory_uint32, METH_O, 0},
-  {"read_memory_uint64", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_47read_memory_uint64, METH_O, 0},
-  {"alloc_memory", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_49alloc_memory, METH_VARARGS|METH_KEYWORDS, 0},
-  {"dealloc_memory", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_51dealloc_memory, METH_O, 0},
-  {"dealloc_all_memory", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_53dealloc_all_memory, METH_NOARGS, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_61__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_63__setstate_cython__, METH_O, 0},
+static PyMethodDef __pyx_methods_29cython_virtual_memory_toolkit_7process_AppHandle[] = {
+  {"from_window_name", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_1from_window_name, METH_VARARGS|METH_KEYWORDS, 0},
+  {"search_process_memory", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_3search_process_memory, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_bytes", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_5write_memory_bytes, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_float32", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_7write_memory_float32, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_float64", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_9write_memory_float64, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_int8", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_11write_memory_int8, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_int16", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_13write_memory_int16, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_int32", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_15write_memory_int32, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_int64", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_17write_memory_int64, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_uint8", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_19write_memory_uint8, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_uint16", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_21write_memory_uint16, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_uint32", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_23write_memory_uint32, METH_VARARGS|METH_KEYWORDS, 0},
+  {"write_memory_uint64", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_25write_memory_uint64, METH_VARARGS|METH_KEYWORDS, 0},
+  {"read_memory_bytes", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_27read_memory_bytes, METH_VARARGS|METH_KEYWORDS, 0},
+  {"read_memory_float32", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_29read_memory_float32, METH_O, 0},
+  {"read_memory_float64", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_31read_memory_float64, METH_O, 0},
+  {"read_memory_int8", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_33read_memory_int8, METH_O, 0},
+  {"read_memory_int16", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_35read_memory_int16, METH_O, 0},
+  {"read_memory_int32", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_37read_memory_int32, METH_O, 0},
+  {"read_memory_int64", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_39read_memory_int64, METH_O, 0},
+  {"read_memory_uint8", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_41read_memory_uint8, METH_O, 0},
+  {"read_memory_uint16", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_43read_memory_uint16, METH_O, 0},
+  {"read_memory_uint32", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_45read_memory_uint32, METH_O, 0},
+  {"read_memory_uint64", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_47read_memory_uint64, METH_O, 0},
+  {"alloc_memory", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_49alloc_memory, METH_VARARGS|METH_KEYWORDS, 0},
+  {"dealloc_memory", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_51dealloc_memory, METH_O, 0},
+  {"dealloc_all_memory", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_53dealloc_all_memory, METH_NOARGS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_61__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_63__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
-static struct PyGetSetDef __pyx_getsets_29cython_virtual_memory_toolkit_7process_Application[] = {
-  {(char *)"window_handle", __pyx_getprop_29cython_virtual_memory_toolkit_7process_11Application_window_handle, 0, (char *)0, 0},
-  {(char *)"process_handle", __pyx_getprop_29cython_virtual_memory_toolkit_7process_11Application_process_handle, 0, (char *)0, 0},
-  {(char *)"pid", __pyx_getprop_29cython_virtual_memory_toolkit_7process_11Application_pid, 0, (char *)0, 0},
-  {(char *)"modules", __pyx_getprop_29cython_virtual_memory_toolkit_7process_11Application_modules, 0, (char *)0, 0},
+static struct PyGetSetDef __pyx_getsets_29cython_virtual_memory_toolkit_7process_AppHandle[] = {
+  {(char *)"window_handle", __pyx_getprop_29cython_virtual_memory_toolkit_7process_9AppHandle_window_handle, 0, (char *)0, 0},
+  {(char *)"process_handle", __pyx_getprop_29cython_virtual_memory_toolkit_7process_9AppHandle_process_handle, 0, (char *)0, 0},
+  {(char *)"pid", __pyx_getprop_29cython_virtual_memory_toolkit_7process_9AppHandle_pid, 0, (char *)0, 0},
+  {(char *)"modules", __pyx_getprop_29cython_virtual_memory_toolkit_7process_9AppHandle_modules, 0, (char *)0, 0},
   {0, 0, 0, 0, 0}
 };
 
-static PyTypeObject __pyx_type_29cython_virtual_memory_toolkit_7process_Application = {
+static PyTypeObject __pyx_type_29cython_virtual_memory_toolkit_7process_AppHandle = {
   PyVarObject_HEAD_INIT(0, 0)
-  "cython_virtual_memory_toolkit.process.Application", /*tp_name*/
-  sizeof(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application), /*tp_basicsize*/
+  "cython_virtual_memory_toolkit.process.AppHandle", /*tp_name*/
+  sizeof(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_29cython_virtual_memory_toolkit_7process_Application, /*tp_dealloc*/
+  __pyx_tp_dealloc_29cython_virtual_memory_toolkit_7process_AppHandle, /*tp_dealloc*/
   #if PY_VERSION_HEX < 0x030800b4
   0, /*tp_print*/
   #endif
@@ -24541,13 +24653,13 @@ static PyTypeObject __pyx_type_29cython_virtual_memory_toolkit_7process_Applicat
   #if PY_MAJOR_VERSION >= 3
   0, /*tp_as_async*/
   #endif
-  __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_57__repr__, /*tp_repr*/
+  __pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_57__repr__, /*tp_repr*/
   0, /*tp_as_number*/
   0, /*tp_as_sequence*/
   0, /*tp_as_mapping*/
   0, /*tp_hash*/
   0, /*tp_call*/
-  __pyx_pw_29cython_virtual_memory_toolkit_7process_11Application_55__str__, /*tp_str*/
+  __pyx_pw_29cython_virtual_memory_toolkit_7process_9AppHandle_55__str__, /*tp_str*/
   0, /*tp_getattro*/
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
@@ -24559,9 +24671,9 @@ static PyTypeObject __pyx_type_29cython_virtual_memory_toolkit_7process_Applicat
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_29cython_virtual_memory_toolkit_7process_Application, /*tp_methods*/
+  __pyx_methods_29cython_virtual_memory_toolkit_7process_AppHandle, /*tp_methods*/
   0, /*tp_members*/
-  __pyx_getsets_29cython_virtual_memory_toolkit_7process_Application, /*tp_getset*/
+  __pyx_getsets_29cython_virtual_memory_toolkit_7process_AppHandle, /*tp_getset*/
   0, /*tp_base*/
   0, /*tp_dict*/
   0, /*tp_descr_get*/
@@ -24569,7 +24681,7 @@ static PyTypeObject __pyx_type_29cython_virtual_memory_toolkit_7process_Applicat
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_29cython_virtual_memory_toolkit_7process_Application, /*tp_new*/
+  __pyx_tp_new_29cython_virtual_memory_toolkit_7process_AppHandle, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -25367,8 +25479,8 @@ static struct PyModuleDef __pyx_moduledef = {
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_ASCII, __pyx_k_ASCII, sizeof(__pyx_k_ASCII), 0, 0, 1, 1},
+  {&__pyx_n_s_AppHandle, __pyx_k_AppHandle, sizeof(__pyx_k_AppHandle), 0, 0, 1, 1},
   {&__pyx_kp_u_Application, __pyx_k_Application, sizeof(__pyx_k_Application), 0, 1, 0, 0},
-  {&__pyx_n_s_Application_2, __pyx_k_Application_2, sizeof(__pyx_k_Application_2), 0, 0, 1, 1},
   {&__pyx_kp_s_Buffer_view_does_not_expose_stri, __pyx_k_Buffer_view_does_not_expose_stri, sizeof(__pyx_k_Buffer_view_does_not_expose_stri), 0, 0, 1, 0},
   {&__pyx_kp_u_Bytes_instructed_to_read, __pyx_k_Bytes_instructed_to_read, sizeof(__pyx_k_Bytes_instructed_to_read), 0, 1, 0, 0},
   {&__pyx_kp_u_Bytes_instructed_to_write, __pyx_k_Bytes_instructed_to_write, sizeof(__pyx_k_Bytes_instructed_to_write), 0, 1, 0, 0},
@@ -25416,7 +25528,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_b_T, __pyx_k_T, sizeof(__pyx_k_T), 0, 0, 0, 0},
   {&__pyx_kp_u_Too_many_bytes_requested_request, __pyx_k_Too_many_bytes_requested_request, sizeof(__pyx_k_Too_many_bytes_requested_request), 0, 1, 0, 0},
   {&__pyx_n_s_TypeError, __pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 0, 1, 1},
+  {&__pyx_n_s_UnableToAcquireHandle, __pyx_k_UnableToAcquireHandle, sizeof(__pyx_k_UnableToAcquireHandle), 0, 0, 1, 1},
   {&__pyx_kp_s_Unable_to_convert_item_to_object, __pyx_k_Unable_to_convert_item_to_object, sizeof(__pyx_k_Unable_to_convert_item_to_object), 0, 0, 1, 0},
+  {&__pyx_kp_u_Unable_to_find_window_with_subst, __pyx_k_Unable_to_find_window_with_subst, sizeof(__pyx_k_Unable_to_find_window_with_subst), 0, 1, 0, 0},
   {&__pyx_kp_u_Unable_to_free_allocated_memory, __pyx_k_Unable_to_free_allocated_memory, sizeof(__pyx_k_Unable_to_free_allocated_memory), 0, 1, 0, 0},
   {&__pyx_kp_u_Unable_to_get_a_privilaged_hand, __pyx_k_Unable_to_get_a_privilaged_hand, sizeof(__pyx_k_Unable_to_get_a_privilaged_hand), 0, 1, 0, 0},
   {&__pyx_kp_u_Unable_to_get_a_privilaged_handl, __pyx_k_Unable_to_get_a_privilaged_handl, sizeof(__pyx_k_Unable_to_get_a_privilaged_handl), 0, 1, 0, 0},
@@ -25444,17 +25558,18 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_address, __pyx_k_address, sizeof(__pyx_k_address), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_allocation_type, __pyx_k_allocation_type, sizeof(__pyx_k_allocation_type), 0, 0, 1, 1},
+  {&__pyx_n_s_app, __pyx_k_app, sizeof(__pyx_k_app), 0, 0, 1, 1},
   {&__pyx_n_s_append, __pyx_k_append, sizeof(__pyx_k_append), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
   {&__pyx_n_s_bytes_to_read, __pyx_k_bytes_to_read, sizeof(__pyx_k_bytes_to_read), 0, 0, 1, 1},
   {&__pyx_n_s_bytes_to_write, __pyx_k_bytes_to_write, sizeof(__pyx_k_bytes_to_write), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
-  {&__pyx_n_s_cinit___locals_lambda, __pyx_k_cinit___locals_lambda, sizeof(__pyx_k_cinit___locals_lambda), 0, 0, 1, 1},
   {&__pyx_n_s_class, __pyx_k_class, sizeof(__pyx_k_class), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_kp_s_contiguous_and_direct, __pyx_k_contiguous_and_direct, sizeof(__pyx_k_contiguous_and_direct), 0, 0, 1, 0},
   {&__pyx_kp_s_contiguous_and_indirect, __pyx_k_contiguous_and_indirect, sizeof(__pyx_k_contiguous_and_indirect), 0, 0, 1, 0},
+  {&__pyx_n_s_cur_mod, __pyx_k_cur_mod, sizeof(__pyx_k_cur_mod), 0, 0, 1, 1},
   {&__pyx_n_s_cython_virtual_memory_toolkit_pr, __pyx_k_cython_virtual_memory_toolkit_pr, sizeof(__pyx_k_cython_virtual_memory_toolkit_pr), 0, 0, 1, 1},
   {&__pyx_n_s_dealloc_all_memory, __pyx_k_dealloc_all_memory, sizeof(__pyx_k_dealloc_all_memory), 0, 0, 1, 1},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
@@ -25463,13 +25578,18 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_end_address, __pyx_k_end_address, sizeof(__pyx_k_end_address), 0, 0, 1, 1},
   {&__pyx_n_s_enumerate, __pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 0, 1, 1},
   {&__pyx_n_s_error, __pyx_k_error, sizeof(__pyx_k_error), 0, 0, 1, 1},
+  {&__pyx_n_s_error_code, __pyx_k_error_code, sizeof(__pyx_k_error_code), 0, 0, 1, 1},
+  {&__pyx_n_s_errors, __pyx_k_errors, sizeof(__pyx_k_errors), 0, 0, 1, 1},
   {&__pyx_n_s_flags, __pyx_k_flags, sizeof(__pyx_k_flags), 0, 0, 1, 1},
   {&__pyx_n_s_format, __pyx_k_format, sizeof(__pyx_k_format), 0, 0, 1, 1},
   {&__pyx_n_s_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 0, 1, 1},
   {&__pyx_n_u_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 1, 0, 1},
+  {&__pyx_n_s_from_window_name, __pyx_k_from_window_name, sizeof(__pyx_k_from_window_name), 0, 0, 1, 1},
+  {&__pyx_n_s_from_window_name_locals_lambda, __pyx_k_from_window_name_locals_lambda, sizeof(__pyx_k_from_window_name_locals_lambda), 0, 0, 1, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 0, 1, 0},
   {&__pyx_n_s_hex, __pyx_k_hex, sizeof(__pyx_k_hex), 0, 0, 1, 1},
+  {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_is_verbose, __pyx_k_is_verbose, sizeof(__pyx_k_is_verbose), 0, 0, 1, 1},
@@ -25492,6 +25612,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_print, __pyx_k_print, sizeof(__pyx_k_print), 0, 0, 1, 1},
   {&__pyx_n_s_process_handle, __pyx_k_process_handle, sizeof(__pyx_k_process_handle), 0, 0, 1, 1},
   {&__pyx_kp_u_process_please_re_run_using_adm, __pyx_k_process_please_re_run_using_adm, sizeof(__pyx_k_process_please_re_run_using_adm), 0, 1, 0, 0},
+  {&__pyx_kp_s_process_pyx, __pyx_k_process_pyx, sizeof(__pyx_k_process_pyx), 0, 0, 1, 0},
   {&__pyx_kp_u_process_unknown_error_Error_cod, __pyx_k_process_unknown_error_Error_cod, sizeof(__pyx_k_process_unknown_error_Error_cod), 0, 1, 0, 0},
   {&__pyx_n_s_protection_type, __pyx_k_protection_type, sizeof(__pyx_k_protection_type), 0, 0, 1, 1},
   {&__pyx_n_s_py_modules_dict, __pyx_k_py_modules_dict, sizeof(__pyx_k_py_modules_dict), 0, 0, 1, 1},
@@ -25510,6 +25631,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
   {&__pyx_kp_u_s, __pyx_k_s, sizeof(__pyx_k_s), 0, 1, 0, 0},
   {&__pyx_n_s_search_bytes, __pyx_k_search_bytes, sizeof(__pyx_k_search_bytes), 0, 0, 1, 1},
+  {&__pyx_kp_s_self__allocated_memory_blocks_se, __pyx_k_self__allocated_memory_blocks_se, sizeof(__pyx_k_self__allocated_memory_blocks_se), 0, 0, 1, 0},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
@@ -25517,6 +25639,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_sort, __pyx_k_sort, sizeof(__pyx_k_sort), 0, 0, 1, 1},
   {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
   {&__pyx_n_s_start_address, __pyx_k_start_address, sizeof(__pyx_k_start_address), 0, 0, 1, 1},
+  {&__pyx_n_s_staticmethod, __pyx_k_staticmethod, sizeof(__pyx_k_staticmethod), 0, 0, 1, 1},
   {&__pyx_n_s_step, __pyx_k_step, sizeof(__pyx_k_step), 0, 0, 1, 1},
   {&__pyx_n_s_stop, __pyx_k_stop, sizeof(__pyx_k_stop), 0, 0, 1, 1},
   {&__pyx_n_s_str, __pyx_k_str, sizeof(__pyx_k_str), 0, 0, 1, 1},
@@ -25531,17 +25654,19 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_unpack, __pyx_k_unpack, sizeof(__pyx_k_unpack), 0, 0, 1, 1},
   {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
   {&__pyx_n_s_value, __pyx_k_value, sizeof(__pyx_k_value), 0, 0, 1, 1},
+  {&__pyx_n_s_window_data, __pyx_k_window_data, sizeof(__pyx_k_window_data), 0, 0, 1, 1},
   {&__pyx_n_s_window_name_substring, __pyx_k_window_name_substring, sizeof(__pyx_k_window_name_substring), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
+  __pyx_builtin_staticmethod = __Pyx_GetBuiltinName(__pyx_n_s_staticmethod); if (!__pyx_builtin_staticmethod) __PYX_ERR(0, 317, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(0, 150, __pyx_L1_error)
   __pyx_builtin_hex = __Pyx_GetBuiltinName(__pyx_n_s_hex); if (!__pyx_builtin_hex) __PYX_ERR(0, 150, __pyx_L1_error)
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 336, __pyx_L1_error)
-  __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(0, 349, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 360, __pyx_L1_error)
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 376, __pyx_L1_error)
-  __pyx_builtin_OSError = __Pyx_GetBuiltinName(__pyx_n_s_OSError); if (!__pyx_builtin_OSError) __PYX_ERR(0, 441, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 352, __pyx_L1_error)
+  __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(0, 365, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 376, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 394, __pyx_L1_error)
+  __pyx_builtin_OSError = __Pyx_GetBuiltinName(__pyx_n_s_OSError); if (!__pyx_builtin_OSError) __PYX_ERR(0, 459, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(1, 152, __pyx_L1_error)
   __pyx_builtin_Ellipsis = __Pyx_GetBuiltinName(__pyx_n_s_Ellipsis); if (!__pyx_builtin_Ellipsis) __PYX_ERR(1, 406, __pyx_L1_error)
@@ -25600,132 +25725,132 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
-  /* "process.pyx":336
- *         if not self._window_handle:
+  /* "process.pyx":352
+ *         if not app._window_handle:
  *             if is_verbose:
  *                 print("=================================================")             # <<<<<<<<<<<<<<
  *                 print(" Cannot find window name with substring: ", window_name_substring)
  *                 print("=================================================")
  */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_u__5); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_u__5); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 352, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
 
-  /* "process.pyx":346
+  /* "process.pyx":362
  *                 if is_verbose:
  *                     print("=================================================")
  *                     print(" Unable to get a privilaged handle to target ")             # <<<<<<<<<<<<<<
  *                     print(" process, please re-run using administrator :) ")
  *                     print("=================================================")
  */
-  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_u_Unable_to_get_a_privilaged_hand); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 346, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_u_Unable_to_get_a_privilaged_hand); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 362, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
-  /* "process.pyx":347
+  /* "process.pyx":363
  *                     print("=================================================")
  *                     print(" Unable to get a privilaged handle to target ")
  *                     print(" process, please re-run using administrator :) ")             # <<<<<<<<<<<<<<
  *                     print("=================================================")
  *                 raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_u_process_please_re_run_using_adm); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 347, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_u_process_please_re_run_using_adm); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 363, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
 
-  /* "process.pyx":349
+  /* "process.pyx":365
  *                     print(" process, please re-run using administrator :) ")
  *                     print("=================================================")
  *                 raise RuntimeError("Unable to get a privilaged handle to target process, please re-run using administrator :)")             # <<<<<<<<<<<<<<
  *             if is_verbose:
  *                 print("=================================================")
  */
-  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_u_Unable_to_get_a_privilaged_handl); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 349, __pyx_L1_error)
+  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_u_Unable_to_get_a_privilaged_handl); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 365, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
 
-  /* "process.pyx":376
+  /* "process.pyx":394
  *     def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes) -> int:
  *         if not search_bytes:
  *             raise ValueError("Search bytes must not be empty.")             # <<<<<<<<<<<<<<
  * 
  *         cdef size_t num_bytes = len(search_bytes)
  */
-  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_u_Search_bytes_must_not_be_empty); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_u_Search_bytes_must_not_be_empty); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 394, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
 
-  /* "process.pyx":382
+  /* "process.pyx":400
  *         cdef PBYTE c_search_bytes = <PBYTE>calloc(num_bytes, sizeof(BYTE))
  *         if not c_search_bytes:
  *             raise MemoryError("Cannot allocate memory for search bytes.")             # <<<<<<<<<<<<<<
  * 
  *         for i in range(num_bytes):
  */
-  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_u_Cannot_allocate_memory_for_searc); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 382, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_u_Cannot_allocate_memory_for_searc); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 400, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
 
-  /* "process.pyx":414
+  /* "process.pyx":432
  * 
  *         if not write_buffer:
  *             raise MemoryError("Failed to allocate memory.")             # <<<<<<<<<<<<<<
  * 
  *         num_bytes_written = write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, len(bytes_to_write))
  */
-  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_u_Failed_to_allocate_memory); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 414, __pyx_L1_error)
+  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_u_Failed_to_allocate_memory); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 432, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__12);
   __Pyx_GIVEREF(__pyx_tuple__12);
 
-  /* "process.pyx":433
+  /* "process.pyx":451
  *         cdef void* write_buffer = <void*>malloc(4)  # Size for float is 4 bytes
  *         if not write_buffer:
  *             raise MemoryError("Failed to allocate memory buffer.")             # <<<<<<<<<<<<<<
  * 
  *         # Copy the Cython/C float value into the buffer
  */
-  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_kp_u_Failed_to_allocate_memory_buffer); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 433, __pyx_L1_error)
+  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_kp_u_Failed_to_allocate_memory_buffer); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 451, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_GIVEREF(__pyx_tuple__14);
 
-  /* "process.pyx":441
+  /* "process.pyx":459
  *         if not write_process_memory(self._process_handle, <LPVOID>address, <LPCVOID>write_buffer, <size_t>4):
  *             free(write_buffer)  # Ensure to free allocated memory in case of failure
  *             raise OSError("Failed to write to process memory.")             # <<<<<<<<<<<<<<
  * 
  *         # Free the allocated memory
  */
-  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_kp_u_Failed_to_write_to_process_memor); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 441, __pyx_L1_error)
+  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_kp_u_Failed_to_write_to_process_memor); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 459, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__15);
   __Pyx_GIVEREF(__pyx_tuple__15);
 
-  /* "process.pyx":563
+  /* "process.pyx":581
  *         if not read_process_memory(self._process_handle, <LPCVOID>address, <LPVOID>read_buffer, <SIZE_T>4):
  *             free(read_buffer)  # Ensure to free allocated memory in case of failure
  *             raise OSError("Failed to read process memory.")             # <<<<<<<<<<<<<<
  * 
  *         cdef float result
  */
-  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_u_Failed_to_read_process_memory); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(0, 563, __pyx_L1_error)
+  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_u_Failed_to_read_process_memory); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(0, 581, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__16);
   __Pyx_GIVEREF(__pyx_tuple__16);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")
  */
-  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_kp_s_self__allocated_memory_blocks_se); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(1, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__23);
   __Pyx_GIVEREF(__pyx_tuple__23);
 
   /* "(tree fragment)":4
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")
  * def __setstate_cython__(self, __pyx_state):
- *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
+ *     raise TypeError("self._allocated_memory_blocks,self._modules_info,self._process_handle,self._snapshot32_handle,self._window_handle cannot be converted to a Python object for pickling")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s_self__allocated_memory_blocks_se); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__24);
   __Pyx_GIVEREF(__pyx_tuple__24);
 
@@ -25924,6 +26049,18 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__43);
   __Pyx_GIVEREF(__pyx_tuple__43);
 
+  /* "process.pyx":318
+ * 
+ *     @staticmethod
+ *     def from_window_name(char* window_name_substring, bint is_verbose = False) -> AppHandle:             # <<<<<<<<<<<<<<
+ *         cdef AppHandle app = AppHandle.__new__(AppHandle)
+ *         cdef unsigned long error_code
+ */
+  __pyx_tuple__48 = PyTuple_Pack(7, __pyx_n_s_window_name_substring, __pyx_n_s_is_verbose, __pyx_n_s_app, __pyx_n_s_error_code, __pyx_n_s_window_data, __pyx_n_s_cur_mod, __pyx_n_s_i); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__48);
+  __Pyx_GIVEREF(__pyx_tuple__48);
+  __pyx_codeobj__49 = (PyObject*)__Pyx_PyCode_New(2, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__48, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_process_pyx, __pyx_n_s_from_window_name, 318, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__49)) __PYX_ERR(0, 318, __pyx_L1_error)
+
   /* "View.MemoryView":287
  *         return self.name
  * 
@@ -25931,9 +26068,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_tuple__48 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(1, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__48);
-  __Pyx_GIVEREF(__pyx_tuple__48);
+  __pyx_tuple__50 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__50)) __PYX_ERR(1, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__50);
+  __Pyx_GIVEREF(__pyx_tuple__50);
 
   /* "View.MemoryView":288
  * 
@@ -25942,9 +26079,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_tuple__49 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(1, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__49);
-  __Pyx_GIVEREF(__pyx_tuple__49);
+  __pyx_tuple__51 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(1, 288, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__51);
+  __Pyx_GIVEREF(__pyx_tuple__51);
 
   /* "View.MemoryView":289
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -25953,9 +26090,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__50 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__50)) __PYX_ERR(1, 289, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__50);
-  __Pyx_GIVEREF(__pyx_tuple__50);
+  __pyx_tuple__52 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__52)) __PYX_ERR(1, 289, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__52);
+  __Pyx_GIVEREF(__pyx_tuple__52);
 
   /* "View.MemoryView":292
  * 
@@ -25964,9 +26101,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_tuple__51 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(1, 292, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__51);
-  __Pyx_GIVEREF(__pyx_tuple__51);
+  __pyx_tuple__53 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(1, 292, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__53);
+  __Pyx_GIVEREF(__pyx_tuple__53);
 
   /* "View.MemoryView":293
  * 
@@ -25975,19 +26112,19 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__52 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__52)) __PYX_ERR(1, 293, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__52);
-  __Pyx_GIVEREF(__pyx_tuple__52);
+  __pyx_tuple__54 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__54)) __PYX_ERR(1, 293, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__54);
+  __Pyx_GIVEREF(__pyx_tuple__54);
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_Enum(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_tuple__53 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__53);
-  __Pyx_GIVEREF(__pyx_tuple__53);
-  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_tuple__55 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__55)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__55);
+  __Pyx_GIVEREF(__pyx_tuple__55);
+  __pyx_codeobj__56 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__55, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__56)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -26052,21 +26189,21 @@ static int __Pyx_modinit_type_init_code(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  __pyx_vtabptr_29cython_virtual_memory_toolkit_7process_Application = &__pyx_vtable_29cython_virtual_memory_toolkit_7process_Application;
-  __pyx_vtable_29cython_virtual_memory_toolkit_7process_Application.write_memory_int = (void (*)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *, unsigned PY_LONG_LONG, PY_LONG_LONG, int))__pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write_memory_int;
-  __pyx_vtable_29cython_virtual_memory_toolkit_7process_Application.write_memory_uint = (void (*)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *, unsigned PY_LONG_LONG, unsigned PY_LONG_LONG, int))__pyx_f_29cython_virtual_memory_toolkit_7process_11Application_write_memory_uint;
-  __pyx_vtable_29cython_virtual_memory_toolkit_7process_Application.read_memory_int = (PY_LONG_LONG (*)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_Application *, unsigned PY_LONG_LONG, unsigned short))__pyx_f_29cython_virtual_memory_toolkit_7process_11Application_read_memory_int;
-  if (PyType_Ready(&__pyx_type_29cython_virtual_memory_toolkit_7process_Application) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_vtabptr_29cython_virtual_memory_toolkit_7process_AppHandle = &__pyx_vtable_29cython_virtual_memory_toolkit_7process_AppHandle;
+  __pyx_vtable_29cython_virtual_memory_toolkit_7process_AppHandle.write_memory_int = (void (*)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *, unsigned PY_LONG_LONG, PY_LONG_LONG, int))__pyx_f_29cython_virtual_memory_toolkit_7process_9AppHandle_write_memory_int;
+  __pyx_vtable_29cython_virtual_memory_toolkit_7process_AppHandle.write_memory_uint = (void (*)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *, unsigned PY_LONG_LONG, unsigned PY_LONG_LONG, int))__pyx_f_29cython_virtual_memory_toolkit_7process_9AppHandle_write_memory_uint;
+  __pyx_vtable_29cython_virtual_memory_toolkit_7process_AppHandle.read_memory_int = (PY_LONG_LONG (*)(struct __pyx_obj_29cython_virtual_memory_toolkit_7process_AppHandle *, unsigned PY_LONG_LONG, unsigned short))__pyx_f_29cython_virtual_memory_toolkit_7process_9AppHandle_read_memory_int;
+  if (PyType_Ready(&__pyx_type_29cython_virtual_memory_toolkit_7process_AppHandle) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_29cython_virtual_memory_toolkit_7process_Application.tp_print = 0;
+  __pyx_type_29cython_virtual_memory_toolkit_7process_AppHandle.tp_print = 0;
   #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_29cython_virtual_memory_toolkit_7process_Application.tp_dictoffset && __pyx_type_29cython_virtual_memory_toolkit_7process_Application.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_29cython_virtual_memory_toolkit_7process_Application.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_29cython_virtual_memory_toolkit_7process_AppHandle.tp_dictoffset && __pyx_type_29cython_virtual_memory_toolkit_7process_AppHandle.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_29cython_virtual_memory_toolkit_7process_AppHandle.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (__Pyx_SetVtable(__pyx_type_29cython_virtual_memory_toolkit_7process_Application.tp_dict, __pyx_vtabptr_29cython_virtual_memory_toolkit_7process_Application) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Application_2, (PyObject *)&__pyx_type_29cython_virtual_memory_toolkit_7process_Application) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_29cython_virtual_memory_toolkit_7process_Application) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
-  __pyx_ptype_29cython_virtual_memory_toolkit_7process_Application = &__pyx_type_29cython_virtual_memory_toolkit_7process_Application;
+  if (__Pyx_SetVtable(__pyx_type_29cython_virtual_memory_toolkit_7process_AppHandle.tp_dict, __pyx_vtabptr_29cython_virtual_memory_toolkit_7process_AppHandle) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_AppHandle, (PyObject *)&__pyx_type_29cython_virtual_memory_toolkit_7process_AppHandle) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_29cython_virtual_memory_toolkit_7process_AppHandle) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle = &__pyx_type_29cython_virtual_memory_toolkit_7process_AppHandle;
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
   if (PyType_Ready(&__pyx_type___pyx_array) < 0) __PYX_ERR(1, 106, __pyx_L1_error)
@@ -26278,7 +26415,8 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_process(PyObject *__pyx_pyinit_mod
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
-  static PyThread_type_lock __pyx_t_2[8];
+  PyObject *__pyx_t_2 = NULL;
+  static PyThread_type_lock __pyx_t_3[8];
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -26384,6 +26522,27 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
+  /* "process.pyx":7
+ * from libc.string cimport strncpy, strdup
+ * from libcpp.vector cimport vector
+ * from .errors import UnableToAcquireHandle             # <<<<<<<<<<<<<<
+ * #sizeof(char)         # 1
+ * #sizeof(short)        # 2
+ */
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(__pyx_n_s_UnableToAcquireHandle);
+  __Pyx_GIVEREF(__pyx_n_s_UnableToAcquireHandle);
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_UnableToAcquireHandle);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_errors, __pyx_t_1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_UnableToAcquireHandle); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_UnableToAcquireHandle, __pyx_t_1) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
   /* "process.pyx":79
  *     DWORD GetProcessImageFileNameA(HANDLE hProcess, LPSTR out_lpImageFileName, DWORD nSize) nogil
  * 
@@ -26400,26 +26559,55 @@ if (!__Pyx_RefNanny) {
  *     _py_modules_dict: dict[bytes, int] = {}
  * 
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 314, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_29cython_virtual_memory_toolkit_7process_Application->tp_dict, __pyx_n_s_py_modules_ordered_list, __pyx_t_1) < 0) __PYX_ERR(0, 314, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  PyType_Modified(__pyx_ptype_29cython_virtual_memory_toolkit_7process_Application);
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 314, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle->tp_dict, __pyx_n_s_py_modules_ordered_list, __pyx_t_2) < 0) __PYX_ERR(0, 314, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  PyType_Modified(__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle);
 
   /* "process.pyx":315
  * 
  *     _py_modules_ordered_list: list[tuple[bytes, int]] = []
  *     _py_modules_dict: dict[bytes, int] = {}             # <<<<<<<<<<<<<<
  * 
- *     def __cinit__(self, char* window_name_substring, bint is_verbose = False):
+ *     @staticmethod
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 315, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_29cython_virtual_memory_toolkit_7process_Application->tp_dict, __pyx_n_s_py_modules_dict, __pyx_t_1) < 0) __PYX_ERR(0, 315, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  PyType_Modified(__pyx_ptype_29cython_virtual_memory_toolkit_7process_Application);
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 315, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle->tp_dict, __pyx_n_s_py_modules_dict, __pyx_t_2) < 0) __PYX_ERR(0, 315, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  PyType_Modified(__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle);
 
-  /* "process.pyx":648
+  /* "process.pyx":318
+ * 
+ *     @staticmethod
+ *     def from_window_name(char* window_name_substring, bint is_verbose = False) -> AppHandle:             # <<<<<<<<<<<<<<
+ *         cdef AppHandle app = AppHandle.__new__(AppHandle)
+ *         cdef unsigned long error_code
+ */
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_29cython_virtual_memory_toolkit_7process_9AppHandle_1from_window_name, NULL, __pyx_n_s_cython_virtual_memory_toolkit_pr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle->tp_dict, __pyx_n_s_from_window_name, __pyx_t_2) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  PyType_Modified(__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle);
+
+  /* "process.pyx":317
+ *     _py_modules_dict: dict[bytes, int] = {}
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     def from_window_name(char* window_name_substring, bint is_verbose = False) -> AppHandle:
+ *         cdef AppHandle app = AppHandle.__new__(AppHandle)
+ */
+  __Pyx_GetNameInClass(__pyx_t_2, (PyObject *)__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle, __pyx_n_s_from_window_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle->tp_dict, __pyx_n_s_from_window_name, __pyx_t_1) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  PyType_Modified(__pyx_ptype_29cython_virtual_memory_toolkit_7process_AppHandle);
+
+  /* "process.pyx":666
  *        return <unsigned long long>self.read_memory_int(address, 8)
  * 
  *     def alloc_memory(self, unsigned long long size, unsigned long long min_address = 0, unsigned int allocation_type = MEM_COMMIT, unsigned int protection_type = PAGE_EXECUTE_READWRITE) -> int:             # <<<<<<<<<<<<<<
@@ -26459,7 +26647,7 @@ if (!__Pyx_RefNanny) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__48, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 287, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__50, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 287, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(generic);
   __Pyx_DECREF_SET(generic, __pyx_t_1);
@@ -26473,7 +26661,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__49, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 288, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__51, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 288, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(strided);
   __Pyx_DECREF_SET(strided, __pyx_t_1);
@@ -26487,7 +26675,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__50, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 289, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__52, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 289, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(indirect);
   __Pyx_DECREF_SET(indirect, __pyx_t_1);
@@ -26501,7 +26689,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__51, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 292, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__53, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 292, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(contiguous);
   __Pyx_DECREF_SET(contiguous, __pyx_t_1);
@@ -26515,7 +26703,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__52, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 293, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__54, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 293, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(indirect_contiguous);
   __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_1);
@@ -26538,15 +26726,15 @@ if (!__Pyx_RefNanny) {
  *     PyThread_allocate_lock(),
  *     PyThread_allocate_lock(),
  */
-  __pyx_t_2[0] = PyThread_allocate_lock();
-  __pyx_t_2[1] = PyThread_allocate_lock();
-  __pyx_t_2[2] = PyThread_allocate_lock();
-  __pyx_t_2[3] = PyThread_allocate_lock();
-  __pyx_t_2[4] = PyThread_allocate_lock();
-  __pyx_t_2[5] = PyThread_allocate_lock();
-  __pyx_t_2[6] = PyThread_allocate_lock();
-  __pyx_t_2[7] = PyThread_allocate_lock();
-  memcpy(&(__pyx_memoryview_thread_locks[0]), __pyx_t_2, sizeof(__pyx_memoryview_thread_locks[0]) * (8));
+  __pyx_t_3[0] = PyThread_allocate_lock();
+  __pyx_t_3[1] = PyThread_allocate_lock();
+  __pyx_t_3[2] = PyThread_allocate_lock();
+  __pyx_t_3[3] = PyThread_allocate_lock();
+  __pyx_t_3[4] = PyThread_allocate_lock();
+  __pyx_t_3[5] = PyThread_allocate_lock();
+  __pyx_t_3[6] = PyThread_allocate_lock();
+  __pyx_t_3[7] = PyThread_allocate_lock();
+  memcpy(&(__pyx_memoryview_thread_locks[0]), __pyx_t_3, sizeof(__pyx_memoryview_thread_locks[0]) * (8));
 
   /* "View.MemoryView":551
  *         info.obj = self
@@ -26597,6 +26785,7 @@ if (!__Pyx_RefNanny) {
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d) {
       __Pyx_AddTraceback("init cython_virtual_memory_toolkit.process", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -27334,6 +27523,67 @@ static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i, 
     }
 #endif
     return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
+}
+
+/* PyDictVersioning */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
+    PyObject **dictptr = NULL;
+    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
+    if (offset) {
+#if CYTHON_COMPILING_IN_CPYTHON
+        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
+#else
+        dictptr = _PyObject_GetDictPtr(obj);
+#endif
+    }
+    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
+}
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
+        return 0;
+    return obj_dict_version == __Pyx_get_object_dict_version(obj);
+}
+#endif
+
+/* GetModuleGlobalName */
+#if CYTHON_USE_DICT_VERSIONS
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
+#else
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
+#endif
+{
+    PyObject *result;
+#if !CYTHON_AVOID_BORROWED_REFS
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    } else if (unlikely(PyErr_Occurred())) {
+        return NULL;
+    }
+#else
+    result = PyDict_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+#endif
+#else
+    result = PyObject_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+    PyErr_Clear();
+#endif
+    return __Pyx_GetBuiltinName(name);
 }
 
 /* PyObjectCall2Args */
@@ -28888,67 +29138,6 @@ static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *o, PyObject *n, PyObject
     return (likely(r)) ? r : __Pyx_GetAttr3Default(d);
 }
 
-/* PyDictVersioning */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
-    PyObject **dictptr = NULL;
-    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
-    if (offset) {
-#if CYTHON_COMPILING_IN_CPYTHON
-        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
-#else
-        dictptr = _PyObject_GetDictPtr(obj);
-#endif
-    }
-    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
-}
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
-        return 0;
-    return obj_dict_version == __Pyx_get_object_dict_version(obj);
-}
-#endif
-
-/* GetModuleGlobalName */
-#if CYTHON_USE_DICT_VERSIONS
-static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
-#else
-static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
-#endif
-{
-    PyObject *result;
-#if !CYTHON_AVOID_BORROWED_REFS
-#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
-    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    } else if (unlikely(PyErr_Occurred())) {
-        return NULL;
-    }
-#else
-    result = PyDict_GetItem(__pyx_d, name);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    }
-#endif
-#else
-    result = PyObject_GetItem(__pyx_d, name);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    }
-    PyErr_Clear();
-#endif
-    return __Pyx_GetBuiltinName(name);
-}
-
 /* RaiseNoneIterError */
 static CYTHON_INLINE void __Pyx_RaiseNoneNotIterableError(void) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
@@ -29727,6 +29916,26 @@ bad:
     return NULL;
 }
 #endif
+
+/* GetNameInClass */
+static PyObject *__Pyx_GetGlobalNameAfterAttributeLookup(PyObject *name) {
+    PyObject *result;
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    if (unlikely(!__Pyx_PyErr_ExceptionMatches(PyExc_AttributeError)))
+        return NULL;
+    __Pyx_PyErr_Clear();
+    __Pyx_GetModuleGlobalNameUncached(result, name);
+    return result;
+}
+static PyObject *__Pyx__GetNameInClass(PyObject *nmspace, PyObject *name) {
+    PyObject *result;
+    result = __Pyx_PyObject_GetAttrStr(nmspace, name);
+    if (!result) {
+        result = __Pyx_GetGlobalNameAfterAttributeLookup(name);
+    }
+    return result;
+}
 
 /* CLineInTraceback */
 #ifndef CYTHON_CLINE_IN_TRACEBACK

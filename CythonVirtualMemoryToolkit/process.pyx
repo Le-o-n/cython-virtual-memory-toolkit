@@ -4,7 +4,7 @@ from libc.string cimport memcpy, memcmp
 from cpython cimport array
 from libc.string cimport strncpy, strdup
 from libcpp.vector cimport vector
-
+from .errors import UnableToAcquireHandle
 #sizeof(char)         # 1
 #sizeof(short)        # 2
 #sizeof(int)          # 4
@@ -298,7 +298,7 @@ cdef struct MemoryBlock:
     void* address
     SIZE_T size
 
-cdef class Application:
+cdef class AppHandle:
     cdef HANDLE _process_handle
     cdef HWND _window_handle
     cdef HANDLE _snapshot32_handle
@@ -314,31 +314,47 @@ cdef class Application:
     _py_modules_ordered_list: list[tuple[bytes, int]] = [] 
     _py_modules_dict: dict[bytes, int] = {}
 
-    def __cinit__(self, char* window_name_substring, bint is_verbose = False):
+    @staticmethod
+    def from_window_name(char* window_name_substring, bint is_verbose = False) -> AppHandle:
+        cdef AppHandle app = AppHandle.__new__(AppHandle)
+        cdef unsigned long error_code
         
         cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
-        cdef unsigned long error_code
-        self._process_handle = window_data.out_all_access_process_handle
-        self._window_handle = window_data.out_window_handle
-        self._window_name = window_data.out_full_window_name
-        self._pid = window_data.out_pid
-        self.is_verbose = is_verbose
+        if not window_data.out_window_handle:
+            raise UnableToAcquireHandle(f"Unable to find window with substring {window_name_substring}")
+        app._process_handle = window_data.out_all_access_process_handle
+        app._window_handle = window_data.out_window_handle
+        app._window_name = window_data.out_full_window_name
+        app._pid = window_data.out_pid
+        app.is_verbose = is_verbose
 
-        self._process_image_filename = <char*>malloc(sizeof(char) * MAX_PATH)
-        GetProcessImageFileNameA(self._process_handle, self._process_image_filename, sizeof(char) * MAX_PATH)
+        app._process_image_filename = <char*>malloc(
+            sizeof(char) * MAX_PATH
+        )
 
-        self._snapshot32_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE, self._pid)
+        GetProcessImageFileNameA(
+            app._process_handle, 
+            app._process_image_filename,
+            sizeof(char) * MAX_PATH
+        )
 
-        self._modules_info = collect_all_module_information(self._snapshot32_handle)
+        app._snapshot32_handle = CreateToolhelp32Snapshot(
+            TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE,
+            app._pid
+        )
+
+        app._modules_info = collect_all_module_information(
+            app._snapshot32_handle
+        )
         
-        if not self._window_handle:
+        if not app._window_handle:
             if is_verbose:
                 print("=================================================")
                 print(" Cannot find window name with substring: ", window_name_substring)
                 print("=================================================")
             raise MemoryError("Cannot find window with name with substring: ", window_name_substring)
 
-        if not self._process_handle:
+        if not app._process_handle:
             error_code = GetLastError()  
             if error_code == 5 or error_code == 6:
                 if is_verbose:
@@ -358,18 +374,20 @@ cdef class Application:
         cdef MODULEENTRY32 cur_mod
 
         for i in range(MAX_MODULES):
-            cur_mod = self._modules_info[i]
+            cur_mod = app._modules_info[i]
             if cur_mod.modBaseSize != 0:
-                self._py_modules_ordered_list.append(
+                app._py_modules_ordered_list.append(
                     (
                         cur_mod.szModule, 
                         <unsigned long long>cur_mod.modBaseAddr
                     )
                 )
 
-                self._py_modules_dict[cur_mod.szModule] = <unsigned long long>cur_mod.modBaseAddr
+                app._py_modules_dict[cur_mod.szModule] = <unsigned long long>cur_mod.modBaseAddr
 
-        self._py_modules_ordered_list.sort(key = lambda x: x[1])
+        app._py_modules_ordered_list.sort(key = lambda x: x[1])
+
+        return app
 
     def search_process_memory(self, SIZE_T start_address, SIZE_T end_address, bytes search_bytes) -> int:
         if not search_bytes:
@@ -707,8 +725,6 @@ cdef class Application:
             ):
                 raise MemoryError(f"Unable to free allocated memory block at address {hex(<SIZE_T>mem_block.address)}")
 
-
-
     @property
     def window_handle(self) -> int:
         return <unsigned long long>self._window_handle
@@ -756,7 +772,6 @@ cdef class Application:
         return self.__str__()
 
     def __dealloc__(self):
-
 
         self.dealloc_all_memory()
 
