@@ -22,19 +22,20 @@ remove_file_extensions(directory_path, ["c", "pyd"])
 
 include_libs = [
     "user32",
-    "kernel32"
+    "kernel32",
 ]
 
 process_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.process",
     [
-        "process.pyx"
+        "process.pyx",
     ],
     libraries=include_libs,
     language="c++",
     depends=[
-        "errors.py"
+        "windows_externs.pxd"
     ]
+
 )
 hooks_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.hooks",
@@ -67,6 +68,13 @@ errors_extension: Extension = Extension(
     ],
     libraries=None,
 )
+windows_externs_extension: Extension = Extension(
+    "cython_virtual_memory_toolkit.windows_externs",
+    [
+        "windows_externs.pyx"
+    ],
+    libraries=None,
+)
 
 
 extensions = [
@@ -74,7 +82,8 @@ extensions = [
     hooks_extension,
     datatypes_extension,
     addressing_extension,
-    errors_extension
+    errors_extension,
+    windows_externs_extension
 ]
 
 setup(
@@ -91,6 +100,7 @@ setup(
             '*.pyx',
             '*.pxd',
             '*.pyi',
+            '*.py'
         ],
 
     },

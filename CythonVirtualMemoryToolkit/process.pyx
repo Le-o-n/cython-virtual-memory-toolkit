@@ -1,3 +1,5 @@
+
+
 from libc.stdlib cimport malloc, free, calloc
 from libc.stdint cimport uintptr_t, uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t
 from libc.string cimport memcpy, memcmp
@@ -5,6 +7,8 @@ from cpython cimport array
 from libc.string cimport strncpy, strdup
 from libcpp.vector cimport vector
 from .errors import UnableToAcquireHandle
+#from windows_externs cimport *
+
 #sizeof(char)         # 1
 #sizeof(short)        # 2
 #sizeof(int)          # 4
@@ -13,6 +17,8 @@ from .errors import UnableToAcquireHandle
 #sizeof(float)        # 4
 #sizeof(double)       # 8
 #sizeof(void*)        # 8
+
+
 
 cdef extern from "Windows.h":
     ctypedef unsigned char BYTE
@@ -30,6 +36,7 @@ cdef extern from "Windows.h":
     ctypedef const char* LPCSTR
     ctypedef const void* LPCVOID
     ctypedef void* LPVOID
+
     ctypedef void* PVOID
     ctypedef Py_UNICODE WCHAR
     ctypedef const WCHAR* LPCWSTR
@@ -78,6 +85,7 @@ cdef extern from "psapi.h":
 
 cdef int MAX_MODULES = 1024 # Arbitrarily chosen limit
 
+
 cdef extern from "tlhelp32.h":
     cdef SIZE_T MAX_MODULE_NAME32 = 255
     cdef SIZE_T MAX_PATH = 260
@@ -100,6 +108,7 @@ cdef extern from "tlhelp32.h":
     HANDLE CreateToolhelp32Snapshot(DWORD dwFlags, DWORD th32ProcessID)
     BOOL Module32First(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme)
     BOOL Module32Next(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme)
+
 
 cdef struct EnumWindowCallbackLParam:
         char* in_window_name_substring
