@@ -44,24 +44,6 @@ cdef extern from "Windows.h":
 
     ctypedef MEMORY_BASIC_INFORMATION* PMEMORY_BASIC_INFORMATION
 
-    HANDLE OpenProcess(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessId) nogil
-    HWND FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName) nogil
-    int GetWindowThreadProcessId(HWND hWnd, DWORD* lpdwProcessId) nogil
-    int CloseHandle(HANDLE handle) nogil
-    BOOL ReadProcessMemory(HANDLE hProcess, LPCVOID lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, SIZE_T* out_lpNumberOfBytesRead) nogil
-    BOOL WriteProcessMemory(HANDLE  hProcess, LPVOID lpBaseAddress, LPCVOID lpBuffer, SIZE_T nSize, SIZE_T *lpNumberOfBytesWritten) nogil
-    int GetWindowTextLengthA(HWND hWnd) nogil
-    int GetWindowTextA(HWND  hWnd, LPSTR out_lpString, int nMaxCount) nogil
-    BOOL EnumWindows(WNDENUMPROC lpEnumFunc, LPARAM lParam) nogil
-    BOOL IsWindowVisible(HWND hWnd) nogil
-    DWORD GetLastError() nogil
-    BOOL VirtualProtectEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect,PDWORD out_lpflOldProtect) nogil
-    SIZE_T VirtualQueryEx(HANDLE hProcess, LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION out_lpBuffer, SIZE_T dwLength) nogil
-    LPVOID VirtualAllocEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect) nogil
-    BOOL VirtualFreeEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType)
-
-cdef extern from "psapi.h":
-    DWORD GetProcessImageFileNameA(HANDLE hProcess, LPSTR out_lpImageFileName, DWORD nSize) nogil
 
 cdef int MAX_MODULES = 1024 # Arbitrarily chosen limit
 
@@ -85,6 +67,4 @@ cdef extern from "tlhelp32.h":
 
     DWORD TH32CS_SNAPMODULE32
     DWORD TH32CS_SNAPMODULE
-    HANDLE CreateToolhelp32Snapshot(DWORD dwFlags, DWORD th32ProcessID)
-    BOOL Module32First(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme)
-    BOOL Module32Next(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme)
+    

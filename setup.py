@@ -28,19 +28,15 @@ include_libs = [
 process_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.process",
     [
-        "process.pyx",
+        "CythonVirtualMemoryToolkit/process.pyx"
     ],
     libraries=include_libs,
     language="c++",
-    depends=[
-        "windows_externs.pxd"
-    ]
-
 )
 hooks_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.hooks",
     [
-        "hooks.pyx"
+        "CythonVirtualMemoryToolkit/hooks.pyx"
     ],
     libraries=include_libs,
     language="c++"
@@ -48,7 +44,7 @@ hooks_extension: Extension = Extension(
 datatypes_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.datatypes",
     [
-        "datatypes.pyx"
+        "CythonVirtualMemoryToolkit/datatypes.pyx"
     ],
     libraries=include_libs,
     language="c++"
@@ -56,7 +52,7 @@ datatypes_extension: Extension = Extension(
 addressing_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.addressing",
     [
-        "addressing.pyx"
+        "CythonVirtualMemoryToolkit/addressing.pyx"
     ],
     libraries=include_libs,
     language="c++"
@@ -64,14 +60,14 @@ addressing_extension: Extension = Extension(
 errors_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.errors",
     [
-        "errors.py"
+        "CythonVirtualMemoryToolkit/errors.py"
     ],
     libraries=None,
 )
 windows_externs_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.windows_externs",
     [
-        "windows_externs.pyx"
+        "CythonVirtualMemoryToolkit/windows_externs.pyx"
     ],
     libraries=None,
 )
@@ -83,7 +79,7 @@ extensions = [
     datatypes_extension,
     addressing_extension,
     errors_extension,
-    windows_externs_extension
+    # windows_externs_extension
 ]
 
 setup(
@@ -94,13 +90,13 @@ setup(
     license='MIT',
     author='Leon Bass',
     packages=['cython_virtual_memory_toolkit'],
-    package_dir={'cython_virtual_memory_toolkit': '.'},
+    package_dir={'cython_virtual_memory_toolkit': 'CythonVirtualMemoryToolkit'},
     package_data={
         'cython_virtual_memory_toolkit': [
-            '*.pyx',
-            '*.pxd',
-            '*.pyi',
-            '*.py'
+            'CythonVirtualMemoryToolkit/*.pyx',
+            'CythonVirtualMemoryToolkit/*.pxd',
+            'CythonVirtualMemoryToolkit/*.pyi',
+            'CythonVirtualMemoryToolkit/*.py'
         ],
 
     },
