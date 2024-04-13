@@ -1,6 +1,5 @@
-from SomeModule import A
-from SomeModule import B
+import b
 
+x = b.proc_all_access()
 
-A.main()
-B.main()
+print(hex(x))
