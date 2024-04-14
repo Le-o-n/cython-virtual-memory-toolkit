@@ -3,12 +3,13 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "cython_virtual_memory_toolkit.errors",
+        "depends": [],
+        "name": "windows.windows_defs",
         "sources": [
-            "CythonVirtualMemoryToolkit/errors.py"
+            "windows/windows_defs.pyx"
         ]
     },
-    "module_name": "cython_virtual_memory_toolkit.errors"
+    "module_name": "windows.windows_defs"
 }
 END: Cython Metadata */
 
@@ -23,7 +24,7 @@ END: Cython Metadata */
 #else
 #define CYTHON_ABI "0_29_33"
 #define CYTHON_HEX_VERSION 0x001D21F0
-#define CYTHON_FUTURE_DIVISION 1
+#define CYTHON_FUTURE_DIVISION 0
 #include <stddef.h>
 #ifndef offsetof
   #define offsetof(type, member) ( (size_t) & ((type*)0) -> member )
@@ -750,9 +751,12 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__cython_virtual_memory_toolkit__errors
-#define __PYX_HAVE_API__cython_virtual_memory_toolkit__errors
+#define __PYX_HAVE__windows__windows_defs
+#define __PYX_HAVE_API__windows__windows_defs
 /* Early includes */
+#include "Windows.h"
+#include "tlhelp32.h"
+#include "psapi.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -962,8 +966,20 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "CythonVirtualMemoryToolkit\\errors.py",
+  "windows\\windows_defs.pyx",
 };
+/* ForceInitThreads.proto */
+#ifndef __PYX_FORCE_INIT_THREADS
+  #define __PYX_FORCE_INIT_THREADS 0
+#endif
+
+/* NoFastGil.proto */
+#define __Pyx_PyGILState_Ensure PyGILState_Ensure
+#define __Pyx_PyGILState_Release PyGILState_Release
+#define __Pyx_FastGIL_Remember()
+#define __Pyx_FastGIL_Forget()
+#define __Pyx_FastGilFuncInit()
+
 
 /*--- Type declarations ---*/
 
@@ -1041,25 +1057,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject
 /* GetBuiltinName.proto */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
-/* RaiseDoubleKeywords.proto */
-static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
-
-/* ParseKeywords.proto */
-static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
-    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
-    const char* function_name);
-
-/* RaiseArgTupleInvalid.proto */
-static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
-    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
-
-/* PyObjectCall.proto */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw);
-#else
-#define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
-#endif
-
 /* PyCFunctionFastCall.proto */
 #if CYTHON_FAST_PYCCALL
 static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
@@ -1098,8 +1095,12 @@ static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, 
 #endif // CYTHON_FAST_PYCALL
 #endif
 
-/* PyObjectCall2Args.proto */
-static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
+/* PyObjectCall.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw);
+#else
+#define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
+#endif
 
 /* PyObjectCallMethO.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -1108,118 +1109,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject
 
 /* PyObjectCallOneArg.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
-
-/* CalculateMetaclass.proto */
-static PyObject *__Pyx_CalculateMetaclass(PyTypeObject *metaclass, PyObject *bases);
-
-/* FetchCommonType.proto */
-static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type);
-
-/* CythonFunctionShared.proto */
-#define __Pyx_CyFunction_USED 1
-#define __Pyx_CYFUNCTION_STATICMETHOD  0x01
-#define __Pyx_CYFUNCTION_CLASSMETHOD   0x02
-#define __Pyx_CYFUNCTION_CCLASS        0x04
-#define __Pyx_CyFunction_GetClosure(f)\
-    (((__pyx_CyFunctionObject *) (f))->func_closure)
-#define __Pyx_CyFunction_GetClassObj(f)\
-    (((__pyx_CyFunctionObject *) (f))->func_classobj)
-#define __Pyx_CyFunction_Defaults(type, f)\
-    ((type *)(((__pyx_CyFunctionObject *) (f))->defaults))
-#define __Pyx_CyFunction_SetDefaultsGetter(f, g)\
-    ((__pyx_CyFunctionObject *) (f))->defaults_getter = (g)
-typedef struct {
-    PyCFunctionObject func;
-#if PY_VERSION_HEX < 0x030500A0
-    PyObject *func_weakreflist;
-#endif
-    PyObject *func_dict;
-    PyObject *func_name;
-    PyObject *func_qualname;
-    PyObject *func_doc;
-    PyObject *func_globals;
-    PyObject *func_code;
-    PyObject *func_closure;
-    PyObject *func_classobj;
-    void *defaults;
-    int defaults_pyobjects;
-    size_t defaults_size;  // used by FusedFunction for copying defaults
-    int flags;
-    PyObject *defaults_tuple;
-    PyObject *defaults_kwdict;
-    PyObject *(*defaults_getter)(PyObject *);
-    PyObject *func_annotations;
-} __pyx_CyFunctionObject;
-static PyTypeObject *__pyx_CyFunctionType = 0;
-#define __Pyx_CyFunction_Check(obj)  (__Pyx_TypeCheck(obj, __pyx_CyFunctionType))
-static PyObject *__Pyx_CyFunction_Init(__pyx_CyFunctionObject* op, PyMethodDef *ml,
-                                      int flags, PyObject* qualname,
-                                      PyObject *self,
-                                      PyObject *module, PyObject *globals,
-                                      PyObject* code);
-static CYTHON_INLINE void *__Pyx_CyFunction_InitDefaults(PyObject *m,
-                                                         size_t size,
-                                                         int pyobjects);
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsTuple(PyObject *m,
-                                                            PyObject *tuple);
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsKwDict(PyObject *m,
-                                                             PyObject *dict);
-static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *m,
-                                                              PyObject *dict);
-static int __pyx_CyFunction_init(void);
-
-/* CythonFunction.proto */
-static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml,
-                                      int flags, PyObject* qualname,
-                                      PyObject *closure,
-                                      PyObject *module, PyObject *globals,
-                                      PyObject* code);
-
-/* SetNameInClass.proto */
-#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
-#define __Pyx_SetNameInClass(ns, name, value)\
-    (likely(PyDict_CheckExact(ns)) ? _PyDict_SetItem_KnownHash(ns, name, value, ((PyASCIIObject *) name)->hash) : PyObject_SetItem(ns, name, value))
-#elif CYTHON_COMPILING_IN_CPYTHON
-#define __Pyx_SetNameInClass(ns, name, value)\
-    (likely(PyDict_CheckExact(ns)) ? PyDict_SetItem(ns, name, value) : PyObject_SetItem(ns, name, value))
-#else
-#define __Pyx_SetNameInClass(ns, name, value)  PyObject_SetItem(ns, name, value)
-#endif
-
-/* Py3ClassCreate.proto */
-static PyObject *__Pyx_Py3MetaclassPrepare(PyObject *metaclass, PyObject *bases, PyObject *name, PyObject *qualname,
-                                           PyObject *mkw, PyObject *modname, PyObject *doc);
-static PyObject *__Pyx_Py3ClassCreate(PyObject *metaclass, PyObject *name, PyObject *bases, PyObject *dict,
-                                      PyObject *mkw, int calculate_metaclass, int allow_py2_metaclass);
-
-/* CyFunctionClassCell.proto */
-static int __Pyx_CyFunction_InitClassCell(PyObject *cyfunctions, PyObject *classobj);
-
-/* PyDictVersioning.proto */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-#define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
-#define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
-#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)\
-    (version_var) = __PYX_GET_DICT_VERSION(dict);\
-    (cache_var) = (value);
-#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP) {\
-    static PY_UINT64_T __pyx_dict_version = 0;\
-    static PyObject *__pyx_dict_cached_value = NULL;\
-    if (likely(__PYX_GET_DICT_VERSION(DICT) == __pyx_dict_version)) {\
-        (VAR) = __pyx_dict_cached_value;\
-    } else {\
-        (VAR) = __pyx_dict_cached_value = (LOOKUP);\
-        __pyx_dict_version = __PYX_GET_DICT_VERSION(DICT);\
-    }\
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj);
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj);
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version);
-#else
-#define __PYX_GET_DICT_VERSION(dict)  (0)
-#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
-#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
-#endif
 
 /* PyThreadStateGet.proto */
 #if CYTHON_FAST_THREAD_STATE
@@ -1257,6 +1146,40 @@ static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject 
 #define __Pyx_ErrFetch(type, value, tb)  PyErr_Fetch(type, value, tb)
 #endif
 
+/* RaiseException.proto */
+static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
+
+/* WriteUnraisableException.proto */
+static void __Pyx_WriteUnraisable(const char *name, int clineno,
+                                  int lineno, const char *filename,
+                                  int full_traceback, int nogil);
+
+/* PyDictVersioning.proto */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+#define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
+#define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
+#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)\
+    (version_var) = __PYX_GET_DICT_VERSION(dict);\
+    (cache_var) = (value);
+#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP) {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    if (likely(__PYX_GET_DICT_VERSION(DICT) == __pyx_dict_version)) {\
+        (VAR) = __pyx_dict_cached_value;\
+    } else {\
+        (VAR) = __pyx_dict_cached_value = (LOOKUP);\
+        __pyx_dict_version = __PYX_GET_DICT_VERSION(DICT);\
+    }\
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj);
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj);
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version);
+#else
+#define __PYX_GET_DICT_VERSION(dict)  (0)
+#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
+#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
+#endif
+
 /* CLineInTraceback.proto */
 #ifdef CYTHON_CLINE_IN_TRACEBACK
 #define __Pyx_CLineForTraceback(tstate, c_line)  (((CYTHON_CLINE_IN_TRACEBACK)) ? c_line : 0)
@@ -1289,6 +1212,9 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 #endif
 
 /* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_ULONG_PTR(ULONG_PTR value);
+
+/* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 /* CIntFromPy.proto */
@@ -1313,206 +1239,708 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 /* CheckBinaryVersion.proto */
 static int __Pyx_check_binary_version(void);
 
+/* FunctionExport.proto */
+static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig);
+
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'cython_virtual_memory_toolkit.errors' */
-#define __Pyx_MODULE_NAME "cython_virtual_memory_toolkit.errors"
-extern int __pyx_module_is_main_cython_virtual_memory_toolkit__errors;
-int __pyx_module_is_main_cython_virtual_memory_toolkit__errors = 0;
+/* Module declarations from 'windows.windows_types' */
 
-/* Implementation of 'cython_virtual_memory_toolkit.errors' */
-static PyObject *__pyx_builtin_super;
-static const char __pyx_k_doc[] = "__doc__";
-static const char __pyx_k_init[] = "__init__";
+/* Module declarations from 'windows.windows_defs' */
+#define __Pyx_MODULE_NAME "windows.windows_defs"
+extern int __pyx_module_is_main_windows__windows_defs;
+int __pyx_module_is_main_windows__windows_defs = 0;
+
+/* Implementation of 'windows.windows_defs' */
+static PyObject *__pyx_builtin_MemoryError;
+static PyObject *__pyx_builtin_hex;
+static const char __pyx_k_hex[] = "hex";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
-static const char __pyx_k_self[] = "self";
 static const char __pyx_k_test[] = "__test__";
-static const char __pyx_k_super[] = "super";
-static const char __pyx_k_module[] = "__module__";
-static const char __pyx_k_message[] = "message";
-static const char __pyx_k_prepare[] = "__prepare__";
-static const char __pyx_k_qualname[] = "__qualname__";
-static const char __pyx_k_metaclass[] = "__metaclass__";
+static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_UnableToAcquireHandle[] = "UnableToAcquireHandle";
-static const char __pyx_k_UnableToAcquireHandle___init[] = "UnableToAcquireHandle.__init__";
-static const char __pyx_k_Exception_raised_when_unable_to[] = "\n    Exception raised when unable to acquire a necessary resource handle.\n    ";
-static const char __pyx_k_CythonVirtualMemoryToolkit_error[] = "CythonVirtualMemoryToolkit\\errors.py";
-static const char __pyx_k_Unable_to_acquire_the_resource_h[] = "Unable to acquire the resource handle";
-static const char __pyx_k_cython_virtual_memory_toolkit_er[] = "cython_virtual_memory_toolkit.errors";
-static PyObject *__pyx_kp_s_CythonVirtualMemoryToolkit_error;
-static PyObject *__pyx_kp_s_Exception_raised_when_unable_to;
-static PyObject *__pyx_n_s_UnableToAcquireHandle;
-static PyObject *__pyx_n_s_UnableToAcquireHandle___init;
-static PyObject *__pyx_kp_u_Unable_to_acquire_the_resource_h;
+static const char __pyx_k_Failed_to_query_memory_informati[] = "Failed to query memory information. Address: ";
+static const char __pyx_k_Memory_is_not_committed_or_is_ma[] = "Memory is not committed or is marked as no access. Address: ";
+static const char __pyx_k_Unknown_error_cannot_modify_virt[] = "Unknown error, cannot modify virtual memory page protection! Address: ";
+static const char __pyx_k_Unknown_error_cannot_restore_pag[] = "Unknown error, cannot restore page protection! Address: ";
+static const char __pyx_k_Unknown_error_cannot_modify_virt_2[] = "Unknown error, cannot modify virtual memory page protection!";
+static const char __pyx_k_Unknown_error_cannot_restore_pag_2[] = "Unknown error, cannot restore page protection!";
+static PyObject *__pyx_kp_s_Failed_to_query_memory_informati;
+static PyObject *__pyx_n_s_MemoryError;
+static PyObject *__pyx_kp_s_Memory_is_not_committed_or_is_ma;
+static PyObject *__pyx_kp_s_Unknown_error_cannot_modify_virt;
+static PyObject *__pyx_kp_s_Unknown_error_cannot_modify_virt_2;
+static PyObject *__pyx_kp_s_Unknown_error_cannot_restore_pag;
+static PyObject *__pyx_kp_s_Unknown_error_cannot_restore_pag_2;
 static PyObject *__pyx_n_s_cline_in_traceback;
-static PyObject *__pyx_n_s_cython_virtual_memory_toolkit_er;
-static PyObject *__pyx_n_s_doc;
-static PyObject *__pyx_n_s_init;
+static PyObject *__pyx_n_s_hex;
 static PyObject *__pyx_n_s_main;
-static PyObject *__pyx_n_s_message;
-static PyObject *__pyx_n_s_metaclass;
-static PyObject *__pyx_n_s_module;
 static PyObject *__pyx_n_s_name;
-static PyObject *__pyx_n_s_prepare;
-static PyObject *__pyx_n_s_qualname;
-static PyObject *__pyx_n_s_self;
-static PyObject *__pyx_n_s_super;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_6errors_21UnableToAcquireHandle___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message); /* proto */
 static PyObject *__pyx_tuple_;
-static PyObject *__pyx_tuple__3;
-static PyObject *__pyx_codeobj__2;
+static PyObject *__pyx_tuple__2;
 /* Late includes */
 
-/* "CythonVirtualMemoryToolkit/errors.py":8
- *     """
+/* "windows/windows_defs.pyx":3
+ * from .windows_types cimport MEMORY_BASIC_INFORMATION
  * 
- *     def __init__(self, message="Unable to acquire the resource handle"):             # <<<<<<<<<<<<<<
- *         super().__init__(message)
+ * cdef SIZE_T privileged_memory_read(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     cdef MEMORY_BASIC_INFORMATION mbi
  */
 
-/* Python wrapper */
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_6errors_21UnableToAcquireHandle_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_29cython_virtual_memory_toolkit_6errors_21UnableToAcquireHandle_1__init__ = {"__init__", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_29cython_virtual_memory_toolkit_6errors_21UnableToAcquireHandle_1__init__, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_29cython_virtual_memory_toolkit_6errors_21UnableToAcquireHandle_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_self = 0;
-  PyObject *__pyx_v_message = 0;
+static SIZE_T __pyx_f_7windows_12windows_defs_privileged_memory_read(HANDLE __pyx_v_process_handle, LPCVOID __pyx_v_base_address, LPVOID __pyx_v_out_read_buffer, SIZE_T __pyx_v_number_of_bytes) {
+  MEMORY_BASIC_INFORMATION __pyx_v_mbi;
+  DWORD __pyx_v_old_page_protection;
+  int __pyx_v_changed_page_protection;
+  SIZE_T __pyx_v_read_bytes;
+  SIZE_T __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_message,0};
-    PyObject* values[2] = {0,0};
-    values[1] = ((PyObject *)((PyObject*)__pyx_kp_u_Unable_to_acquire_the_resource_h));
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
+  #ifdef WITH_THREAD
+  PyGILState_STATE __pyx_gilstate_save;
+  #endif
+  __Pyx_RefNannySetupContext("privileged_memory_read", 1);
+
+  /* "windows/windows_defs.pyx":5
+ * cdef SIZE_T privileged_memory_read(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
+ * 
+ *     cdef MEMORY_BASIC_INFORMATION mbi             # <<<<<<<<<<<<<<
+ *     if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:
+ *         with gil:
+ */
+  /*try:*/ {
+
+    /* "windows/windows_defs.pyx":6
+ * 
+ *     cdef MEMORY_BASIC_INFORMATION mbi
+ *     if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:             # <<<<<<<<<<<<<<
+ *         with gil:
+ *             raise MemoryError("Failed to query memory information. Address: ", hex(<SIZE_T> base_address))
+ */
+    __pyx_t_1 = ((VirtualQueryEx(__pyx_v_process_handle, __pyx_v_base_address, (&__pyx_v_mbi), (sizeof(__pyx_v_mbi))) == 0) != 0);
+    if (__pyx_t_1) {
+
+      /* "windows/windows_defs.pyx":7
+ *     cdef MEMORY_BASIC_INFORMATION mbi
+ *     if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:
+ *         with gil:             # <<<<<<<<<<<<<<
+ *             raise MemoryError("Failed to query memory information. Address: ", hex(<SIZE_T> base_address))
+ * 
+ */
+      {
+          #ifdef WITH_THREAD
+          PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+          #endif
+          /*try:*/ {
+
+            /* "windows/windows_defs.pyx":8
+ *     if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:
+ *         with gil:
+ *             raise MemoryError("Failed to query memory information. Address: ", hex(<SIZE_T> base_address))             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+            __pyx_t_2 = __Pyx_PyInt_From_ULONG_PTR(((SIZE_T)__pyx_v_base_address)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L8_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 8, __pyx_L8_error)
+            __Pyx_GOTREF(__pyx_t_3);
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L8_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_INCREF(__pyx_kp_s_Failed_to_query_memory_informati);
+            __Pyx_GIVEREF(__pyx_kp_s_Failed_to_query_memory_informati);
+            PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_kp_s_Failed_to_query_memory_informati);
+            __Pyx_GIVEREF(__pyx_t_3);
+            PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_3);
+            __pyx_t_3 = 0;
+            __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 8, __pyx_L8_error)
+            __Pyx_GOTREF(__pyx_t_3);
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __Pyx_Raise(__pyx_t_3, 0, 0, 0);
+            __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+            __PYX_ERR(0, 8, __pyx_L8_error)
+          }
+
+          /* "windows/windows_defs.pyx":7
+ *     cdef MEMORY_BASIC_INFORMATION mbi
+ *     if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:
+ *         with gil:             # <<<<<<<<<<<<<<
+ *             raise MemoryError("Failed to query memory information. Address: ", hex(<SIZE_T> base_address))
+ * 
+ */
+          /*finally:*/ {
+            __pyx_L8_error: {
+              #ifdef WITH_THREAD
+              __Pyx_PyGILState_Release(__pyx_gilstate_save);
+              #endif
+              goto __pyx_L4_error;
+            }
+          }
       }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_message);
-          if (value) { values[1] = value; kw_args--; }
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 8, __pyx_L3_error)
-      }
-    } else {
-      switch (PyTuple_GET_SIZE(__pyx_args)) {
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        break;
-        default: goto __pyx_L5_argtuple_error;
-      }
+
+      /* "windows/windows_defs.pyx":6
+ * 
+ *     cdef MEMORY_BASIC_INFORMATION mbi
+ *     if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:             # <<<<<<<<<<<<<<
+ *         with gil:
+ *             raise MemoryError("Failed to query memory information. Address: ", hex(<SIZE_T> base_address))
+ */
     }
-    __pyx_v_self = values[0];
-    __pyx_v_message = values[1];
+
+    /* "windows/windows_defs.pyx":11
+ * 
+ * 
+ *     if mbi.State != MEM_COMMIT or mbi.Protect == PAGE_NOACCESS:             # <<<<<<<<<<<<<<
+ *         with gil:
+ *             raise MemoryError("Memory is not committed or is marked as no access. Address: ", hex(<SIZE_T> base_address))
+ */
+    __pyx_t_4 = ((__pyx_v_mbi.State != MEM_COMMIT) != 0);
+    if (!__pyx_t_4) {
+    } else {
+      __pyx_t_1 = __pyx_t_4;
+      goto __pyx_L11_bool_binop_done;
+    }
+    __pyx_t_4 = ((__pyx_v_mbi.Protect == PAGE_NOACCESS) != 0);
+    __pyx_t_1 = __pyx_t_4;
+    __pyx_L11_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "windows/windows_defs.pyx":12
+ * 
+ *     if mbi.State != MEM_COMMIT or mbi.Protect == PAGE_NOACCESS:
+ *         with gil:             # <<<<<<<<<<<<<<
+ *             raise MemoryError("Memory is not committed or is marked as no access. Address: ", hex(<SIZE_T> base_address))
+ * 
+ */
+      {
+          #ifdef WITH_THREAD
+          PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+          #endif
+          /*try:*/ {
+
+            /* "windows/windows_defs.pyx":13
+ *     if mbi.State != MEM_COMMIT or mbi.Protect == PAGE_NOACCESS:
+ *         with gil:
+ *             raise MemoryError("Memory is not committed or is marked as no access. Address: ", hex(<SIZE_T> base_address))             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+            __pyx_t_3 = __Pyx_PyInt_From_ULONG_PTR(((SIZE_T)__pyx_v_base_address)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 13, __pyx_L14_error)
+            __Pyx_GOTREF(__pyx_t_3);
+            __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 13, __pyx_L14_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+            __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 13, __pyx_L14_error)
+            __Pyx_GOTREF(__pyx_t_3);
+            __Pyx_INCREF(__pyx_kp_s_Memory_is_not_committed_or_is_ma);
+            __Pyx_GIVEREF(__pyx_kp_s_Memory_is_not_committed_or_is_ma);
+            PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_kp_s_Memory_is_not_committed_or_is_ma);
+            __Pyx_GIVEREF(__pyx_t_2);
+            PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
+            __pyx_t_2 = 0;
+            __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 13, __pyx_L14_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+            __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __PYX_ERR(0, 13, __pyx_L14_error)
+          }
+
+          /* "windows/windows_defs.pyx":12
+ * 
+ *     if mbi.State != MEM_COMMIT or mbi.Protect == PAGE_NOACCESS:
+ *         with gil:             # <<<<<<<<<<<<<<
+ *             raise MemoryError("Memory is not committed or is marked as no access. Address: ", hex(<SIZE_T> base_address))
+ * 
+ */
+          /*finally:*/ {
+            __pyx_L14_error: {
+              #ifdef WITH_THREAD
+              __Pyx_PyGILState_Release(__pyx_gilstate_save);
+              #endif
+              goto __pyx_L4_error;
+            }
+          }
+      }
+
+      /* "windows/windows_defs.pyx":11
+ * 
+ * 
+ *     if mbi.State != MEM_COMMIT or mbi.Protect == PAGE_NOACCESS:             # <<<<<<<<<<<<<<
+ *         with gil:
+ *             raise MemoryError("Memory is not committed or is marked as no access. Address: ", hex(<SIZE_T> base_address))
+ */
+    }
+
+    /* "windows/windows_defs.pyx":19
+ *     cdef bint changed_page_protection
+ * 
+ *     changed_page_protection = VirtualProtectEx(             # <<<<<<<<<<<<<<
+ *         process_handle,
+ *         <LPVOID>base_address,
+ */
+    __pyx_v_changed_page_protection = VirtualProtectEx(__pyx_v_process_handle, ((LPVOID)__pyx_v_base_address), __pyx_v_number_of_bytes, PAGE_EXECUTE_READWRITE, ((PDWORD)(&__pyx_v_old_page_protection)));
+
+    /* "windows/windows_defs.pyx":27
+ *     )
+ * 
+ *     if not changed_page_protection:             # <<<<<<<<<<<<<<
+ *         with gil:
+ *             raise MemoryError("Unknown error, cannot modify virtual memory page protection! Address: ", hex(<SIZE_T> base_address))
+ */
+    __pyx_t_1 = ((!(__pyx_v_changed_page_protection != 0)) != 0);
+    if (__pyx_t_1) {
+
+      /* "windows/windows_defs.pyx":28
+ * 
+ *     if not changed_page_protection:
+ *         with gil:             # <<<<<<<<<<<<<<
+ *             raise MemoryError("Unknown error, cannot modify virtual memory page protection! Address: ", hex(<SIZE_T> base_address))
+ * 
+ */
+      {
+          #ifdef WITH_THREAD
+          PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+          #endif
+          /*try:*/ {
+
+            /* "windows/windows_defs.pyx":29
+ *     if not changed_page_protection:
+ *         with gil:
+ *             raise MemoryError("Unknown error, cannot modify virtual memory page protection! Address: ", hex(<SIZE_T> base_address))             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+            __pyx_t_2 = __Pyx_PyInt_From_ULONG_PTR(((SIZE_T)__pyx_v_base_address)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L18_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 29, __pyx_L18_error)
+            __Pyx_GOTREF(__pyx_t_3);
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L18_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_INCREF(__pyx_kp_s_Unknown_error_cannot_modify_virt);
+            __Pyx_GIVEREF(__pyx_kp_s_Unknown_error_cannot_modify_virt);
+            PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_kp_s_Unknown_error_cannot_modify_virt);
+            __Pyx_GIVEREF(__pyx_t_3);
+            PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_3);
+            __pyx_t_3 = 0;
+            __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 29, __pyx_L18_error)
+            __Pyx_GOTREF(__pyx_t_3);
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __Pyx_Raise(__pyx_t_3, 0, 0, 0);
+            __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+            __PYX_ERR(0, 29, __pyx_L18_error)
+          }
+
+          /* "windows/windows_defs.pyx":28
+ * 
+ *     if not changed_page_protection:
+ *         with gil:             # <<<<<<<<<<<<<<
+ *             raise MemoryError("Unknown error, cannot modify virtual memory page protection! Address: ", hex(<SIZE_T> base_address))
+ * 
+ */
+          /*finally:*/ {
+            __pyx_L18_error: {
+              #ifdef WITH_THREAD
+              __Pyx_PyGILState_Release(__pyx_gilstate_save);
+              #endif
+              goto __pyx_L4_error;
+            }
+          }
+      }
+
+      /* "windows/windows_defs.pyx":27
+ *     )
+ * 
+ *     if not changed_page_protection:             # <<<<<<<<<<<<<<
+ *         with gil:
+ *             raise MemoryError("Unknown error, cannot modify virtual memory page protection! Address: ", hex(<SIZE_T> base_address))
+ */
+    }
+
+    /* "windows/windows_defs.pyx":32
+ * 
+ * 
+ *     cdef SIZE_T read_bytes = 0             # <<<<<<<<<<<<<<
+ *     ReadProcessMemory(
+ *         process_handle,
+ */
+    __pyx_v_read_bytes = 0;
+
+    /* "windows/windows_defs.pyx":33
+ * 
+ *     cdef SIZE_T read_bytes = 0
+ *     ReadProcessMemory(             # <<<<<<<<<<<<<<
+ *         process_handle,
+ *         base_address,
+ */
+    (void)(ReadProcessMemory(__pyx_v_process_handle, __pyx_v_base_address, __pyx_v_out_read_buffer, __pyx_v_number_of_bytes, (&__pyx_v_read_bytes)));
+
+    /* "windows/windows_defs.pyx":41
+ *     )
+ * 
+ *     changed_page_protection = VirtualProtectEx(             # <<<<<<<<<<<<<<
+ *         process_handle,
+ *         <LPVOID>base_address,
+ */
+    __pyx_v_changed_page_protection = VirtualProtectEx(__pyx_v_process_handle, ((LPVOID)__pyx_v_base_address), __pyx_v_number_of_bytes, __pyx_v_old_page_protection, ((PDWORD)(&__pyx_v_old_page_protection)));
+
+    /* "windows/windows_defs.pyx":49
+ *     )
+ * 
+ *     if not changed_page_protection:             # <<<<<<<<<<<<<<
+ *         with gil:
+ *             raise MemoryError("Unknown error, cannot restore page protection! Address: ", hex(<SIZE_T> base_address))
+ */
+    __pyx_t_1 = ((!(__pyx_v_changed_page_protection != 0)) != 0);
+    if (__pyx_t_1) {
+
+      /* "windows/windows_defs.pyx":50
+ * 
+ *     if not changed_page_protection:
+ *         with gil:             # <<<<<<<<<<<<<<
+ *             raise MemoryError("Unknown error, cannot restore page protection! Address: ", hex(<SIZE_T> base_address))
+ * 
+ */
+      {
+          #ifdef WITH_THREAD
+          PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+          #endif
+          /*try:*/ {
+
+            /* "windows/windows_defs.pyx":51
+ *     if not changed_page_protection:
+ *         with gil:
+ *             raise MemoryError("Unknown error, cannot restore page protection! Address: ", hex(<SIZE_T> base_address))             # <<<<<<<<<<<<<<
+ * 
+ *     return read_bytes
+ */
+            __pyx_t_3 = __Pyx_PyInt_From_ULONG_PTR(((SIZE_T)__pyx_v_base_address)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 51, __pyx_L22_error)
+            __Pyx_GOTREF(__pyx_t_3);
+            __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L22_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+            __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 51, __pyx_L22_error)
+            __Pyx_GOTREF(__pyx_t_3);
+            __Pyx_INCREF(__pyx_kp_s_Unknown_error_cannot_restore_pag);
+            __Pyx_GIVEREF(__pyx_kp_s_Unknown_error_cannot_restore_pag);
+            PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_kp_s_Unknown_error_cannot_restore_pag);
+            __Pyx_GIVEREF(__pyx_t_2);
+            PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
+            __pyx_t_2 = 0;
+            __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L22_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+            __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __PYX_ERR(0, 51, __pyx_L22_error)
+          }
+
+          /* "windows/windows_defs.pyx":50
+ * 
+ *     if not changed_page_protection:
+ *         with gil:             # <<<<<<<<<<<<<<
+ *             raise MemoryError("Unknown error, cannot restore page protection! Address: ", hex(<SIZE_T> base_address))
+ * 
+ */
+          /*finally:*/ {
+            __pyx_L22_error: {
+              #ifdef WITH_THREAD
+              __Pyx_PyGILState_Release(__pyx_gilstate_save);
+              #endif
+              goto __pyx_L4_error;
+            }
+          }
+      }
+
+      /* "windows/windows_defs.pyx":49
+ *     )
+ * 
+ *     if not changed_page_protection:             # <<<<<<<<<<<<<<
+ *         with gil:
+ *             raise MemoryError("Unknown error, cannot restore page protection! Address: ", hex(<SIZE_T> base_address))
+ */
+    }
+
+    /* "windows/windows_defs.pyx":53
+ *             raise MemoryError("Unknown error, cannot restore page protection! Address: ", hex(<SIZE_T> base_address))
+ * 
+ *     return read_bytes             # <<<<<<<<<<<<<<
+ * 
+ * cdef SIZE_T privilaged_memory_write(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
+ */
+    __pyx_r = __pyx_v_read_bytes;
+    goto __pyx_L3_return;
   }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 8, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.errors.UnableToAcquireHandle.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_29cython_virtual_memory_toolkit_6errors_21UnableToAcquireHandle___init__(__pyx_self, __pyx_v_self, __pyx_v_message);
+
+  /* "windows/windows_defs.pyx":5
+ * cdef SIZE_T privileged_memory_read(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
+ * 
+ *     cdef MEMORY_BASIC_INFORMATION mbi             # <<<<<<<<<<<<<<
+ *     if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:
+ *         with gil:
+ */
+  /*finally:*/ {
+    __pyx_L3_return: {
+      #ifdef WITH_THREAD
+      __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+      #endif
+      goto __pyx_L0;
+    }
+    __pyx_L4_error: {
+      #ifdef WITH_THREAD
+      __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+      #endif
+      goto __pyx_L1_error;
+    }
+  }
+
+  /* "windows/windows_defs.pyx":3
+ * from .windows_types cimport MEMORY_BASIC_INFORMATION
+ * 
+ * cdef SIZE_T privileged_memory_read(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     cdef MEMORY_BASIC_INFORMATION mbi
+ */
 
   /* function exit code */
-  __Pyx_RefNannyFinishContext();
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_WriteUnraisable("windows.windows_defs.privileged_memory_read", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 1);
+  __pyx_r = 0;
+  __pyx_L0:;
+  #ifdef WITH_THREAD
+  __Pyx_PyGILState_Release(__pyx_gilstate_save);
+  #endif
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_29cython_virtual_memory_toolkit_6errors_21UnableToAcquireHandle___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message) {
-  PyObject *__pyx_r = NULL;
+/* "windows/windows_defs.pyx":55
+ *     return read_bytes
+ * 
+ * cdef SIZE_T privilaged_memory_write(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     cdef DWORD old_page_protection
+ */
+
+static SIZE_T __pyx_f_7windows_12windows_defs_privilaged_memory_write(HANDLE __pyx_v_process_handle, LPVOID __pyx_v_base_address, LPCVOID __pyx_v_write_buffer, SIZE_T __pyx_v_number_of_bytes) {
+  DWORD __pyx_v_old_page_protection;
+  int __pyx_v_changed_page_protection;
+  SIZE_T __pyx_v_written_bytes;
+  SIZE_T __pyx_r;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
+  int __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__init__", 0);
+  #ifdef WITH_THREAD
+  PyGILState_STATE __pyx_gilstate_save;
+  #endif
+  __Pyx_RefNannySetupContext("privilaged_memory_write", 1);
 
-  /* "CythonVirtualMemoryToolkit/errors.py":9
+  /* "windows/windows_defs.pyx":57
+ * cdef SIZE_T privilaged_memory_write(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
  * 
- *     def __init__(self, message="Unable to acquire the resource handle"):
- *         super().__init__(message)             # <<<<<<<<<<<<<<
+ *     cdef DWORD old_page_protection             # <<<<<<<<<<<<<<
+ *     cdef bint changed_page_protection
+ * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_GetClassObj(__pyx_self);
-  if (!__pyx_t_2) { PyErr_SetString(PyExc_SystemError, "super(): empty __class__ cell"); __PYX_ERR(0, 9, __pyx_L1_error) }
-  __Pyx_INCREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 9, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
-  __Pyx_INCREF(__pyx_v_self);
-  __Pyx_GIVEREF(__pyx_v_self);
-  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_self);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_super, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_init); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 9, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-    if (likely(__pyx_t_2)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_2);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
+  /*try:*/ {
+
+    /* "windows/windows_defs.pyx":60
+ *     cdef bint changed_page_protection
+ * 
+ *     changed_page_protection = VirtualProtectEx(             # <<<<<<<<<<<<<<
+ *         process_handle,
+ *         <LPVOID>base_address,
+ */
+    __pyx_v_changed_page_protection = VirtualProtectEx(__pyx_v_process_handle, ((LPVOID)__pyx_v_base_address), __pyx_v_number_of_bytes, PAGE_EXECUTE_READWRITE, ((PDWORD)(&__pyx_v_old_page_protection)));
+
+    /* "windows/windows_defs.pyx":68
+ *     )
+ * 
+ *     if not changed_page_protection:             # <<<<<<<<<<<<<<
+ *         raise MemoryError("Unknown error, cannot modify virtual memory page protection!")
+ * 
+ */
+    __pyx_t_1 = ((!(__pyx_v_changed_page_protection != 0)) != 0);
+    if (__pyx_t_1) {
+
+      /* "windows/windows_defs.pyx":69
+ * 
+ *     if not changed_page_protection:
+ *         raise MemoryError("Unknown error, cannot modify virtual memory page protection!")             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+      {
+          #ifdef WITH_THREAD
+          PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+          #endif
+          /*try:*/ {
+            __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L8_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __PYX_ERR(0, 69, __pyx_L8_error)
+          }
+          /*finally:*/ {
+            __pyx_L8_error: {
+              #ifdef WITH_THREAD
+              __Pyx_PyGILState_Release(__pyx_gilstate_save);
+              #endif
+              goto __pyx_L4_error;
+            }
+          }
+      }
+
+      /* "windows/windows_defs.pyx":68
+ *     )
+ * 
+ *     if not changed_page_protection:             # <<<<<<<<<<<<<<
+ *         raise MemoryError("Unknown error, cannot modify virtual memory page protection!")
+ * 
+ */
+    }
+
+    /* "windows/windows_defs.pyx":72
+ * 
+ * 
+ *     cdef SIZE_T written_bytes = 0             # <<<<<<<<<<<<<<
+ *     WriteProcessMemory(
+ *         process_handle,
+ */
+    __pyx_v_written_bytes = 0;
+
+    /* "windows/windows_defs.pyx":73
+ * 
+ *     cdef SIZE_T written_bytes = 0
+ *     WriteProcessMemory(             # <<<<<<<<<<<<<<
+ *         process_handle,
+ *         base_address,
+ */
+    (void)(WriteProcessMemory(__pyx_v_process_handle, __pyx_v_base_address, __pyx_v_write_buffer, __pyx_v_number_of_bytes, (&__pyx_v_written_bytes)));
+
+    /* "windows/windows_defs.pyx":81
+ *     )
+ * 
+ *     changed_page_protection = VirtualProtectEx(             # <<<<<<<<<<<<<<
+ *         process_handle,
+ *         <LPVOID>base_address,
+ */
+    __pyx_v_changed_page_protection = VirtualProtectEx(__pyx_v_process_handle, ((LPVOID)__pyx_v_base_address), __pyx_v_number_of_bytes, __pyx_v_old_page_protection, ((PDWORD)(&__pyx_v_old_page_protection)));
+
+    /* "windows/windows_defs.pyx":89
+ *     )
+ * 
+ *     if not changed_page_protection:             # <<<<<<<<<<<<<<
+ *         raise MemoryError("Unknown error, cannot restore page protection!")
+ * 
+ */
+    __pyx_t_1 = ((!(__pyx_v_changed_page_protection != 0)) != 0);
+    if (__pyx_t_1) {
+
+      /* "windows/windows_defs.pyx":90
+ * 
+ *     if not changed_page_protection:
+ *         raise MemoryError("Unknown error, cannot restore page protection!")             # <<<<<<<<<<<<<<
+ * 
+ *     return written_bytes
+ */
+      {
+          #ifdef WITH_THREAD
+          PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+          #endif
+          /*try:*/ {
+            __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 90, __pyx_L12_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __PYX_ERR(0, 90, __pyx_L12_error)
+          }
+          /*finally:*/ {
+            __pyx_L12_error: {
+              #ifdef WITH_THREAD
+              __Pyx_PyGILState_Release(__pyx_gilstate_save);
+              #endif
+              goto __pyx_L4_error;
+            }
+          }
+      }
+
+      /* "windows/windows_defs.pyx":89
+ *     )
+ * 
+ *     if not changed_page_protection:             # <<<<<<<<<<<<<<
+ *         raise MemoryError("Unknown error, cannot restore page protection!")
+ * 
+ */
+    }
+
+    /* "windows/windows_defs.pyx":92
+ *         raise MemoryError("Unknown error, cannot restore page protection!")
+ * 
+ *     return written_bytes             # <<<<<<<<<<<<<<
+ */
+    __pyx_r = __pyx_v_written_bytes;
+    goto __pyx_L3_return;
+  }
+
+  /* "windows/windows_defs.pyx":57
+ * cdef SIZE_T privilaged_memory_write(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
+ * 
+ *     cdef DWORD old_page_protection             # <<<<<<<<<<<<<<
+ *     cdef bint changed_page_protection
+ * 
+ */
+  /*finally:*/ {
+    __pyx_L3_return: {
+      #ifdef WITH_THREAD
+      __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+      #endif
+      goto __pyx_L0;
+    }
+    __pyx_L4_error: {
+      #ifdef WITH_THREAD
+      __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+      #endif
+      goto __pyx_L1_error;
     }
   }
-  __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_v_message) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_message);
-  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "CythonVirtualMemoryToolkit/errors.py":8
- *     """
+  /* "windows/windows_defs.pyx":55
+ *     return read_bytes
  * 
- *     def __init__(self, message="Unable to acquire the resource handle"):             # <<<<<<<<<<<<<<
- *         super().__init__(message)
+ * cdef SIZE_T privilaged_memory_write(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     cdef DWORD old_page_protection
  */
 
   /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("cython_virtual_memory_toolkit.errors.UnableToAcquireHandle.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
+  __Pyx_WriteUnraisable("windows.windows_defs.privilaged_memory_write", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 1);
+  __pyx_r = 0;
   __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
+  #ifdef WITH_THREAD
+  __Pyx_PyGILState_Release(__pyx_gilstate_save);
+  #endif
   return __pyx_r;
 }
 
@@ -1523,17 +1951,17 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_errors(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_windows_defs(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_errors},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_windows_defs},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "errors",
+    "windows_defs",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -1562,29 +1990,23 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_kp_s_CythonVirtualMemoryToolkit_error, __pyx_k_CythonVirtualMemoryToolkit_error, sizeof(__pyx_k_CythonVirtualMemoryToolkit_error), 0, 0, 1, 0},
-  {&__pyx_kp_s_Exception_raised_when_unable_to, __pyx_k_Exception_raised_when_unable_to, sizeof(__pyx_k_Exception_raised_when_unable_to), 0, 0, 1, 0},
-  {&__pyx_n_s_UnableToAcquireHandle, __pyx_k_UnableToAcquireHandle, sizeof(__pyx_k_UnableToAcquireHandle), 0, 0, 1, 1},
-  {&__pyx_n_s_UnableToAcquireHandle___init, __pyx_k_UnableToAcquireHandle___init, sizeof(__pyx_k_UnableToAcquireHandle___init), 0, 0, 1, 1},
-  {&__pyx_kp_u_Unable_to_acquire_the_resource_h, __pyx_k_Unable_to_acquire_the_resource_h, sizeof(__pyx_k_Unable_to_acquire_the_resource_h), 0, 1, 0, 0},
+  {&__pyx_kp_s_Failed_to_query_memory_informati, __pyx_k_Failed_to_query_memory_informati, sizeof(__pyx_k_Failed_to_query_memory_informati), 0, 0, 1, 0},
+  {&__pyx_n_s_MemoryError, __pyx_k_MemoryError, sizeof(__pyx_k_MemoryError), 0, 0, 1, 1},
+  {&__pyx_kp_s_Memory_is_not_committed_or_is_ma, __pyx_k_Memory_is_not_committed_or_is_ma, sizeof(__pyx_k_Memory_is_not_committed_or_is_ma), 0, 0, 1, 0},
+  {&__pyx_kp_s_Unknown_error_cannot_modify_virt, __pyx_k_Unknown_error_cannot_modify_virt, sizeof(__pyx_k_Unknown_error_cannot_modify_virt), 0, 0, 1, 0},
+  {&__pyx_kp_s_Unknown_error_cannot_modify_virt_2, __pyx_k_Unknown_error_cannot_modify_virt_2, sizeof(__pyx_k_Unknown_error_cannot_modify_virt_2), 0, 0, 1, 0},
+  {&__pyx_kp_s_Unknown_error_cannot_restore_pag, __pyx_k_Unknown_error_cannot_restore_pag, sizeof(__pyx_k_Unknown_error_cannot_restore_pag), 0, 0, 1, 0},
+  {&__pyx_kp_s_Unknown_error_cannot_restore_pag_2, __pyx_k_Unknown_error_cannot_restore_pag_2, sizeof(__pyx_k_Unknown_error_cannot_restore_pag_2), 0, 0, 1, 0},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
-  {&__pyx_n_s_cython_virtual_memory_toolkit_er, __pyx_k_cython_virtual_memory_toolkit_er, sizeof(__pyx_k_cython_virtual_memory_toolkit_er), 0, 0, 1, 1},
-  {&__pyx_n_s_doc, __pyx_k_doc, sizeof(__pyx_k_doc), 0, 0, 1, 1},
-  {&__pyx_n_s_init, __pyx_k_init, sizeof(__pyx_k_init), 0, 0, 1, 1},
+  {&__pyx_n_s_hex, __pyx_k_hex, sizeof(__pyx_k_hex), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
-  {&__pyx_n_s_message, __pyx_k_message, sizeof(__pyx_k_message), 0, 0, 1, 1},
-  {&__pyx_n_s_metaclass, __pyx_k_metaclass, sizeof(__pyx_k_metaclass), 0, 0, 1, 1},
-  {&__pyx_n_s_module, __pyx_k_module, sizeof(__pyx_k_module), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
-  {&__pyx_n_s_prepare, __pyx_k_prepare, sizeof(__pyx_k_prepare), 0, 0, 1, 1},
-  {&__pyx_n_s_qualname, __pyx_k_qualname, sizeof(__pyx_k_qualname), 0, 0, 1, 1},
-  {&__pyx_n_s_self, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
-  {&__pyx_n_s_super, __pyx_k_super, sizeof(__pyx_k_super), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_super = __Pyx_GetBuiltinName(__pyx_n_s_super); if (!__pyx_builtin_super) __PYX_ERR(0, 9, __pyx_L1_error)
+  __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(0, 8, __pyx_L1_error)
+  __pyx_builtin_hex = __Pyx_GetBuiltinName(__pyx_n_s_hex); if (!__pyx_builtin_hex) __PYX_ERR(0, 8, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -1594,19 +2016,27 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "CythonVirtualMemoryToolkit/errors.py":8
- *     """
+  /* "windows/windows_defs.pyx":69
  * 
- *     def __init__(self, message="Unable to acquire the resource handle"):             # <<<<<<<<<<<<<<
- *         super().__init__(message)
+ *     if not changed_page_protection:
+ *         raise MemoryError("Unknown error, cannot modify virtual memory page protection!")             # <<<<<<<<<<<<<<
+ * 
+ * 
  */
-  __pyx_tuple_ = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_message); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 8, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_s_Unknown_error_cannot_modify_virt_2); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
-  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_CythonVirtualMemoryToolkit_error, __pyx_n_s_init, 8, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 8, __pyx_L1_error)
-  __pyx_tuple__3 = PyTuple_Pack(1, ((PyObject*)__pyx_kp_u_Unable_to_acquire_the_resource_h)); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 8, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__3);
-  __Pyx_GIVEREF(__pyx_tuple__3);
+
+  /* "windows/windows_defs.pyx":90
+ * 
+ *     if not changed_page_protection:
+ *         raise MemoryError("Unknown error, cannot restore page protection!")             # <<<<<<<<<<<<<<
+ * 
+ *     return written_bytes
+ */
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_Unknown_error_cannot_restore_pag_2); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__2);
+  __Pyx_GIVEREF(__pyx_tuple__2);
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -1615,7 +2045,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 }
 
 static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
-  if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -1647,10 +2077,18 @@ static int __Pyx_modinit_variable_export_code(void) {
 
 static int __Pyx_modinit_function_export_code(void) {
   __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_export_code", 0);
   /*--- Function export code ---*/
+  if (__Pyx_ExportFunction("privileged_memory_read", (void (*)(void))__pyx_f_7windows_12windows_defs_privileged_memory_read, "SIZE_T (HANDLE, LPCVOID, LPVOID, SIZE_T)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("privilaged_memory_write", (void (*)(void))__pyx_f_7windows_12windows_defs_privilaged_memory_write, "SIZE_T (HANDLE, LPVOID, LPCVOID, SIZE_T)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
+  __pyx_L1_error:;
+  __Pyx_RefNannyFinishContext();
+  return -1;
 }
 
 static int __Pyx_modinit_type_init_code(void) {
@@ -1704,11 +2142,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initerrors(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initerrors(void)
+__Pyx_PyMODINIT_FUNC initwindows_defs(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initwindows_defs(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_errors(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_errors(void)
+__Pyx_PyMODINIT_FUNC PyInit_windows_defs(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_windows_defs(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -1775,15 +2213,11 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_errors(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_windows_defs(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1791,7 +2225,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_errors(PyObject *__pyx_pyinit_modu
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'errors' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'windows_defs' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -1806,31 +2240,31 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_errors(void)", 0);
-  if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_windows_defs(void)", 0);
+  if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
   #endif
-  __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) __PYX_ERR(0, 3, __pyx_L1_error)
-  __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) __PYX_ERR(0, 3, __pyx_L1_error)
-  __pyx_empty_unicode = PyUnicode_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_unicode)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_empty_unicode = PyUnicode_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_unicode)) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pyx_CyFunction_USED
-  if (__pyx_CyFunction_init() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__pyx_CyFunction_init() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
   #ifdef __Pyx_FusedFunction_USED
-  if (__pyx_FusedFunction_init() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__pyx_FusedFunction_init() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
   #ifdef __Pyx_Coroutine_USED
-  if (__pyx_Coroutine_init() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__pyx_Coroutine_init() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
   #ifdef __Pyx_Generator_USED
-  if (__pyx_Generator_init() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__pyx_Generator_init() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
   #ifdef __Pyx_AsyncGen_USED
-  if (__pyx_AsyncGen_init() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__pyx_AsyncGen_init() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
   #ifdef __Pyx_StopAsyncIteration_USED
-  if (__pyx_StopAsyncIteration_init() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__pyx_StopAsyncIteration_init() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
   /*--- Library function declarations ---*/
   /*--- Threads initialization code ---*/
@@ -1843,105 +2277,60 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("errors", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("windows_defs", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
-  if (unlikely(!__pyx_m)) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (unlikely(!__pyx_m)) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  __pyx_d = PyModule_GetDict(__pyx_m); if (unlikely(!__pyx_d)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_d = PyModule_GetDict(__pyx_m); if (unlikely(!__pyx_d)) __PYX_ERR(0, 1, __pyx_L1_error)
   Py_INCREF(__pyx_d);
-  __pyx_b = PyImport_AddModule(__Pyx_BUILTIN_MODULE_NAME); if (unlikely(!__pyx_b)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_b = PyImport_AddModule(__Pyx_BUILTIN_MODULE_NAME); if (unlikely(!__pyx_b)) __PYX_ERR(0, 1, __pyx_L1_error)
   Py_INCREF(__pyx_b);
-  __pyx_cython_runtime = PyImport_AddModule((char *) "cython_runtime"); if (unlikely(!__pyx_cython_runtime)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_cython_runtime = PyImport_AddModule((char *) "cython_runtime"); if (unlikely(!__pyx_cython_runtime)) __PYX_ERR(0, 1, __pyx_L1_error)
   Py_INCREF(__pyx_cython_runtime);
-  if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Initialize various global constants etc. ---*/
-  if (__Pyx_InitGlobals() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__Pyx_InitGlobals() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
-  if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_cython_virtual_memory_toolkit__errors) {
-    if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__pyx_module_is_main_windows__windows_defs) {
+    if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
-    PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 3, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "cython_virtual_memory_toolkit.errors")) {
-      if (unlikely(PyDict_SetItemString(modules, "cython_virtual_memory_toolkit.errors", __pyx_m) < 0)) __PYX_ERR(0, 3, __pyx_L1_error)
+    PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "windows.windows_defs")) {
+      if (unlikely(PyDict_SetItemString(modules, "windows.windows_defs", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
   /*--- Builtin init code ---*/
-  if (__Pyx_InitCachedBuiltins() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__Pyx_InitCachedBuiltins() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Constants init code ---*/
-  if (__Pyx_InitCachedConstants() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__Pyx_InitCachedConstants() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Global type/function init code ---*/
   (void)__Pyx_modinit_global_init_code();
   (void)__Pyx_modinit_variable_export_code();
-  (void)__Pyx_modinit_function_export_code();
+  if (unlikely(__Pyx_modinit_function_export_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
   (void)__Pyx_modinit_type_init_code();
   (void)__Pyx_modinit_type_import_code();
   (void)__Pyx_modinit_variable_import_code();
   (void)__Pyx_modinit_function_import_code();
   /*--- Execution code ---*/
   #if defined(__Pyx_Generator_USED) || defined(__Pyx_Coroutine_USED)
-  if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "CythonVirtualMemoryToolkit/errors.py":3
+  /* "windows/windows_defs.pyx":1
+ * from .windows_types cimport MEMORY_BASIC_INFORMATION             # <<<<<<<<<<<<<<
  * 
- * 
- * class UnableToAcquireHandle(Exception):             # <<<<<<<<<<<<<<
- *     """
- *     Exception raised when unable to acquire a necessary resource handle.
+ * cdef SIZE_T privileged_memory_read(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
  */
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
-  __Pyx_GIVEREF(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
-  PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
-  __pyx_t_2 = __Pyx_CalculateMetaclass(NULL, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 3, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_2, __pyx_t_1, __pyx_n_s_UnableToAcquireHandle, __pyx_n_s_UnableToAcquireHandle, (PyObject *) NULL, __pyx_n_s_cython_virtual_memory_toolkit_er, __pyx_kp_s_Exception_raised_when_unable_to); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 3, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 3, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-
-  /* "CythonVirtualMemoryToolkit/errors.py":8
- *     """
- * 
- *     def __init__(self, message="Unable to acquire the resource handle"):             # <<<<<<<<<<<<<<
- *         super().__init__(message)
- */
-  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_29cython_virtual_memory_toolkit_6errors_21UnableToAcquireHandle_1__init__, 0, __pyx_n_s_UnableToAcquireHandle___init, NULL, __pyx_n_s_cython_virtual_memory_toolkit_er, __pyx_d, ((PyObject *)__pyx_codeobj__2)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 8, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_INCREF(__pyx_t_5);
-  PyList_Append(__pyx_t_4, __pyx_t_5);
-  __Pyx_GIVEREF(__pyx_t_5);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_5, __pyx_tuple__3);
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_init, __pyx_t_5) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-  /* "CythonVirtualMemoryToolkit/errors.py":3
- * 
- * 
- * class UnableToAcquireHandle(Exception):             # <<<<<<<<<<<<<<
- *     """
- *     Exception raised when unable to acquire a necessary resource handle.
- */
-  __pyx_t_5 = __Pyx_Py3ClassCreate(__pyx_t_2, __pyx_n_s_UnableToAcquireHandle, __pyx_t_1, __pyx_t_3, NULL, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 3, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  if (__Pyx_CyFunction_InitClassCell(__pyx_t_4, __pyx_t_5) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_UnableToAcquireHandle, __pyx_t_5) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 3, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /*--- Wrapped vars code ---*/
@@ -1949,17 +2338,13 @@ if (!__Pyx_RefNanny) {
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init cython_virtual_memory_toolkit.errors", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init windows.windows_defs", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init cython_virtual_memory_toolkit.errors");
+    PyErr_SetString(PyExc_ImportError, "init windows.windows_defs");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -2017,168 +2402,6 @@ static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
     }
     return result;
 }
-
-/* RaiseDoubleKeywords */
-static void __Pyx_RaiseDoubleKeywordsError(
-    const char* func_name,
-    PyObject* kw_name)
-{
-    PyErr_Format(PyExc_TypeError,
-        #if PY_MAJOR_VERSION >= 3
-        "%s() got multiple values for keyword argument '%U'", func_name, kw_name);
-        #else
-        "%s() got multiple values for keyword argument '%s'", func_name,
-        PyString_AsString(kw_name));
-        #endif
-}
-
-/* ParseKeywords */
-static int __Pyx_ParseOptionalKeywords(
-    PyObject *kwds,
-    PyObject **argnames[],
-    PyObject *kwds2,
-    PyObject *values[],
-    Py_ssize_t num_pos_args,
-    const char* function_name)
-{
-    PyObject *key = 0, *value = 0;
-    Py_ssize_t pos = 0;
-    PyObject*** name;
-    PyObject*** first_kw_arg = argnames + num_pos_args;
-    while (PyDict_Next(kwds, &pos, &key, &value)) {
-        name = first_kw_arg;
-        while (*name && (**name != key)) name++;
-        if (*name) {
-            values[name-argnames] = value;
-            continue;
-        }
-        name = first_kw_arg;
-        #if PY_MAJOR_VERSION < 3
-        if (likely(PyString_Check(key))) {
-            while (*name) {
-                if ((CYTHON_COMPILING_IN_PYPY || PyString_GET_SIZE(**name) == PyString_GET_SIZE(key))
-                        && _PyString_Eq(**name, key)) {
-                    values[name-argnames] = value;
-                    break;
-                }
-                name++;
-            }
-            if (*name) continue;
-            else {
-                PyObject*** argname = argnames;
-                while (argname != first_kw_arg) {
-                    if ((**argname == key) || (
-                            (CYTHON_COMPILING_IN_PYPY || PyString_GET_SIZE(**argname) == PyString_GET_SIZE(key))
-                             && _PyString_Eq(**argname, key))) {
-                        goto arg_passed_twice;
-                    }
-                    argname++;
-                }
-            }
-        } else
-        #endif
-        if (likely(PyUnicode_Check(key))) {
-            while (*name) {
-                int cmp = (**name == key) ? 0 :
-                #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION >= 3
-                    (__Pyx_PyUnicode_GET_LENGTH(**name) != __Pyx_PyUnicode_GET_LENGTH(key)) ? 1 :
-                #endif
-                    PyUnicode_Compare(**name, key);
-                if (cmp < 0 && unlikely(PyErr_Occurred())) goto bad;
-                if (cmp == 0) {
-                    values[name-argnames] = value;
-                    break;
-                }
-                name++;
-            }
-            if (*name) continue;
-            else {
-                PyObject*** argname = argnames;
-                while (argname != first_kw_arg) {
-                    int cmp = (**argname == key) ? 0 :
-                    #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION >= 3
-                        (__Pyx_PyUnicode_GET_LENGTH(**argname) != __Pyx_PyUnicode_GET_LENGTH(key)) ? 1 :
-                    #endif
-                        PyUnicode_Compare(**argname, key);
-                    if (cmp < 0 && unlikely(PyErr_Occurred())) goto bad;
-                    if (cmp == 0) goto arg_passed_twice;
-                    argname++;
-                }
-            }
-        } else
-            goto invalid_keyword_type;
-        if (kwds2) {
-            if (unlikely(PyDict_SetItem(kwds2, key, value))) goto bad;
-        } else {
-            goto invalid_keyword;
-        }
-    }
-    return 0;
-arg_passed_twice:
-    __Pyx_RaiseDoubleKeywordsError(function_name, key);
-    goto bad;
-invalid_keyword_type:
-    PyErr_Format(PyExc_TypeError,
-        "%.200s() keywords must be strings", function_name);
-    goto bad;
-invalid_keyword:
-    PyErr_Format(PyExc_TypeError,
-    #if PY_MAJOR_VERSION < 3
-        "%.200s() got an unexpected keyword argument '%.200s'",
-        function_name, PyString_AsString(key));
-    #else
-        "%s() got an unexpected keyword argument '%U'",
-        function_name, key);
-    #endif
-bad:
-    return -1;
-}
-
-/* RaiseArgTupleInvalid */
-static void __Pyx_RaiseArgtupleInvalid(
-    const char* func_name,
-    int exact,
-    Py_ssize_t num_min,
-    Py_ssize_t num_max,
-    Py_ssize_t num_found)
-{
-    Py_ssize_t num_expected;
-    const char *more_or_less;
-    if (num_found < num_min) {
-        num_expected = num_min;
-        more_or_less = "at least";
-    } else {
-        num_expected = num_max;
-        more_or_less = "at most";
-    }
-    if (exact) {
-        more_or_less = "exactly";
-    }
-    PyErr_Format(PyExc_TypeError,
-                 "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
-                 func_name, more_or_less, num_expected,
-                 (num_expected == 1) ? "" : "s", num_found);
-}
-
-/* PyObjectCall */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw) {
-    PyObject *result;
-    ternaryfunc call = Py_TYPE(func)->tp_call;
-    if (unlikely(!call))
-        return PyObject_Call(func, arg, kw);
-    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
-        return NULL;
-    result = (*call)(func, arg, kw);
-    Py_LeaveRecursiveCall();
-    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
-        PyErr_SetString(
-            PyExc_SystemError,
-            "NULL result without error in PyObject_Call");
-    }
-    return result;
-}
-#endif
 
 /* PyCFunctionFastCall */
 #if CYTHON_FAST_PYCCALL
@@ -2322,34 +2545,25 @@ done:
 #endif
 #endif
 
-/* PyObjectCall2Args */
-static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
-    PyObject *args, *result = NULL;
-    #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(function)) {
-        PyObject *args[2] = {arg1, arg2};
-        return __Pyx_PyFunction_FastCall(function, args, 2);
+/* PyObjectCall */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw) {
+    PyObject *result;
+    ternaryfunc call = Py_TYPE(func)->tp_call;
+    if (unlikely(!call))
+        return PyObject_Call(func, arg, kw);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = (*call)(func, arg, kw);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
     }
-    #endif
-    #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(function)) {
-        PyObject *args[2] = {arg1, arg2};
-        return __Pyx_PyCFunction_FastCall(function, args, 2);
-    }
-    #endif
-    args = PyTuple_New(2);
-    if (unlikely(!args)) goto done;
-    Py_INCREF(arg1);
-    PyTuple_SET_ITEM(args, 0, arg1);
-    Py_INCREF(arg2);
-    PyTuple_SET_ITEM(args, 1, arg2);
-    Py_INCREF(function);
-    result = __Pyx_PyObject_Call(function, args, NULL);
-    Py_DECREF(args);
-    Py_DECREF(function);
-done:
     return result;
 }
+#endif
 
 /* PyObjectCallMethO */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -2411,799 +2625,227 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
 }
 #endif
 
-/* CalculateMetaclass */
-static PyObject *__Pyx_CalculateMetaclass(PyTypeObject *metaclass, PyObject *bases) {
-    Py_ssize_t i, nbases = PyTuple_GET_SIZE(bases);
-    for (i=0; i < nbases; i++) {
-        PyTypeObject *tmptype;
-        PyObject *tmp = PyTuple_GET_ITEM(bases, i);
-        tmptype = Py_TYPE(tmp);
-#if PY_MAJOR_VERSION < 3
-        if (tmptype == &PyClass_Type)
-            continue;
-#endif
-        if (!metaclass) {
-            metaclass = tmptype;
-            continue;
-        }
-        if (PyType_IsSubtype(metaclass, tmptype))
-            continue;
-        if (PyType_IsSubtype(tmptype, metaclass)) {
-            metaclass = tmptype;
-            continue;
-        }
-        PyErr_SetString(PyExc_TypeError,
-                        "metaclass conflict: "
-                        "the metaclass of a derived class "
-                        "must be a (non-strict) subclass "
-                        "of the metaclasses of all its bases");
-        return NULL;
-    }
-    if (!metaclass) {
-#if PY_MAJOR_VERSION < 3
-        metaclass = &PyClass_Type;
-#else
-        metaclass = &PyType_Type;
-#endif
-    }
-    Py_INCREF((PyObject*) metaclass);
-    return (PyObject*) metaclass;
+/* PyErrFetchRestore */
+#if CYTHON_FAST_THREAD_STATE
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
+    PyObject *tmp_type, *tmp_value, *tmp_tb;
+    tmp_type = tstate->curexc_type;
+    tmp_value = tstate->curexc_value;
+    tmp_tb = tstate->curexc_traceback;
+    tstate->curexc_type = type;
+    tstate->curexc_value = value;
+    tstate->curexc_traceback = tb;
+    Py_XDECREF(tmp_type);
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(tmp_tb);
 }
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
+    *type = tstate->curexc_type;
+    *value = tstate->curexc_value;
+    *tb = tstate->curexc_traceback;
+    tstate->curexc_type = 0;
+    tstate->curexc_value = 0;
+    tstate->curexc_traceback = 0;
+}
+#endif
 
-/* FetchCommonType */
-static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type) {
-    PyObject* fake_module;
-    PyTypeObject* cached_type = NULL;
-    fake_module = PyImport_AddModule((char*) "_cython_" CYTHON_ABI);
-    if (!fake_module) return NULL;
-    Py_INCREF(fake_module);
-    cached_type = (PyTypeObject*) PyObject_GetAttrString(fake_module, type->tp_name);
-    if (cached_type) {
-        if (!PyType_Check((PyObject*)cached_type)) {
-            PyErr_Format(PyExc_TypeError,
-                "Shared Cython type %.200s is not a type object",
-                type->tp_name);
-            goto bad;
-        }
-        if (cached_type->tp_basicsize != type->tp_basicsize) {
-            PyErr_Format(PyExc_TypeError,
-                "Shared Cython type %.200s has the wrong size, try recompiling",
-                type->tp_name);
-            goto bad;
-        }
-    } else {
-        if (!PyErr_ExceptionMatches(PyExc_AttributeError)) goto bad;
-        PyErr_Clear();
-        if (PyType_Ready(type) < 0) goto bad;
-        if (PyObject_SetAttrString(fake_module, type->tp_name, (PyObject*) type) < 0)
-            goto bad;
-        Py_INCREF(type);
-        cached_type = type;
-    }
-done:
-    Py_DECREF(fake_module);
-    return cached_type;
-bad:
-    Py_XDECREF(cached_type);
-    cached_type = NULL;
-    goto done;
-}
-
-/* CythonFunctionShared */
-#include <structmember.h>
-static PyObject *
-__Pyx_CyFunction_get_doc(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *closure)
-{
-    if (unlikely(op->func_doc == NULL)) {
-        if (op->func.m_ml->ml_doc) {
-#if PY_MAJOR_VERSION >= 3
-            op->func_doc = PyUnicode_FromString(op->func.m_ml->ml_doc);
-#else
-            op->func_doc = PyString_FromString(op->func.m_ml->ml_doc);
-#endif
-            if (unlikely(op->func_doc == NULL))
-                return NULL;
-        } else {
-            Py_INCREF(Py_None);
-            return Py_None;
-        }
-    }
-    Py_INCREF(op->func_doc);
-    return op->func_doc;
-}
-static int
-__Pyx_CyFunction_set_doc(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp = op->func_doc;
-    if (value == NULL) {
-        value = Py_None;
-    }
-    Py_INCREF(value);
-    op->func_doc = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_name(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    if (unlikely(op->func_name == NULL)) {
-#if PY_MAJOR_VERSION >= 3
-        op->func_name = PyUnicode_InternFromString(op->func.m_ml->ml_name);
-#else
-        op->func_name = PyString_InternFromString(op->func.m_ml->ml_name);
-#endif
-        if (unlikely(op->func_name == NULL))
-            return NULL;
-    }
-    Py_INCREF(op->func_name);
-    return op->func_name;
-}
-static int
-__Pyx_CyFunction_set_name(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp;
-#if PY_MAJOR_VERSION >= 3
-    if (unlikely(value == NULL || !PyUnicode_Check(value)))
-#else
-    if (unlikely(value == NULL || !PyString_Check(value)))
-#endif
-    {
-        PyErr_SetString(PyExc_TypeError,
-                        "__name__ must be set to a string object");
-        return -1;
-    }
-    tmp = op->func_name;
-    Py_INCREF(value);
-    op->func_name = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_qualname(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    Py_INCREF(op->func_qualname);
-    return op->func_qualname;
-}
-static int
-__Pyx_CyFunction_set_qualname(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp;
-#if PY_MAJOR_VERSION >= 3
-    if (unlikely(value == NULL || !PyUnicode_Check(value)))
-#else
-    if (unlikely(value == NULL || !PyString_Check(value)))
-#endif
-    {
-        PyErr_SetString(PyExc_TypeError,
-                        "__qualname__ must be set to a string object");
-        return -1;
-    }
-    tmp = op->func_qualname;
-    Py_INCREF(value);
-    op->func_qualname = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_self(__pyx_CyFunctionObject *m, CYTHON_UNUSED void *closure)
-{
-    PyObject *self;
-    self = m->func_closure;
-    if (self == NULL)
-        self = Py_None;
-    Py_INCREF(self);
-    return self;
-}
-static PyObject *
-__Pyx_CyFunction_get_dict(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    if (unlikely(op->func_dict == NULL)) {
-        op->func_dict = PyDict_New();
-        if (unlikely(op->func_dict == NULL))
-            return NULL;
-    }
-    Py_INCREF(op->func_dict);
-    return op->func_dict;
-}
-static int
-__Pyx_CyFunction_set_dict(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp;
-    if (unlikely(value == NULL)) {
-        PyErr_SetString(PyExc_TypeError,
-               "function's dictionary may not be deleted");
-        return -1;
-    }
-    if (unlikely(!PyDict_Check(value))) {
-        PyErr_SetString(PyExc_TypeError,
-               "setting function's dictionary to a non-dict");
-        return -1;
-    }
-    tmp = op->func_dict;
-    Py_INCREF(value);
-    op->func_dict = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_globals(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    Py_INCREF(op->func_globals);
-    return op->func_globals;
-}
-static PyObject *
-__Pyx_CyFunction_get_closure(CYTHON_UNUSED __pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-static PyObject *
-__Pyx_CyFunction_get_code(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    PyObject* result = (op->func_code) ? op->func_code : Py_None;
-    Py_INCREF(result);
-    return result;
-}
-static int
-__Pyx_CyFunction_init_defaults(__pyx_CyFunctionObject *op) {
-    int result = 0;
-    PyObject *res = op->defaults_getter((PyObject *) op);
-    if (unlikely(!res))
-        return -1;
-    #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    op->defaults_tuple = PyTuple_GET_ITEM(res, 0);
-    Py_INCREF(op->defaults_tuple);
-    op->defaults_kwdict = PyTuple_GET_ITEM(res, 1);
-    Py_INCREF(op->defaults_kwdict);
-    #else
-    op->defaults_tuple = PySequence_ITEM(res, 0);
-    if (unlikely(!op->defaults_tuple)) result = -1;
-    else {
-        op->defaults_kwdict = PySequence_ITEM(res, 1);
-        if (unlikely(!op->defaults_kwdict)) result = -1;
-    }
-    #endif
-    Py_DECREF(res);
-    return result;
-}
-static int
-__Pyx_CyFunction_set_defaults(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
-    PyObject* tmp;
-    if (!value) {
-        value = Py_None;
-    } else if (value != Py_None && !PyTuple_Check(value)) {
-        PyErr_SetString(PyExc_TypeError,
-                        "__defaults__ must be set to a tuple object");
-        return -1;
-    }
-    Py_INCREF(value);
-    tmp = op->defaults_tuple;
-    op->defaults_tuple = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_defaults(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
-    PyObject* result = op->defaults_tuple;
-    if (unlikely(!result)) {
-        if (op->defaults_getter) {
-            if (__Pyx_CyFunction_init_defaults(op) < 0) return NULL;
-            result = op->defaults_tuple;
-        } else {
-            result = Py_None;
-        }
-    }
-    Py_INCREF(result);
-    return result;
-}
-static int
-__Pyx_CyFunction_set_kwdefaults(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
-    PyObject* tmp;
-    if (!value) {
-        value = Py_None;
-    } else if (value != Py_None && !PyDict_Check(value)) {
-        PyErr_SetString(PyExc_TypeError,
-                        "__kwdefaults__ must be set to a dict object");
-        return -1;
-    }
-    Py_INCREF(value);
-    tmp = op->defaults_kwdict;
-    op->defaults_kwdict = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_kwdefaults(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
-    PyObject* result = op->defaults_kwdict;
-    if (unlikely(!result)) {
-        if (op->defaults_getter) {
-            if (__Pyx_CyFunction_init_defaults(op) < 0) return NULL;
-            result = op->defaults_kwdict;
-        } else {
-            result = Py_None;
-        }
-    }
-    Py_INCREF(result);
-    return result;
-}
-static int
-__Pyx_CyFunction_set_annotations(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
-    PyObject* tmp;
-    if (!value || value == Py_None) {
+/* RaiseException */
+#if PY_MAJOR_VERSION < 3
+static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb,
+                        CYTHON_UNUSED PyObject *cause) {
+    __Pyx_PyThreadState_declare
+    Py_XINCREF(type);
+    if (!value || value == Py_None)
         value = NULL;
-    } else if (!PyDict_Check(value)) {
-        PyErr_SetString(PyExc_TypeError,
-                        "__annotations__ must be set to a dict object");
-        return -1;
-    }
-    Py_XINCREF(value);
-    tmp = op->func_annotations;
-    op->func_annotations = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_annotations(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
-    PyObject* result = op->func_annotations;
-    if (unlikely(!result)) {
-        result = PyDict_New();
-        if (unlikely(!result)) return NULL;
-        op->func_annotations = result;
-    }
-    Py_INCREF(result);
-    return result;
-}
-static PyGetSetDef __pyx_CyFunction_getsets[] = {
-    {(char *) "func_doc", (getter)__Pyx_CyFunction_get_doc, (setter)__Pyx_CyFunction_set_doc, 0, 0},
-    {(char *) "__doc__",  (getter)__Pyx_CyFunction_get_doc, (setter)__Pyx_CyFunction_set_doc, 0, 0},
-    {(char *) "func_name", (getter)__Pyx_CyFunction_get_name, (setter)__Pyx_CyFunction_set_name, 0, 0},
-    {(char *) "__name__", (getter)__Pyx_CyFunction_get_name, (setter)__Pyx_CyFunction_set_name, 0, 0},
-    {(char *) "__qualname__", (getter)__Pyx_CyFunction_get_qualname, (setter)__Pyx_CyFunction_set_qualname, 0, 0},
-    {(char *) "__self__", (getter)__Pyx_CyFunction_get_self, 0, 0, 0},
-    {(char *) "func_dict", (getter)__Pyx_CyFunction_get_dict, (setter)__Pyx_CyFunction_set_dict, 0, 0},
-    {(char *) "__dict__", (getter)__Pyx_CyFunction_get_dict, (setter)__Pyx_CyFunction_set_dict, 0, 0},
-    {(char *) "func_globals", (getter)__Pyx_CyFunction_get_globals, 0, 0, 0},
-    {(char *) "__globals__", (getter)__Pyx_CyFunction_get_globals, 0, 0, 0},
-    {(char *) "func_closure", (getter)__Pyx_CyFunction_get_closure, 0, 0, 0},
-    {(char *) "__closure__", (getter)__Pyx_CyFunction_get_closure, 0, 0, 0},
-    {(char *) "func_code", (getter)__Pyx_CyFunction_get_code, 0, 0, 0},
-    {(char *) "__code__", (getter)__Pyx_CyFunction_get_code, 0, 0, 0},
-    {(char *) "func_defaults", (getter)__Pyx_CyFunction_get_defaults, (setter)__Pyx_CyFunction_set_defaults, 0, 0},
-    {(char *) "__defaults__", (getter)__Pyx_CyFunction_get_defaults, (setter)__Pyx_CyFunction_set_defaults, 0, 0},
-    {(char *) "__kwdefaults__", (getter)__Pyx_CyFunction_get_kwdefaults, (setter)__Pyx_CyFunction_set_kwdefaults, 0, 0},
-    {(char *) "__annotations__", (getter)__Pyx_CyFunction_get_annotations, (setter)__Pyx_CyFunction_set_annotations, 0, 0},
-    {0, 0, 0, 0, 0}
-};
-static PyMemberDef __pyx_CyFunction_members[] = {
-    {(char *) "__module__", T_OBJECT, offsetof(PyCFunctionObject, m_module), PY_WRITE_RESTRICTED, 0},
-    {0, 0, 0,  0, 0}
-};
-static PyObject *
-__Pyx_CyFunction_reduce(__pyx_CyFunctionObject *m, CYTHON_UNUSED PyObject *args)
-{
-#if PY_MAJOR_VERSION >= 3
-    Py_INCREF(m->func_qualname);
-    return m->func_qualname;
-#else
-    return PyString_FromString(m->func.m_ml->ml_name);
-#endif
-}
-static PyMethodDef __pyx_CyFunction_methods[] = {
-    {"__reduce__", (PyCFunction)__Pyx_CyFunction_reduce, METH_VARARGS, 0},
-    {0, 0, 0, 0}
-};
-#if PY_VERSION_HEX < 0x030500A0
-#define __Pyx_CyFunction_weakreflist(cyfunc) ((cyfunc)->func_weakreflist)
-#else
-#define __Pyx_CyFunction_weakreflist(cyfunc) ((cyfunc)->func.m_weakreflist)
-#endif
-static PyObject *__Pyx_CyFunction_Init(__pyx_CyFunctionObject *op, PyMethodDef *ml, int flags, PyObject* qualname,
-                                       PyObject *closure, PyObject *module, PyObject* globals, PyObject* code) {
-    if (unlikely(op == NULL))
-        return NULL;
-    op->flags = flags;
-    __Pyx_CyFunction_weakreflist(op) = NULL;
-    op->func.m_ml = ml;
-    op->func.m_self = (PyObject *) op;
-    Py_XINCREF(closure);
-    op->func_closure = closure;
-    Py_XINCREF(module);
-    op->func.m_module = module;
-    op->func_dict = NULL;
-    op->func_name = NULL;
-    Py_INCREF(qualname);
-    op->func_qualname = qualname;
-    op->func_doc = NULL;
-    op->func_classobj = NULL;
-    op->func_globals = globals;
-    Py_INCREF(op->func_globals);
-    Py_XINCREF(code);
-    op->func_code = code;
-    op->defaults_pyobjects = 0;
-    op->defaults_size = 0;
-    op->defaults = NULL;
-    op->defaults_tuple = NULL;
-    op->defaults_kwdict = NULL;
-    op->defaults_getter = NULL;
-    op->func_annotations = NULL;
-    return (PyObject *) op;
-}
-static int
-__Pyx_CyFunction_clear(__pyx_CyFunctionObject *m)
-{
-    Py_CLEAR(m->func_closure);
-    Py_CLEAR(m->func.m_module);
-    Py_CLEAR(m->func_dict);
-    Py_CLEAR(m->func_name);
-    Py_CLEAR(m->func_qualname);
-    Py_CLEAR(m->func_doc);
-    Py_CLEAR(m->func_globals);
-    Py_CLEAR(m->func_code);
-    Py_CLEAR(m->func_classobj);
-    Py_CLEAR(m->defaults_tuple);
-    Py_CLEAR(m->defaults_kwdict);
-    Py_CLEAR(m->func_annotations);
-    if (m->defaults) {
-        PyObject **pydefaults = __Pyx_CyFunction_Defaults(PyObject *, m);
-        int i;
-        for (i = 0; i < m->defaults_pyobjects; i++)
-            Py_XDECREF(pydefaults[i]);
-        PyObject_Free(m->defaults);
-        m->defaults = NULL;
-    }
-    return 0;
-}
-static void __Pyx__CyFunction_dealloc(__pyx_CyFunctionObject *m)
-{
-    if (__Pyx_CyFunction_weakreflist(m) != NULL)
-        PyObject_ClearWeakRefs((PyObject *) m);
-    __Pyx_CyFunction_clear(m);
-    PyObject_GC_Del(m);
-}
-static void __Pyx_CyFunction_dealloc(__pyx_CyFunctionObject *m)
-{
-    PyObject_GC_UnTrack(m);
-    __Pyx__CyFunction_dealloc(m);
-}
-static int __Pyx_CyFunction_traverse(__pyx_CyFunctionObject *m, visitproc visit, void *arg)
-{
-    Py_VISIT(m->func_closure);
-    Py_VISIT(m->func.m_module);
-    Py_VISIT(m->func_dict);
-    Py_VISIT(m->func_name);
-    Py_VISIT(m->func_qualname);
-    Py_VISIT(m->func_doc);
-    Py_VISIT(m->func_globals);
-    Py_VISIT(m->func_code);
-    Py_VISIT(m->func_classobj);
-    Py_VISIT(m->defaults_tuple);
-    Py_VISIT(m->defaults_kwdict);
-    if (m->defaults) {
-        PyObject **pydefaults = __Pyx_CyFunction_Defaults(PyObject *, m);
-        int i;
-        for (i = 0; i < m->defaults_pyobjects; i++)
-            Py_VISIT(pydefaults[i]);
-    }
-    return 0;
-}
-static PyObject *__Pyx_CyFunction_descr_get(PyObject *func, PyObject *obj, PyObject *type)
-{
-#if PY_MAJOR_VERSION < 3
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    if (m->flags & __Pyx_CYFUNCTION_STATICMETHOD) {
-        Py_INCREF(func);
-        return func;
-    }
-    if (m->flags & __Pyx_CYFUNCTION_CLASSMETHOD) {
-        if (type == NULL)
-            type = (PyObject *)(Py_TYPE(obj));
-        return __Pyx_PyMethod_New(func, type, (PyObject *)(Py_TYPE(type)));
-    }
-    if (obj == Py_None)
-        obj = NULL;
-#endif
-    return __Pyx_PyMethod_New(func, obj, type);
-}
-static PyObject*
-__Pyx_CyFunction_repr(__pyx_CyFunctionObject *op)
-{
-#if PY_MAJOR_VERSION >= 3
-    return PyUnicode_FromFormat("<cyfunction %U at %p>",
-                                op->func_qualname, (void *)op);
-#else
-    return PyString_FromFormat("<cyfunction %s at %p>",
-                               PyString_AsString(op->func_qualname), (void *)op);
-#endif
-}
-static PyObject * __Pyx_CyFunction_CallMethod(PyObject *func, PyObject *self, PyObject *arg, PyObject *kw) {
-    PyCFunctionObject* f = (PyCFunctionObject*)func;
-    PyCFunction meth = f->m_ml->ml_meth;
-    Py_ssize_t size;
-    switch (f->m_ml->ml_flags & (METH_VARARGS | METH_KEYWORDS | METH_NOARGS | METH_O)) {
-    case METH_VARARGS:
-        if (likely(kw == NULL || PyDict_Size(kw) == 0))
-            return (*meth)(self, arg);
-        break;
-    case METH_VARARGS | METH_KEYWORDS:
-        return (*(PyCFunctionWithKeywords)(void*)meth)(self, arg, kw);
-    case METH_NOARGS:
-        if (likely(kw == NULL || PyDict_Size(kw) == 0)) {
-            size = PyTuple_GET_SIZE(arg);
-            if (likely(size == 0))
-                return (*meth)(self, NULL);
-            PyErr_Format(PyExc_TypeError,
-                "%.200s() takes no arguments (%" CYTHON_FORMAT_SSIZE_T "d given)",
-                f->m_ml->ml_name, size);
-            return NULL;
-        }
-        break;
-    case METH_O:
-        if (likely(kw == NULL || PyDict_Size(kw) == 0)) {
-            size = PyTuple_GET_SIZE(arg);
-            if (likely(size == 1)) {
-                PyObject *result, *arg0;
-                #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                arg0 = PyTuple_GET_ITEM(arg, 0);
-                #else
-                arg0 = PySequence_ITEM(arg, 0); if (unlikely(!arg0)) return NULL;
-                #endif
-                result = (*meth)(self, arg0);
-                #if !(CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS)
-                Py_DECREF(arg0);
-                #endif
-                return result;
-            }
-            PyErr_Format(PyExc_TypeError,
-                "%.200s() takes exactly one argument (%" CYTHON_FORMAT_SSIZE_T "d given)",
-                f->m_ml->ml_name, size);
-            return NULL;
-        }
-        break;
-    default:
-        PyErr_SetString(PyExc_SystemError, "Bad call flags in "
-                        "__Pyx_CyFunction_Call. METH_OLDARGS is no "
-                        "longer supported!");
-        return NULL;
-    }
-    PyErr_Format(PyExc_TypeError, "%.200s() takes no keyword arguments",
-                 f->m_ml->ml_name);
-    return NULL;
-}
-static CYTHON_INLINE PyObject *__Pyx_CyFunction_Call(PyObject *func, PyObject *arg, PyObject *kw) {
-    return __Pyx_CyFunction_CallMethod(func, ((PyCFunctionObject*)func)->m_self, arg, kw);
-}
-static PyObject *__Pyx_CyFunction_CallAsMethod(PyObject *func, PyObject *args, PyObject *kw) {
-    PyObject *result;
-    __pyx_CyFunctionObject *cyfunc = (__pyx_CyFunctionObject *) func;
-    if ((cyfunc->flags & __Pyx_CYFUNCTION_CCLASS) && !(cyfunc->flags & __Pyx_CYFUNCTION_STATICMETHOD)) {
-        Py_ssize_t argc;
-        PyObject *new_args;
-        PyObject *self;
-        argc = PyTuple_GET_SIZE(args);
-        new_args = PyTuple_GetSlice(args, 1, argc);
-        if (unlikely(!new_args))
-            return NULL;
-        self = PyTuple_GetItem(args, 0);
-        if (unlikely(!self)) {
-            Py_DECREF(new_args);
-#if PY_MAJOR_VERSION > 2
-            PyErr_Format(PyExc_TypeError,
-                         "unbound method %.200S() needs an argument",
-                         cyfunc->func_qualname);
-#else
+    else
+        Py_INCREF(value);
+    if (!tb || tb == Py_None)
+        tb = NULL;
+    else {
+        Py_INCREF(tb);
+        if (!PyTraceBack_Check(tb)) {
             PyErr_SetString(PyExc_TypeError,
-                            "unbound method needs an argument");
-#endif
-            return NULL;
+                "raise: arg 3 must be a traceback or None");
+            goto raise_error;
         }
-        result = __Pyx_CyFunction_CallMethod(func, self, new_args, kw);
-        Py_DECREF(new_args);
+    }
+    if (PyType_Check(type)) {
+#if CYTHON_COMPILING_IN_PYPY
+        if (!value) {
+            Py_INCREF(Py_None);
+            value = Py_None;
+        }
+#endif
+        PyErr_NormalizeException(&type, &value, &tb);
     } else {
-        result = __Pyx_CyFunction_Call(func, args, kw);
+        if (value) {
+            PyErr_SetString(PyExc_TypeError,
+                "instance exception may not have a separate value");
+            goto raise_error;
+        }
+        value = type;
+        type = (PyObject*) Py_TYPE(type);
+        Py_INCREF(type);
+        if (!PyType_IsSubtype((PyTypeObject *)type, (PyTypeObject *)PyExc_BaseException)) {
+            PyErr_SetString(PyExc_TypeError,
+                "raise: exception class must be a subclass of BaseException");
+            goto raise_error;
+        }
     }
-    return result;
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrRestore(type, value, tb);
+    return;
+raise_error:
+    Py_XDECREF(value);
+    Py_XDECREF(type);
+    Py_XDECREF(tb);
+    return;
 }
-static PyTypeObject __pyx_CyFunctionType_type = {
-    PyVarObject_HEAD_INIT(0, 0)
-    "cython_function_or_method",
-    sizeof(__pyx_CyFunctionObject),
-    0,
-    (destructor) __Pyx_CyFunction_dealloc,
-    0,
-    0,
-    0,
-#if PY_MAJOR_VERSION < 3
-    0,
 #else
-    0,
-#endif
-    (reprfunc) __Pyx_CyFunction_repr,
-    0,
-    0,
-    0,
-    0,
-    __Pyx_CyFunction_CallAsMethod,
-    0,
-    0,
-    0,
-    0,
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,
-    0,
-    (traverseproc) __Pyx_CyFunction_traverse,
-    (inquiry) __Pyx_CyFunction_clear,
-    0,
-#if PY_VERSION_HEX < 0x030500A0
-    offsetof(__pyx_CyFunctionObject, func_weakreflist),
-#else
-    offsetof(PyCFunctionObject, m_weakreflist),
-#endif
-    0,
-    0,
-    __pyx_CyFunction_methods,
-    __pyx_CyFunction_members,
-    __pyx_CyFunction_getsets,
-    0,
-    0,
-    __Pyx_CyFunction_descr_get,
-    0,
-    offsetof(__pyx_CyFunctionObject, func_dict),
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-#if PY_VERSION_HEX >= 0x030400a1
-    0,
-#endif
-#if PY_VERSION_HEX >= 0x030800b1 && (!CYTHON_COMPILING_IN_PYPY || PYPY_VERSION_NUM >= 0x07030800)
-    0,
-#endif
-#if PY_VERSION_HEX >= 0x030800b4 && PY_VERSION_HEX < 0x03090000
-    0,
-#endif
-#if CYTHON_COMPILING_IN_PYPY && PY_VERSION_HEX >= 0x03090000
-    0,
-#endif
-};
-static int __pyx_CyFunction_init(void) {
-    __pyx_CyFunctionType = __Pyx_FetchCommonType(&__pyx_CyFunctionType_type);
-    if (unlikely(__pyx_CyFunctionType == NULL)) {
-        return -1;
+static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause) {
+    PyObject* owned_instance = NULL;
+    if (tb == Py_None) {
+        tb = 0;
+    } else if (tb && !PyTraceBack_Check(tb)) {
+        PyErr_SetString(PyExc_TypeError,
+            "raise: arg 3 must be a traceback or None");
+        goto bad;
     }
-    return 0;
-}
-static CYTHON_INLINE void *__Pyx_CyFunction_InitDefaults(PyObject *func, size_t size, int pyobjects) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->defaults = PyObject_Malloc(size);
-    if (unlikely(!m->defaults))
-        return PyErr_NoMemory();
-    memset(m->defaults, 0, size);
-    m->defaults_pyobjects = pyobjects;
-    m->defaults_size = size;
-    return m->defaults;
-}
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsTuple(PyObject *func, PyObject *tuple) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->defaults_tuple = tuple;
-    Py_INCREF(tuple);
-}
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsKwDict(PyObject *func, PyObject *dict) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->defaults_kwdict = dict;
-    Py_INCREF(dict);
-}
-static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *func, PyObject *dict) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->func_annotations = dict;
-    Py_INCREF(dict);
-}
-
-/* CythonFunction */
-static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml, int flags, PyObject* qualname,
-                                      PyObject *closure, PyObject *module, PyObject* globals, PyObject* code) {
-    PyObject *op = __Pyx_CyFunction_Init(
-        PyObject_GC_New(__pyx_CyFunctionObject, __pyx_CyFunctionType),
-        ml, flags, qualname, closure, module, globals, code
-    );
-    if (likely(op)) {
-        PyObject_GC_Track(op);
-    }
-    return op;
-}
-
-/* Py3ClassCreate */
-static PyObject *__Pyx_Py3MetaclassPrepare(PyObject *metaclass, PyObject *bases, PyObject *name,
-                                           PyObject *qualname, PyObject *mkw, PyObject *modname, PyObject *doc) {
-    PyObject *ns;
-    if (metaclass) {
-        PyObject *prep = __Pyx_PyObject_GetAttrStr(metaclass, __pyx_n_s_prepare);
-        if (prep) {
-            PyObject *pargs = PyTuple_Pack(2, name, bases);
-            if (unlikely(!pargs)) {
-                Py_DECREF(prep);
-                return NULL;
+    if (value == Py_None)
+        value = 0;
+    if (PyExceptionInstance_Check(type)) {
+        if (value) {
+            PyErr_SetString(PyExc_TypeError,
+                "instance exception may not have a separate value");
+            goto bad;
+        }
+        value = type;
+        type = (PyObject*) Py_TYPE(value);
+    } else if (PyExceptionClass_Check(type)) {
+        PyObject *instance_class = NULL;
+        if (value && PyExceptionInstance_Check(value)) {
+            instance_class = (PyObject*) Py_TYPE(value);
+            if (instance_class != type) {
+                int is_subclass = PyObject_IsSubclass(instance_class, type);
+                if (!is_subclass) {
+                    instance_class = NULL;
+                } else if (unlikely(is_subclass == -1)) {
+                    goto bad;
+                } else {
+                    type = instance_class;
+                }
             }
-            ns = PyObject_Call(prep, pargs, mkw);
-            Py_DECREF(prep);
-            Py_DECREF(pargs);
-        } else {
-            if (unlikely(!PyErr_ExceptionMatches(PyExc_AttributeError)))
-                return NULL;
-            PyErr_Clear();
-            ns = PyDict_New();
+        }
+        if (!instance_class) {
+            PyObject *args;
+            if (!value)
+                args = PyTuple_New(0);
+            else if (PyTuple_Check(value)) {
+                Py_INCREF(value);
+                args = value;
+            } else
+                args = PyTuple_Pack(1, value);
+            if (!args)
+                goto bad;
+            owned_instance = PyObject_Call(type, args, NULL);
+            Py_DECREF(args);
+            if (!owned_instance)
+                goto bad;
+            value = owned_instance;
+            if (!PyExceptionInstance_Check(value)) {
+                PyErr_Format(PyExc_TypeError,
+                             "calling %R should have returned an instance of "
+                             "BaseException, not %R",
+                             type, Py_TYPE(value));
+                goto bad;
+            }
         }
     } else {
-        ns = PyDict_New();
+        PyErr_SetString(PyExc_TypeError,
+            "raise: exception class must be a subclass of BaseException");
+        goto bad;
     }
-    if (unlikely(!ns))
-        return NULL;
-    if (unlikely(PyObject_SetItem(ns, __pyx_n_s_module, modname) < 0)) goto bad;
-    if (unlikely(PyObject_SetItem(ns, __pyx_n_s_qualname, qualname) < 0)) goto bad;
-    if (unlikely(doc && PyObject_SetItem(ns, __pyx_n_s_doc, doc) < 0)) goto bad;
-    return ns;
-bad:
-    Py_DECREF(ns);
-    return NULL;
-}
-static PyObject *__Pyx_Py3ClassCreate(PyObject *metaclass, PyObject *name, PyObject *bases,
-                                      PyObject *dict, PyObject *mkw,
-                                      int calculate_metaclass, int allow_py2_metaclass) {
-    PyObject *result, *margs;
-    PyObject *owned_metaclass = NULL;
-    if (allow_py2_metaclass) {
-        owned_metaclass = PyObject_GetItem(dict, __pyx_n_s_metaclass);
-        if (owned_metaclass) {
-            metaclass = owned_metaclass;
-        } else if (likely(PyErr_ExceptionMatches(PyExc_KeyError))) {
-            PyErr_Clear();
+    if (cause) {
+        PyObject *fixed_cause;
+        if (cause == Py_None) {
+            fixed_cause = NULL;
+        } else if (PyExceptionClass_Check(cause)) {
+            fixed_cause = PyObject_CallObject(cause, NULL);
+            if (fixed_cause == NULL)
+                goto bad;
+        } else if (PyExceptionInstance_Check(cause)) {
+            fixed_cause = cause;
+            Py_INCREF(fixed_cause);
         } else {
-            return NULL;
+            PyErr_SetString(PyExc_TypeError,
+                            "exception causes must derive from "
+                            "BaseException");
+            goto bad;
         }
+        PyException_SetCause(value, fixed_cause);
     }
-    if (calculate_metaclass && (!metaclass || PyType_Check(metaclass))) {
-        metaclass = __Pyx_CalculateMetaclass((PyTypeObject*) metaclass, bases);
-        Py_XDECREF(owned_metaclass);
-        if (unlikely(!metaclass))
-            return NULL;
-        owned_metaclass = metaclass;
-    }
-    margs = PyTuple_Pack(3, name, bases, dict);
-    if (unlikely(!margs)) {
-        result = NULL;
-    } else {
-        result = PyObject_Call(metaclass, margs, mkw);
-        Py_DECREF(margs);
-    }
-    Py_XDECREF(owned_metaclass);
-    return result;
-}
-
-/* CyFunctionClassCell */
-static int __Pyx_CyFunction_InitClassCell(PyObject *cyfunctions, PyObject *classobj) {
-    Py_ssize_t i, count = PyList_GET_SIZE(cyfunctions);
-    for (i = 0; i < count; i++) {
-        __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *)
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            PyList_GET_ITEM(cyfunctions, i);
+    PyErr_SetObject(type, value);
+    if (tb) {
+#if CYTHON_COMPILING_IN_PYPY
+        PyObject *tmp_type, *tmp_value, *tmp_tb;
+        PyErr_Fetch(&tmp_type, &tmp_value, &tmp_tb);
+        Py_INCREF(tb);
+        PyErr_Restore(tmp_type, tmp_value, tb);
+        Py_XDECREF(tmp_tb);
 #else
-            PySequence_ITEM(cyfunctions, i);
-        if (unlikely(!m))
-            return -1;
-#endif
-        Py_INCREF(classobj);
-        m->func_classobj = classobj;
-#if !(CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS)
-        Py_DECREF((PyObject*)m);
+        PyThreadState *tstate = __Pyx_PyThreadState_Current;
+        PyObject* tmp_tb = tstate->curexc_traceback;
+        if (tb != tmp_tb) {
+            Py_INCREF(tb);
+            tstate->curexc_traceback = tb;
+            Py_XDECREF(tmp_tb);
+        }
 #endif
     }
-    return 0;
+bad:
+    Py_XDECREF(owned_instance);
+    return;
+}
+#endif
+
+/* WriteUnraisableException */
+static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
+                                  CYTHON_UNUSED int lineno, CYTHON_UNUSED const char *filename,
+                                  int full_traceback, CYTHON_UNUSED int nogil) {
+    PyObject *old_exc, *old_val, *old_tb;
+    PyObject *ctx;
+    __Pyx_PyThreadState_declare
+#ifdef WITH_THREAD
+    PyGILState_STATE state;
+    if (nogil)
+        state = PyGILState_Ensure();
+    else state = (PyGILState_STATE)0;
+#endif
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&old_exc, &old_val, &old_tb);
+    if (full_traceback) {
+        Py_XINCREF(old_exc);
+        Py_XINCREF(old_val);
+        Py_XINCREF(old_tb);
+        __Pyx_ErrRestore(old_exc, old_val, old_tb);
+        PyErr_PrintEx(1);
+    }
+    #if PY_MAJOR_VERSION < 3
+    ctx = PyString_FromString(name);
+    #else
+    ctx = PyUnicode_FromString(name);
+    #endif
+    __Pyx_ErrRestore(old_exc, old_val, old_tb);
+    if (!ctx) {
+        PyErr_WriteUnraisable(Py_None);
+    } else {
+        PyErr_WriteUnraisable(ctx);
+        Py_DECREF(ctx);
+    }
+#ifdef WITH_THREAD
+    if (nogil)
+        PyGILState_Release(state);
+#endif
 }
 
 /* PyDictVersioning */
@@ -3229,30 +2871,6 @@ static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UIN
     if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
         return 0;
     return obj_dict_version == __Pyx_get_object_dict_version(obj);
-}
-#endif
-
-/* PyErrFetchRestore */
-#if CYTHON_FAST_THREAD_STATE
-static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
-    PyObject *tmp_type, *tmp_value, *tmp_tb;
-    tmp_type = tstate->curexc_type;
-    tmp_value = tstate->curexc_value;
-    tmp_tb = tstate->curexc_traceback;
-    tstate->curexc_type = type;
-    tstate->curexc_value = value;
-    tstate->curexc_traceback = tb;
-    Py_XDECREF(tmp_type);
-    Py_XDECREF(tmp_value);
-    Py_XDECREF(tmp_tb);
-}
-static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
-    *type = tstate->curexc_type;
-    *value = tstate->curexc_value;
-    *tb = tstate->curexc_traceback;
-    tstate->curexc_type = 0;
-    tstate->curexc_value = 0;
-    tstate->curexc_traceback = 0;
 }
 #endif
 
@@ -3483,6 +3101,44 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 bad:
     Py_XDECREF(py_code);
     Py_XDECREF(py_frame);
+}
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_ULONG_PTR(ULONG_PTR value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const ULONG_PTR neg_one = (ULONG_PTR) -1, const_zero = (ULONG_PTR) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(ULONG_PTR) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(ULONG_PTR) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(ULONG_PTR) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(ULONG_PTR) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(ULONG_PTR) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(ULONG_PTR),
+                                     little, !is_unsigned);
+    }
 }
 
 /* CIntToPy */
@@ -4073,6 +3729,43 @@ static int __Pyx_check_binary_version(void) {
         return PyErr_WarnEx(NULL, message, 1);
     }
     return 0;
+}
+
+/* FunctionExport */
+static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig) {
+    PyObject *d = 0;
+    PyObject *cobj = 0;
+    union {
+        void (*fp)(void);
+        void *p;
+    } tmp;
+    d = PyObject_GetAttrString(__pyx_m, (char *)"__pyx_capi__");
+    if (!d) {
+        PyErr_Clear();
+        d = PyDict_New();
+        if (!d)
+            goto bad;
+        Py_INCREF(d);
+        if (PyModule_AddObject(__pyx_m, (char *)"__pyx_capi__", d) < 0)
+            goto bad;
+    }
+    tmp.fp = f;
+#if PY_VERSION_HEX >= 0x02070000
+    cobj = PyCapsule_New(tmp.p, sig, 0);
+#else
+    cobj = PyCObject_FromVoidPtrAndDesc(tmp.p, (void *)sig, 0);
+#endif
+    if (!cobj)
+        goto bad;
+    if (PyDict_SetItemString(d, name, cobj) < 0)
+        goto bad;
+    Py_DECREF(cobj);
+    Py_DECREF(d);
+    return 0;
+bad:
+    Py_XDECREF(cobj);
+    Py_XDECREF(d);
+    return -1;
 }
 
 /* InitStrings */

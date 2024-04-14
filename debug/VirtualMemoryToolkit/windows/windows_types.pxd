@@ -1,5 +1,4 @@
 
-
 cdef extern from "Windows.h":
     ctypedef unsigned char BYTE
     ctypedef unsigned char* PBYTE
@@ -16,7 +15,6 @@ cdef extern from "Windows.h":
     ctypedef const char* LPCSTR
     ctypedef const void* LPCVOID
     ctypedef void* LPVOID
-
     ctypedef void* PVOID
     ctypedef Py_UNICODE WCHAR
     ctypedef const WCHAR* LPCWSTR
@@ -24,14 +22,6 @@ cdef extern from "Windows.h":
     ctypedef int BOOL
     ctypedef BOOL (*WNDENUMPROC)(HWND hWnd, LPARAM lParam)
     
-    DWORD PROCESS_ALL_ACCESS
-    DWORD MEM_COMMIT
-    DWORD PAGE_READWRITE
-    DWORD PAGE_WRITECOPY
-    DWORD PAGE_EXECUTE_READWRITE
-    DWORD PAGE_EXECUTE_WRITECOPY
-    DWORD PAGE_NOACCESS
-    DWORD MEM_DECOMMIT
     ctypedef struct MEMORY_BASIC_INFORMATION:
         PVOID  BaseAddress
         PVOID  AllocationBase
@@ -45,12 +35,8 @@ cdef extern from "Windows.h":
     ctypedef MEMORY_BASIC_INFORMATION* PMEMORY_BASIC_INFORMATION
 
 
-cdef int MAX_MODULES = 1024 # Arbitrarily chosen limit
-
-
 cdef extern from "tlhelp32.h":
-    cdef SIZE_T MAX_MODULE_NAME32 = 255
-    cdef SIZE_T MAX_PATH = 260
+
     ctypedef struct MODULEENTRY32:
         DWORD   dwSize
         DWORD   th32ModuleID
@@ -60,11 +46,10 @@ cdef extern from "tlhelp32.h":
         PBYTE   modBaseAddr
         DWORD   modBaseSize
         HMODULE hModule
-        char*    szModule # size of MAX_MODULE_NAME32
-        char*    szExePath # size of MAX_PATH
+        char*    szModule       # size of MAX_MODULE_NAME32
+        char*    szExePath      # size of MAX_PATH
 
     ctypedef MODULEENTRY32* LPMODULEENTRY32 
 
-    DWORD TH32CS_SNAPMODULE32
-    DWORD TH32CS_SNAPMODULE
+    
     
