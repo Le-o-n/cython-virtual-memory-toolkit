@@ -754,11 +754,16 @@ static CYTHON_INLINE float __PYX_NAN() {
 #define __PYX_HAVE__VirtualMemoryToolkit__b
 #define __PYX_HAVE_API__VirtualMemoryToolkit__b
 /* Early includes */
+#include <string.h>
+#include <stdlib.h>
+#include "ios"
+#include "new"
+#include "stdexcept"
+#include "typeinfo"
+#include <vector>
 #include "Windows.h"
 #include "tlhelp32.h"
 #include "psapi.h"
-#include <string.h>
-#include <stdlib.h>
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -1162,21 +1167,19 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 /* CheckBinaryVersion.proto */
 static int __Pyx_check_binary_version(void);
 
-/* FunctionImport.proto */
-static int __Pyx_ImportFunction(PyObject *module, const char *funcname, void (**f)(void), const char *sig);
-
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'VirtualMemoryToolkit.windows.windows_types' */
-
-/* Module declarations from 'VirtualMemoryToolkit.windows.windows_defs' */
-static SIZE_T (*__pyx_f_20VirtualMemoryToolkit_7windows_12windows_defs_privileged_memory_read)(HANDLE, LPCVOID, LPVOID, SIZE_T); /*proto*/
-
 /* Module declarations from 'libc.string' */
 
 /* Module declarations from 'libc.stdlib' */
+
+/* Module declarations from 'libcpp.vector' */
+
+/* Module declarations from 'VirtualMemoryToolkit.windows.windows_types' */
+
+/* Module declarations from 'VirtualMemoryToolkit.windows.windows_defs' */
 
 /* Module declarations from 'VirtualMemoryToolkit.b' */
 #define __Pyx_MODULE_NAME "VirtualMemoryToolkit.b"
@@ -1184,94 +1187,15 @@ extern int __pyx_module_is_main_VirtualMemoryToolkit__b;
 int __pyx_module_is_main_VirtualMemoryToolkit__b = 0;
 
 /* Implementation of 'VirtualMemoryToolkit.b' */
-static const char __pyx_k_run[] = "run";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
-static const char __pyx_k_buffer[] = "buffer";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_VirtualMemoryToolkit_b[] = "VirtualMemoryToolkit.b";
-static const char __pyx_k_VirtualMemoryToolkit_b_pyx[] = "VirtualMemoryToolkit\\b.pyx";
-static PyObject *__pyx_n_s_VirtualMemoryToolkit_b;
-static PyObject *__pyx_kp_s_VirtualMemoryToolkit_b_pyx;
-static PyObject *__pyx_n_s_buffer;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
-static PyObject *__pyx_n_s_run;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_pf_20VirtualMemoryToolkit_1b_run(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_tuple_;
-static PyObject *__pyx_codeobj__2;
 /* Late includes */
-
-/* "VirtualMemoryToolkit/b.pyx":7
- * 
- * 
- * def run():             # <<<<<<<<<<<<<<
- *     cdef LPVOID buffer = malloc(<size_t>5)
- *     privileged_memory_read(<HANDLE>0, <LPCVOID>0, buffer, 5)
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_20VirtualMemoryToolkit_1b_1run(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_20VirtualMemoryToolkit_1b_1run = {"run", (PyCFunction)__pyx_pw_20VirtualMemoryToolkit_1b_1run, METH_NOARGS, 0};
-static PyObject *__pyx_pw_20VirtualMemoryToolkit_1b_1run(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("run (wrapper)", 0);
-  __pyx_r = __pyx_pf_20VirtualMemoryToolkit_1b_run(__pyx_self);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_20VirtualMemoryToolkit_1b_run(CYTHON_UNUSED PyObject *__pyx_self) {
-  LPVOID __pyx_v_buffer;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("run", 0);
-
-  /* "VirtualMemoryToolkit/b.pyx":8
- * 
- * def run():
- *     cdef LPVOID buffer = malloc(<size_t>5)             # <<<<<<<<<<<<<<
- *     privileged_memory_read(<HANDLE>0, <LPCVOID>0, buffer, 5)
- * 
- */
-  __pyx_v_buffer = malloc(((size_t)5));
-
-  /* "VirtualMemoryToolkit/b.pyx":9
- * def run():
- *     cdef LPVOID buffer = malloc(<size_t>5)
- *     privileged_memory_read(<HANDLE>0, <LPCVOID>0, buffer, 5)             # <<<<<<<<<<<<<<
- * 
- *     free(buffer)
- */
-  (void)(__pyx_f_20VirtualMemoryToolkit_7windows_12windows_defs_privileged_memory_read(((HANDLE)0), ((LPCVOID)0), __pyx_v_buffer, 5));
-
-  /* "VirtualMemoryToolkit/b.pyx":11
- *     privileged_memory_read(<HANDLE>0, <LPCVOID>0, buffer, 5)
- * 
- *     free(buffer)             # <<<<<<<<<<<<<<
- */
-  free(__pyx_v_buffer);
-
-  /* "VirtualMemoryToolkit/b.pyx":7
- * 
- * 
- * def run():             # <<<<<<<<<<<<<<
- *     cdef LPVOID buffer = malloc(<size_t>5)
- *     privileged_memory_read(<HANDLE>0, <LPCVOID>0, buffer, 5)
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
 
 static PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -1319,13 +1243,9 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_s_VirtualMemoryToolkit_b, __pyx_k_VirtualMemoryToolkit_b, sizeof(__pyx_k_VirtualMemoryToolkit_b), 0, 0, 1, 1},
-  {&__pyx_kp_s_VirtualMemoryToolkit_b_pyx, __pyx_k_VirtualMemoryToolkit_b_pyx, sizeof(__pyx_k_VirtualMemoryToolkit_b_pyx), 0, 0, 1, 0},
-  {&__pyx_n_s_buffer, __pyx_k_buffer, sizeof(__pyx_k_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
-  {&__pyx_n_s_run, __pyx_k_run, sizeof(__pyx_k_run), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
@@ -1336,23 +1256,8 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
 static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
-
-  /* "VirtualMemoryToolkit/b.pyx":7
- * 
- * 
- * def run():             # <<<<<<<<<<<<<<
- *     cdef LPVOID buffer = malloc(<size_t>5)
- *     privileged_memory_read(<HANDLE>0, <LPCVOID>0, buffer, 5)
- */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_n_s_buffer); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 7, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple_);
-  __Pyx_GIVEREF(__pyx_tuple_);
-  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_VirtualMemoryToolkit_b_pyx, __pyx_n_s_run, 7, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
-  __pyx_L1_error:;
-  __Pyx_RefNannyFinishContext();
-  return -1;
 }
 
 static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
@@ -1420,22 +1325,10 @@ static int __Pyx_modinit_variable_import_code(void) {
 
 static int __Pyx_modinit_function_import_code(void) {
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_import_code", 0);
   /*--- Function import code ---*/
-  __pyx_t_1 = PyImport_ImportModule("VirtualMemoryToolkit.windows.windows_defs"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (__Pyx_ImportFunction(__pyx_t_1, "privileged_memory_read", (void (**)(void))&__pyx_f_20VirtualMemoryToolkit_7windows_12windows_defs_privileged_memory_read, "SIZE_T (HANDLE, LPCVOID, LPVOID, SIZE_T)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_RefNannyFinishContext();
   return 0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_RefNannyFinishContext();
-  return -1;
 }
 
 
@@ -1632,28 +1525,16 @@ if (!__Pyx_RefNanny) {
   (void)__Pyx_modinit_type_init_code();
   (void)__Pyx_modinit_type_import_code();
   (void)__Pyx_modinit_variable_import_code();
-  if (unlikely(__Pyx_modinit_function_import_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+  (void)__Pyx_modinit_function_import_code();
   /*--- Execution code ---*/
   #if defined(__Pyx_Generator_USED) || defined(__Pyx_Coroutine_USED)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "VirtualMemoryToolkit/b.pyx":7
- * 
- * 
- * def run():             # <<<<<<<<<<<<<<
- *     cdef LPVOID buffer = malloc(<size_t>5)
- *     privileged_memory_read(<HANDLE>0, <LPCVOID>0, buffer, 5)
- */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_20VirtualMemoryToolkit_1b_1run, NULL, __pyx_n_s_VirtualMemoryToolkit_b); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_run, __pyx_t_1) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
   /* "VirtualMemoryToolkit/b.pyx":1
- * from windows.windows_defs cimport privileged_memory_read             # <<<<<<<<<<<<<<
- * from windows.windows_defs cimport PROCESS_ALL_ACCESS
- * from windows.windows_types cimport WORD, HANDLE, LPCVOID, LPVOID
+ * from libc.stdlib cimport malloc, free, calloc             # <<<<<<<<<<<<<<
+ * from libc.string cimport memcpy, memcmp
+ * from libcpp.vector cimport vector
  */
   __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2584,60 +2465,6 @@ static int __Pyx_check_binary_version(void) {
     }
     return 0;
 }
-
-/* FunctionImport */
-#ifndef __PYX_HAVE_RT_ImportFunction
-#define __PYX_HAVE_RT_ImportFunction
-static int __Pyx_ImportFunction(PyObject *module, const char *funcname, void (**f)(void), const char *sig) {
-    PyObject *d = 0;
-    PyObject *cobj = 0;
-    union {
-        void (*fp)(void);
-        void *p;
-    } tmp;
-    d = PyObject_GetAttrString(module, (char *)"__pyx_capi__");
-    if (!d)
-        goto bad;
-    cobj = PyDict_GetItemString(d, funcname);
-    if (!cobj) {
-        PyErr_Format(PyExc_ImportError,
-            "%.200s does not export expected C function %.200s",
-                PyModule_GetName(module), funcname);
-        goto bad;
-    }
-#if PY_VERSION_HEX >= 0x02070000
-    if (!PyCapsule_IsValid(cobj, sig)) {
-        PyErr_Format(PyExc_TypeError,
-            "C function %.200s.%.200s has wrong signature (expected %.500s, got %.500s)",
-             PyModule_GetName(module), funcname, sig, PyCapsule_GetName(cobj));
-        goto bad;
-    }
-    tmp.p = PyCapsule_GetPointer(cobj, sig);
-#else
-    {const char *desc, *s1, *s2;
-    desc = (const char *)PyCObject_GetDesc(cobj);
-    if (!desc)
-        goto bad;
-    s1 = desc; s2 = sig;
-    while (*s1 != '\0' && *s1 == *s2) { s1++; s2++; }
-    if (*s1 != *s2) {
-        PyErr_Format(PyExc_TypeError,
-            "C function %.200s.%.200s has wrong signature (expected %.500s, got %.500s)",
-             PyModule_GetName(module), funcname, sig, desc);
-        goto bad;
-    }
-    tmp.p = PyCObject_AsVoidPtr(cobj);}
-#endif
-    *f = tmp.fp;
-    if (!(*f))
-        goto bad;
-    Py_DECREF(d);
-    return 0;
-bad:
-    Py_XDECREF(d);
-    return -1;
-}
-#endif
 
 /* InitStrings */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {

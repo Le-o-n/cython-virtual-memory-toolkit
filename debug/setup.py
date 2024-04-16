@@ -3,38 +3,24 @@
 from distutils.core import setup, Extension
 from Cython.Build import cythonize
 
+include_libs = [
+    "user32",
+    "kernel32",
+]
 
-win_defs_ext = Extension(
-    "VirtualMemoryToolkit.windows.windows_defs",
-    [
-        "VirtualMemoryToolkit/windows/windows_defs.pyx"
-    ]
-)
-
-win_types_ext = Extension(
-    "VirtualMemoryToolkit.windows.windows_types",
-    [
-        "VirtualMemoryToolkit/windows/windows_types.pyx"
-    ]
-)
 
 B = Extension(
     "VirtualMemoryToolkit.b",
     [
         "VirtualMemoryToolkit/b.pyx"
-    ]
+    ],
+    language="c++",
+    libraries=include_libs
 )
 
 setup(
     name='test',
-    ext_modules=cythonize([win_defs_ext, win_types_ext, B]),
-    package_data={
-        'VirtualMemoryToolkit': [
-            "VirtualMemoryToolkit/windows/windows_types.pyx"
+    ext_modules=cythonize([B])
 
-
-        ],
-
-    },
 
 )

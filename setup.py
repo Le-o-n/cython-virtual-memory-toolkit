@@ -33,41 +33,11 @@ process_extension: Extension = Extension(
     libraries=include_libs,
     language="c++",
 )
-hooks_extension: Extension = Extension(
-    "cython_virtual_memory_toolkit.hooks",
-    [
-        "CythonVirtualMemoryToolkit/hooks.pyx"
-    ],
-    libraries=include_libs,
-    language="c++"
-)
-datatypes_extension: Extension = Extension(
-    "cython_virtual_memory_toolkit.datatypes",
-    [
-        "CythonVirtualMemoryToolkit/datatypes.pyx"
-    ],
-    libraries=include_libs,
-    language="c++"
-)
-addressing_extension: Extension = Extension(
-    "cython_virtual_memory_toolkit.addressing",
-    [
-        "CythonVirtualMemoryToolkit/addressing.pyx"
-    ],
-    libraries=include_libs,
-    language="c++"
-)
+
 errors_extension: Extension = Extension(
     "cython_virtual_memory_toolkit.errors",
     [
-        "CythonVirtualMemoryToolkit/errors.py"
-    ],
-    libraries=None,
-)
-windows_externs_extension: Extension = Extension(
-    "cython_virtual_memory_toolkit.windows_externs",
-    [
-        "CythonVirtualMemoryToolkit/windows_externs.pyx"
+        "CythonVirtualMemoryToolkit/errors/handle_error.py"
     ],
     libraries=None,
 )
@@ -75,11 +45,7 @@ windows_externs_extension: Extension = Extension(
 
 extensions = [
     process_extension,
-    hooks_extension,
-    datatypes_extension,
-    addressing_extension,
     errors_extension,
-    # windows_externs_extension
 ]
 
 setup(
@@ -89,22 +55,6 @@ setup(
     description='Cython virtual memory toolkit',
     license='MIT',
     author='Leon Bass',
-    packages=['cython_virtual_memory_toolkit'],
-    package_dir={'cython_virtual_memory_toolkit': 'CythonVirtualMemoryToolkit'},
-    package_data={
-        'cython_virtual_memory_toolkit': [
-            'CythonVirtualMemoryToolkit/*.pyx',
-            'CythonVirtualMemoryToolkit/*.pxd',
-            'CythonVirtualMemoryToolkit/*.pyi',
-            'CythonVirtualMemoryToolkit/*.py'
-        ],
-
-    },
-    exclude_package_data={
-        'cython_virtual_memory_toolkit': [
-            'main.py'
-        ],
-    },
     ext_modules=cythonize(
         extensions,
         language_level="3",
