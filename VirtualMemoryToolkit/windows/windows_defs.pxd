@@ -1,3 +1,6 @@
+from libc.stdlib cimport malloc, free, calloc 
+from libc.string cimport memcpy, memcmp
+
 from .windows_types cimport SIZE_T
 from .windows_types cimport DWORD
 from .windows_types cimport HANDLE
@@ -13,7 +16,8 @@ from .windows_types cimport PMEMORY_BASIC_INFORMATION
 from .windows_types cimport MEMORY_BASIC_INFORMATION
 from .windows_types cimport PDWORD
 from .windows_types cimport LPMODULEENTRY32
-
+from .windows_types cimport PBYTE
+from .windows_types cimport BYTE
 
 cdef extern from "Windows.h":
     DWORD PROCESS_ALL_ACCESS
@@ -154,3 +158,43 @@ cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPVOID base_addr
             raise MemoryError("Unknown error, cannot restore page protection!")
 
     return written_bytes
+
+cdef inline SIZE_T PrivilagedSearchMemoryBytes(HANDLE process, SIZE_T start_address, SIZE_T end_address, PBYTE pattern, SIZE_T pattern_size) nogil:
+    cdef MEMORY_BASIC_INFORMATION mbi
+    cdef SIZE_T address = start_address
+    cdef SIZE_T read_bytes
+    cdef BOOL found = False
+    cdef BYTE* read_bytes_buffer = <BYTE*>calloc(pattern_size, sizeof(BYTE))
+    
+    cdef SIZE_T region_end
+    cdef SIZE_T search_end
+    cdef SIZE_T current_address
+
+    if not read_bytes_buffer:
+        raise MemoryError("Cannot allocate memory for read buffer")
+
+    while address < end_address:
+        if VirtualQueryEx(process, <LPCVOID>address, &mbi, sizeof(mbi)) == 0:
+            break  # Failed to query memory information
+
+        if mbi.State == MEM_COMMIT:
+            region_end = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
+            search_end = min(end_address, region_end) - pattern_size + 1
+            current_address = address
+
+            while current_address < search_end:
+                if not PrivilagedMemoryRead(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, pattern_size):
+                    break  # Failed to read memory at current address
+
+                if memcmp(<const void*>pattern, <const void*>read_bytes_buffer, pattern_size) == 0:
+                    free(read_bytes_buffer)
+                    return current_address  # Pattern found
+
+                current_address += 1
+            address = region_end
+        else:
+            # if region is not committed
+            address = <SIZE_T>mbi.BaseAddress + mbi.RegionSize # skip to end of region
+
+    free(read_bytes_buffer)
+    return 0  # Pattern not found

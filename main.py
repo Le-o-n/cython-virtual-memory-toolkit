@@ -1,7 +1,7 @@
 
 import time
-from CythonVirtualMemoryToolkit import process  # type: ignore
-from CythonVirtualMemoryToolkit.errors import UnableToAcquireHandle
+from VirtualMemoryToolkit import process  # type: ignore
+from VirtualMemoryToolkit.errors.handle_error import UnableToAcquireHandle
 
 
 app: process.AppHandle | None = None
