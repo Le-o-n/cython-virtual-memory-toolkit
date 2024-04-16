@@ -1,13 +1,15 @@
 
-import time
-from VirtualMemoryToolkit import process  # type: ignore
+from VirtualMemoryToolkit import process
+
+"""
+from VirtualMemoryToolkit.process import AppHandle  # type: ignore
 from VirtualMemoryToolkit.errors.handle_error import UnableToAcquireHandle
 
 
-app: process.AppHandle | None = None
+app: AppHandle | None = None
 while not app:
     try:
-        app = process.AppHandle.from_window_name(b"Steam")
+        app = AppHandle.from_window_name(b"Steam")
     except UnableToAcquireHandle:
         print("Unable to find window!")
         app = None
@@ -17,3 +19,4 @@ while not app:
         exit(-1)
 
 print(app)
+"""

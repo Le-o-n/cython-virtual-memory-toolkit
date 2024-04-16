@@ -43,7 +43,7 @@ cdef extern from "Windows.h":
     BOOL VirtualProtectEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect,PDWORD out_lpflOldProtect) nogil
     SIZE_T VirtualQueryEx(HANDLE hProcess, LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION out_lpBuffer, SIZE_T dwLength) nogil
     LPVOID VirtualAllocEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect) nogil
-    BOOL VirtualFreeEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType)
+    BOOL VirtualFreeEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType) nogil
 
 
 cdef extern from "psapi.h":
@@ -51,9 +51,9 @@ cdef extern from "psapi.h":
 
 
 cdef extern from "tlhelp32.h":
-    HANDLE CreateToolhelp32Snapshot(DWORD dwFlags, DWORD th32ProcessID)
-    BOOL Module32First(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme)
-    BOOL Module32Next(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme)
+    HANDLE CreateToolhelp32Snapshot(DWORD dwFlags, DWORD th32ProcessID) nogil
+    BOOL Module32First(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme) nogil
+    BOOL Module32Next(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme) nogil
 
 cdef SIZE_T MAX_MODULES = 1024  # Arbitrarily chosen limit
 cdef extern from "tlhelp32.h":
