@@ -62,7 +62,7 @@ cdef extern from "tlhelp32.h":
 
 
 
-cdef SIZE_T privileged_memory_read(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
+cdef inline SIZE_T PrivilagedMemoryRead(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
 
     cdef MEMORY_BASIC_INFORMATION mbi
     if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:
@@ -114,7 +114,7 @@ cdef SIZE_T privileged_memory_read(HANDLE process_handle, LPCVOID base_address,L
         
     return read_bytes
 
-cdef SIZE_T privilaged_memory_write(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
+cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
     
     cdef DWORD old_page_protection
     cdef bint changed_page_protection
@@ -128,7 +128,8 @@ cdef SIZE_T privilaged_memory_write(HANDLE process_handle, LPVOID base_address, 
     )
 
     if not changed_page_protection:
-        raise MemoryError("Unknown error, cannot modify virtual memory page protection!")
+        with gil:
+            raise MemoryError("Unknown error, cannot modify virtual memory page protection!")
      
 
     cdef SIZE_T written_bytes = 0
@@ -149,6 +150,7 @@ cdef SIZE_T privilaged_memory_write(HANDLE process_handle, LPVOID base_address, 
     )
 
     if not changed_page_protection:
-        raise MemoryError("Unknown error, cannot restore page protection!")
+        with gil:
+            raise MemoryError("Unknown error, cannot restore page protection!")
 
     return written_bytes
