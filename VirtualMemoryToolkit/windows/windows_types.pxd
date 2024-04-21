@@ -35,6 +35,14 @@ cdef extern from "Windows.h":
     ctypedef MEMORY_BASIC_INFORMATION* PMEMORY_BASIC_INFORMATION
 
 
+cdef extern from "windows_types.h":
+    ctypedef struct FIND_PROCESS_LPARAM:
+        char* in_window_name_substring
+        HWND out_window_handle
+        DWORD out_pid
+        HANDLE out_all_access_process_handle
+        char* out_full_window_name
+
 cdef extern from "tlhelp32.h":
 
     ctypedef struct MODULEENTRY32:

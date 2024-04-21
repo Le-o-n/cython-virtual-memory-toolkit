@@ -1,5 +1,5 @@
 from libc.stdlib cimport malloc, free, calloc 
-from libc.string cimport memcpy, memcmp
+from libc.string cimport memcpy, memcmp, strstr
 
 from .windows_types cimport SIZE_T
 from .windows_types cimport DWORD
@@ -19,6 +19,7 @@ from .windows_types cimport LPMODULEENTRY32
 from .windows_types cimport PBYTE
 from .windows_types cimport BYTE
 from .windows_types cimport MODULEENTRY32
+from .windows_types cimport FIND_PROCESS_LPARAM
 
 cdef extern from "Windows.h":
     DWORD PROCESS_ALL_ACCESS
@@ -63,6 +64,8 @@ cdef extern from "tlhelp32.h":
 
 cdef extern from "windows_defs.h":
     cdef SIZE_T MAX_MODULES
+
+    
 
 
 cdef inline MODULEENTRY32* CollectAllModuleInformation(HANDLE snapshot_handle) nogil:
@@ -180,6 +183,7 @@ cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPVOID base_addr
     return written_bytes
 
 cdef inline SIZE_T PrivilagedSearchMemoryBytes(HANDLE process, SIZE_T start_address, SIZE_T end_address, PBYTE pattern, SIZE_T pattern_size) nogil:
+
     cdef MEMORY_BASIC_INFORMATION mbi
     cdef SIZE_T address = start_address
     cdef SIZE_T read_bytes
@@ -218,3 +222,45 @@ cdef inline SIZE_T PrivilagedSearchMemoryBytes(HANDLE process, SIZE_T start_addr
 
     free(read_bytes_buffer)
     return 0  # Pattern not found
+
+cdef inline BOOL _FindProcessFromWindowNameCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
+    cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam
+    cdef int length = GetWindowTextLengthA(hWnd)
+    cdef char* current_window_title = <char*>malloc(sizeof(char) * (length + 1))
+    cdef DWORD target_pid = 0
+    cdef bint found_substring = 0
+
+    GetWindowTextA(hWnd, current_window_title, length + 1)
+    
+    if (length != 0 and IsWindowVisible(hWnd)):
+
+        found_substring = strstr(
+            current_window_title, 
+            data.in_window_name_substring
+        ) != NULL
+
+        if found_substring:
+            GetWindowThreadProcessId(hWnd, &target_pid)
+            data.out_pid = target_pid
+            data.out_window_handle = hWnd
+            data.out_all_access_process_handle = OpenProcess(
+                PROCESS_ALL_ACCESS,
+                False,
+                target_pid
+            )
+            data.out_full_window_name = current_window_title
+            return False
+
+    free(current_window_title)
+    return True
+
+cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowName(char* window_name_sub_string) nogil:
+    cdef FIND_PROCESS_LPARAM data
+    
+    data.in_window_name_substring = window_name_sub_string
+    data.out_all_access_process_handle = <HANDLE>0
+    data.out_pid = 0
+    data.out_window_handle = <HWND>0
+    EnumWindows(_FindProcessFromWindowNameCallback, <LPARAM>&data)
+
+    return data

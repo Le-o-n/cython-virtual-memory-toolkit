@@ -29,7 +29,7 @@ from .windows.windows_types cimport WNDENUMPROC
 from .windows.windows_types cimport MEMORY_BASIC_INFORMATION
 from .windows.windows_types cimport PMEMORY_BASIC_INFORMATION
 from .windows.windows_types cimport MODULEENTRY32
-
+from .windows.windows_types cimport FIND_PROCESS_LPARAM
 
 from .windows.windows_defs cimport GetWindowTextLengthA as get_window_text_length_a
 from .windows.windows_defs cimport GetWindowTextA as get_window_text_a
@@ -53,6 +53,7 @@ from .windows.windows_defs cimport PrivilagedMemoryRead as privilaged_memory_rea
 from .windows.windows_defs cimport PrivilagedMemoryWrite as privilaged_memory_write
 from .windows.windows_defs cimport PrivilagedSearchMemoryBytes as privilaged_memory_search_bytes
 from .windows.windows_defs cimport CollectAllModuleInformation as collect_all_module_information
+from .windows.windows_defs cimport FindProcessFromWindowName as find_process_from_window_name
 
 from .windows.windows_defs cimport MAX_PATH
 from .windows.windows_defs cimport TH32CS_SNAPMODULE32
@@ -75,49 +76,6 @@ from .windows.windows_defs cimport MEM_DECOMMIT
 #sizeof(float)        # 4
 #sizeof(double)       # 8
 #sizeof(void*)        # 8
-
-cdef struct FindProcessLParam:
-    char* in_window_name_substring
-    HWND out_window_handle
-    DWORD out_pid
-    HANDLE out_all_access_process_handle
-    char* out_full_window_name
-
-cdef BOOL _find_process_from_window_name_callback(HWND hWnd, LPARAM lparam) noexcept:
-    cdef FindProcessLParam* data = <FindProcessLParam*>lparam
-    cdef int length = get_window_text_length_a(hWnd)
-    cdef char* text_buffer = <char*>malloc(sizeof(char) * (length + 1))
-    cdef DWORD target_pid = 0
-    get_window_text_a(hWnd, text_buffer, length + 1)
-    
-    if (length != 0 and is_window_visible(hWnd)):
-        if data.in_window_name_substring in text_buffer:
-            get_window_thread_process_id(hWnd, &target_pid)
-            data.out_pid = target_pid
-            data.out_window_handle = hWnd
-            data.out_all_access_process_handle = open_process(
-                PROCESS_ALL_ACCESS,
-                False,
-                target_pid
-            )
-            data.out_full_window_name = text_buffer
-            return False
-    
-    free(text_buffer)
-    return True
-
-cdef FindProcessLParam find_process_from_window_name(char* window_name_sub_string):
-    cdef FindProcessLParam data
-    
-    data.in_window_name_substring = window_name_sub_string
-    data.out_all_access_process_handle = <HANDLE>0
-    data.out_pid = 0
-    data.out_window_handle = <HWND>0
-    enum_windows(_find_process_from_window_name_callback, <LPARAM>&data)
-
-    return data
-
-
 
 
 cdef struct MemoryBlock:
@@ -146,7 +104,7 @@ cdef class AppHandle:
         cdef AppHandle app = AppHandle.__new__(AppHandle)
         cdef unsigned long error_code
         
-        cdef FindProcessLParam window_data = find_process_from_window_name(window_name_substring)
+        cdef FIND_PROCESS_LPARAM window_data = find_process_from_window_name(window_name_substring)
         if not window_data.out_window_handle:
             raise UnableToAcquireHandle(f"Unable to find window with substring {window_name_substring}")
         app._process_handle = window_data.out_all_access_process_handle
