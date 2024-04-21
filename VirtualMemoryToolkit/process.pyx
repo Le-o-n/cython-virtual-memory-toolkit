@@ -75,15 +75,16 @@ from .windows.windows_defs cimport MEM_DECOMMIT
 #sizeof(float)        # 4
 #sizeof(double)       # 8
 #sizeof(void*)        # 8
-cdef struct EnumWindowCallbackLParam:
+
+cdef struct FindProcessLParam:
     char* in_window_name_substring
     HWND out_window_handle
     DWORD out_pid
     HANDLE out_all_access_process_handle
     char* out_full_window_name
 
-cdef BOOL enum_window_match_callback(HWND hWnd, LPARAM lparam) noexcept:
-    cdef EnumWindowCallbackLParam* data = <EnumWindowCallbackLParam*>lparam
+cdef BOOL _find_process_from_window_name_callback(HWND hWnd, LPARAM lparam) noexcept:
+    cdef FindProcessLParam* data = <FindProcessLParam*>lparam
     cdef int length = get_window_text_length_a(hWnd)
     cdef char* text_buffer = <char*>malloc(sizeof(char) * (length + 1))
     cdef DWORD target_pid = 0
@@ -105,14 +106,14 @@ cdef BOOL enum_window_match_callback(HWND hWnd, LPARAM lparam) noexcept:
     free(text_buffer)
     return True
 
-cdef EnumWindowCallbackLParam find_process(char* window_name):
-    cdef EnumWindowCallbackLParam data
+cdef FindProcessLParam find_process_from_window_name(char* window_name_sub_string):
+    cdef FindProcessLParam data
     
-    data.in_window_name_substring = window_name
+    data.in_window_name_substring = window_name_sub_string
     data.out_all_access_process_handle = <HANDLE>0
     data.out_pid = 0
     data.out_window_handle = <HWND>0
-    enum_windows(enum_window_match_callback, <LPARAM>&data)
+    enum_windows(_find_process_from_window_name_callback, <LPARAM>&data)
 
     return data
 
@@ -145,7 +146,7 @@ cdef class AppHandle:
         cdef AppHandle app = AppHandle.__new__(AppHandle)
         cdef unsigned long error_code
         
-        cdef EnumWindowCallbackLParam window_data = find_process(window_name_substring)
+        cdef FindProcessLParam window_data = find_process_from_window_name(window_name_substring)
         if not window_data.out_window_handle:
             raise UnableToAcquireHandle(f"Unable to find window with substring {window_name_substring}")
         app._process_handle = window_data.out_all_access_process_handle
