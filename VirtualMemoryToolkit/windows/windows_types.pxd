@@ -18,7 +18,7 @@ cdef extern from "Windows.h":
     ctypedef void* PVOID
     ctypedef Py_UNICODE WCHAR
     ctypedef const WCHAR* LPCWSTR
-    ctypedef int* LPARAM
+    ctypedef long long* LPARAM
     ctypedef int BOOL
     ctypedef BOOL (*WNDENUMPROC)(HWND hWnd, LPARAM lParam)
     
