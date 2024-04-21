@@ -1,38 +1,45 @@
 
 
-from libc.stdlib cimport malloc, free, calloc
-from libc.string cimport memcpy, memcmp
-from libcpp.vector cimport vector
-from .errors import UnableToAcquireHandle
-
-from .windows.windows_types cimport BYTE
-from .windows.windows_types cimport PBYTE
-from .windows.windows_types cimport QWORD   
-from .windows.windows_types cimport DWORD         
-from .windows.windows_types cimport WORD        
-from .windows.windows_types cimport PDWORD       
-from .windows.windows_types cimport HANDLE
-from .windows.windows_types cimport HWND
-from .windows.windows_types cimport HMODULE
-from .windows.windows_types cimport ULONG_PTR
-from .windows.windows_types cimport SIZE_T
-from .windows.windows_types cimport LPSTR
-from .windows.windows_types cimport LPCSTR
-from .windows.windows_types cimport LPCVOID
-from .windows.windows_types cimport LPVOID
-from .windows.windows_types cimport PVOID
-from .windows.windows_types cimport WCHAR
-from .windows.windows_types cimport LPCWSTR
-from .windows.windows_types cimport LPARAM
-from .windows.windows_types cimport BOOL
-from .windows.windows_types cimport WNDENUMPROC
-from .windows.windows_types cimport MEMORY_BASIC_INFORMATION
-from .windows.windows_types cimport PMEMORY_BASIC_INFORMATION
+#from libc.stdlib cimport malloc, free, calloc
+#from libc.string cimport memcpy, memcmp
+#from libcpp.vector cimport vector
+#from .errors import UnableToAcquireHandle
+#
+#from .windows.windows_types cimport BYTE
+#from .windows.windows_types cimport PBYTE
+#from .windows.windows_types cimport QWORD   
+#from .windows.windows_types cimport DWORD         
+#from .windows.windows_types cimport WORD        
+#from .windows.windows_types cimport PDWORD       
+#from .windows.windows_types cimport HANDLE
+#from .windows.windows_types cimport HWND
+#from .windows.windows_types cimport HMODULE
+#from .windows.windows_types cimport ULONG_PTR
+#from .windows.windows_types cimport SIZE_T
+#from .windows.windows_types cimport LPSTR
+#from .windows.windows_types cimport LPCSTR
+#from .windows.windows_types cimport LPCVOID
+#from .windows.windows_types cimport LPVOID
+#from .windows.windows_types cimport PVOID
+#from .windows.windows_types cimport WCHAR
+#from .windows.windows_types cimport LPCWSTR
+#from .windows.windows_types cimport LPARAM
+#from .windows.windows_types cimport BOOL
+#from .windows.windows_types cimport WNDENUMPROC
+#from .windows.windows_types cimport MEMORY_BASIC_INFORMATION
+#from .windows.windows_types cimport PMEMORY_BASIC_INFORMATION
 from .windows.windows_types cimport MODULEENTRY32
+#from VirtualMemoryToolkit.windows cimport windows_definitions 
+from VirtualMemoryToolkit cimport windows
+from windows cimport windows_types
+
+cdef windows_types.BYTE b = 1
+
+#from .windows.windows_defs cimport GetWindowTextLengthA as get_window_text_a
+"""
 
 
-from .windows.windows_defs cimport GetWindowTextLengthA as get_window_text_length_a
-"""from .windows.windows_defs cimport GetWindowTextA as get_window_text_a
+from .windows.windows_defs cimport GetWindowTextA as get_window_text_a
 from .windows.windows_defs cimport IsWindowVisible as is_window_visible
 from .windows.windows_defs cimport GetWindowThreadProcessId as get_window_thread_process_id
 from .windows.windows_defs cimport OpenProcess as open_process

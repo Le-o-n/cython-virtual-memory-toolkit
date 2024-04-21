@@ -19,5 +19,5 @@ process_ext = Extension(
 setup(
     name='VirtualMemoryToolkit',
     ext_modules=cythonize([process_ext]),
-    include_dirs=["VirtualMemoryToolkit"]
+    include_dirs=["."]
 )

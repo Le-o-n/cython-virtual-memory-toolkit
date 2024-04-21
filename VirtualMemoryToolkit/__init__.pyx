@@ -1,1 +1,3 @@
-from windows cimport windows_defs, windows_types
+from .windows cimport windows_definitions
+
+print(type(windows_definitions))
