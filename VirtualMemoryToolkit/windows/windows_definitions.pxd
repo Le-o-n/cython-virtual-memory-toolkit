@@ -55,9 +55,9 @@ cdef extern from "tlhelp32.h":
     BOOL Module32First(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme) nogil
     BOOL Module32Next(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme) nogil
 
-cdef SIZE_T MAX_MODULES = 1024  # Arbitrarily chosen limit
+
 cdef extern from "tlhelp32.h":
-    
+    cdef SIZE_T MAX_MODULES = 1024  # Arbitrarily chosen limit
     cdef SIZE_T MAX_MODULE_NAME32   # = 255
     cdef SIZE_T MAX_PATH            # = 260
 
