@@ -18,6 +18,7 @@ from .windows_types cimport PDWORD
 from .windows_types cimport LPMODULEENTRY32
 from .windows_types cimport PBYTE
 from .windows_types cimport BYTE
+from .windows_types cimport MODULEENTRY32
 
 cdef extern from "Windows.h":
     DWORD PROCESS_ALL_ACCESS
@@ -51,6 +52,11 @@ cdef extern from "psapi.h":
 
 
 cdef extern from "tlhelp32.h":
+    SIZE_T MAX_MODULE_NAME32   # = 255
+    SIZE_T MAX_PATH            # = 260
+    DWORD TH32CS_SNAPMODULE32
+    DWORD TH32CS_SNAPMODULE
+
     HANDLE CreateToolhelp32Snapshot(DWORD dwFlags, DWORD th32ProcessID) nogil
     BOOL Module32First(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme) nogil
     BOOL Module32Next(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme) nogil
@@ -58,15 +64,27 @@ cdef extern from "tlhelp32.h":
 cdef extern from "windows_defs.h":
     cdef SIZE_T MAX_MODULES
 
-cdef extern from "tlhelp32.h":
-      # Arbitrarily chosen limit
-    cdef SIZE_T MAX_MODULE_NAME32   # = 255
-    cdef SIZE_T MAX_PATH            # = 260
 
-    DWORD TH32CS_SNAPMODULE32
-    DWORD TH32CS_SNAPMODULE
+cdef inline MODULEENTRY32* CollectAllModuleInformation(HANDLE snapshot_handle) nogil:
+    cdef MODULEENTRY32 me32
+    cdef BOOL result
+    cdef int count = 0
+    cdef MODULEENTRY32* modules = <MODULEENTRY32*>calloc(MAX_MODULES, sizeof(MODULEENTRY32))
 
+    if not modules:
+        with gil:
+            raise MemoryError("Failed to allocate modules array")
 
+    me32.dwSize = sizeof(MODULEENTRY32)
+    result = Module32First(snapshot_handle, &me32)
+
+    while result and count < MAX_MODULES:
+        memcpy(&modules[count], &me32, sizeof(MODULEENTRY32))  # Copy structure
+        
+        count += 1
+        result = Module32Next(snapshot_handle, &me32)
+
+    return modules
 
 cdef inline SIZE_T PrivilagedMemoryRead(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
 

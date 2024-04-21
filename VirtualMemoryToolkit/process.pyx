@@ -52,6 +52,7 @@ from .windows.windows_defs cimport CloseHandle as close_handle
 from .windows.windows_defs cimport PrivilagedMemoryRead as privilaged_memory_read
 from .windows.windows_defs cimport PrivilagedMemoryWrite as privilaged_memory_write
 from .windows.windows_defs cimport PrivilagedSearchMemoryBytes as privilaged_memory_search_bytes
+from .windows.windows_defs cimport CollectAllModuleInformation as collect_all_module_information
 
 from .windows.windows_defs cimport MAX_PATH
 from .windows.windows_defs cimport TH32CS_SNAPMODULE32
@@ -116,25 +117,7 @@ cdef EnumWindowCallbackLParam find_process(char* window_name):
     return data
 
 
-cdef MODULEENTRY32* collect_all_module_information(HANDLE snapshot_handle):
-    cdef MODULEENTRY32 me32
-    cdef BOOL result
-    cdef int count = 0
-    cdef MODULEENTRY32* modules = <MODULEENTRY32*>calloc(MAX_MODULES, sizeof(MODULEENTRY32))
 
-    if not modules:
-        raise MemoryError("Failed to allocate modules array")
-
-    me32.dwSize = sizeof(MODULEENTRY32)
-    result = module_32_first(snapshot_handle, &me32)
-
-    while result and count < MAX_MODULES:
-        memcpy(&modules[count], &me32, sizeof(MODULEENTRY32))  # Copy structure
-        
-        count += 1
-        result = module_32_next(snapshot_handle, &me32)
-
-    return modules
 
 cdef struct MemoryBlock:
     void* process_handle
