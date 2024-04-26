@@ -1,9 +1,63 @@
-from .handle cimport CAppHandle
+from libcpp.vector cimport vector
+from libc.stdlib cimport malloc, free, calloc
+
+from .handle cimport CAppHandle, CAppHandle_new, CAppHandle_dealloc
+
+from .windows.windows_types cimport SIZE_T
+from .windows.windows_types cimport MODULEENTRY32
+from .windows.windows_types cimport HANDLE
+
+from .windows.windows_defs cimport GetProcessImageFileNameA
+from .windows.windows_defs cimport CollectAllModuleInformation
+from .windows.windows_defs cimport CreateToolhelp32Snapshot
+
+from .windows.windows_defs cimport TH32CS_SNAPMODULE
+from .windows.windows_defs cimport TH32CS_SNAPMODULE32
+from .windows.windows_defs cimport MAX_PATH
+
+cdef struct CMemoryBlock:
+    void* process_handle
+    void* address
+    SIZE_T size
 
 cdef struct CProcess:
     CAppHandle* app_handle
-    
+    vector[CMemoryBlock]* allocated_memory_blocks
+    MODULEENTRY32* loaded_modules
+    char* image_filename
 
+cdef CProcess* CProcess_new(CAppHandle* app_handle) nogil:
+    cdef CProcess* process = <CProcess*> malloc(sizeof(CProcess))
+    
+    cdef HANDLE snapshot32 = CreateToolhelp32Snapshot(
+        TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE,
+        app_handle[0].pid
+    )
+
+    if not snapshot32:
+        with gil:
+            raise Exception("Unable to get snapshot of process.")
+
+    process[0].app_handle = app_handle
+    process[0].allocated_memory_blocks = new vector[CMemoryBlock]()
+    process[0].loaded_modules = CollectAllModuleInformation(snapshot32)
+    process[0].image_filename = <char*>malloc(sizeof(char) * MAX_PATH)
+
+    if not GetProcessImageFileNameA(
+        app_handle.process_handle, 
+        process.image_filename,
+        sizeof(char) * MAX_PATH
+    ):
+        with gil:
+            raise Exception("Unable to get process file name.")
+    
+    return process
+
+cdef void CProcess_dealloc(CProcess* process):
+    CAppHandle_dealloc(process[0].app_handle)
+    del process[0].allocated_memory_blocks
+    free(process[0].loaded_modules)
+    free(process[0].image_filename)
 
 """
 

@@ -85,12 +85,16 @@ cdef extern from "handle.h":
         DWORD pid
         char* window_title
 
-cdef inline CAppHandle GetAppHandle(char* title_sub_string) nogil:
-    cdef CAppHandle app_handle
+cdef inline CAppHandle* CAppHandle_new(CAppHandle* app_handle, char* title_sub_string) nogil:
     cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowName(title_sub_string)
     app_handle.window_handle = window_data.out_window_handle
     app_handle.process_handle = window_data.out_all_access_process_handle
     app_handle.pid = window_data.out_pid
     app_handle.window_title = window_data.out_full_window_name
 
-    
+    return app_handle
+
+
+cdef inline void CAppHandle_dealloc(CAppHandle* app_handle):
+    free(app_handle[0].window_title)
+    free(app_handle)
