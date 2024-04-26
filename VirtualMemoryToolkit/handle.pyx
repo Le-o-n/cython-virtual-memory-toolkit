@@ -31,29 +31,29 @@ from .windows.windows_types cimport PMEMORY_BASIC_INFORMATION
 from .windows.windows_types cimport MODULEENTRY32
 from .windows.windows_types cimport FIND_PROCESS_LPARAM
 
-from .windows.windows_defs cimport GetWindowTextLengthA as get_window_text_length_a
-from .windows.windows_defs cimport GetWindowTextA as get_window_text_a
-from .windows.windows_defs cimport IsWindowVisible as is_window_visible
-from .windows.windows_defs cimport GetWindowThreadProcessId as get_window_thread_process_id
-from .windows.windows_defs cimport OpenProcess as open_process
-from .windows.windows_defs cimport EnumWindows as enum_windows
-from .windows.windows_defs cimport VirtualQueryEx as virtual_query_ex
-from .windows.windows_defs cimport VirtualProtectEx as virtual_protect_ex
-from .windows.windows_defs cimport ReadProcessMemory as read_process_memory
-from .windows.windows_defs cimport WriteProcessMemory as write_process_memory
-from .windows.windows_defs cimport GetProcessImageFileNameA as get_process_image_file_name_a
-from .windows.windows_defs cimport Module32First as module_32_first
-from .windows.windows_defs cimport Module32Next as module_32_next
-from .windows.windows_defs cimport CreateToolhelp32Snapshot as create_tool_help_32_snapshot
-from .windows.windows_defs cimport GetLastError as get_last_error
-from .windows.windows_defs cimport VirtualAllocEx as virtual_alloc_ex
-from .windows.windows_defs cimport VirtualFreeEx as virtual_free_ex
-from .windows.windows_defs cimport CloseHandle as close_handle
-from .windows.windows_defs cimport PrivilagedMemoryRead as privilaged_memory_read
-from .windows.windows_defs cimport PrivilagedMemoryWrite as privilaged_memory_write
-from .windows.windows_defs cimport PrivilagedSearchMemoryBytes as privilaged_memory_search_bytes
-from .windows.windows_defs cimport CollectAllModuleInformation as collect_all_module_information
-from .windows.windows_defs cimport FindProcessFromWindowName as find_process_from_window_name
+from .windows.windows_defs cimport GetWindowTextLengthA 
+from .windows.windows_defs cimport GetWindowTextA 
+from .windows.windows_defs cimport IsWindowVisible 
+from .windows.windows_defs cimport GetWindowThreadProcessId 
+from .windows.windows_defs cimport OpenProcess
+from .windows.windows_defs cimport EnumWindows
+from .windows.windows_defs cimport VirtualQueryEx
+from .windows.windows_defs cimport VirtualProtectEx
+from .windows.windows_defs cimport ReadProcessMemory
+from .windows.windows_defs cimport WriteProcessMemory
+from .windows.windows_defs cimport GetProcessImageFileNameA
+from .windows.windows_defs cimport Module32First
+from .windows.windows_defs cimport Module32Next
+from .windows.windows_defs cimport CreateToolhelp32Snapshot
+from .windows.windows_defs cimport GetLastError
+from .windows.windows_defs cimport VirtualAllocEx
+from .windows.windows_defs cimport VirtualFreeEx
+from .windows.windows_defs cimport CloseHandle
+from .windows.windows_defs cimport PrivilagedMemoryRead
+from .windows.windows_defs cimport PrivilagedMemoryWrite
+from .windows.windows_defs cimport PrivilagedSearchMemoryBytes
+from .windows.windows_defs cimport CollectAllModuleInformation
+from .windows.windows_defs cimport FindProcessFromWindowName
 
 from .windows.windows_defs cimport MAX_PATH
 from .windows.windows_defs cimport TH32CS_SNAPMODULE32
@@ -78,11 +78,27 @@ from .windows.windows_defs cimport MEM_DECOMMIT
 #sizeof(void*)        # 8
 
 
-cdef struct MemoryBlock:
+cdef struct CMemoryBlock:
     void* process_handle
     void* address
     SIZE_T size
 
+cdef struct CAppHandle:
+    HANDLE process_handle
+    HWND window_handle
+    DWORD pid
+
+cdef inline CAppHandle GetAppHandle(char* title_sub_string) nogil:
+    cdef CAppHandle app_handle
+    cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowName(title_sub_string)
+    app_handle.window_handle = window_data.out_window_handle
+    app_handle.process_handle = window_data.out_all_access_process_handle
+    app_handle.pid = window_data.out_pid
+
+
+    
+
+"""
 cdef class AppHandle:
     cdef HANDLE _process_handle
     cdef HWND _window_handle
@@ -94,7 +110,7 @@ cdef class AppHandle:
     cdef char* _process_image_filename
     cdef MODULEENTRY32* _modules_info
     
-    cdef vector[MemoryBlock] _allocated_memory_blocks
+    cdef vector[CMemoryBlock] _allocated_memory_blocks
 
     _py_modules_ordered_list: list[tuple[bytes, int]] = [] 
     _py_modules_dict: dict[bytes, int] = {}
@@ -457,7 +473,7 @@ cdef class AppHandle:
             <DWORD>protection_type
         )
 
-        cdef MemoryBlock mem_block
+        cdef CMemoryBlock mem_block
         mem_block.address = <void*>address
         mem_block.process_handle = <void*>self.process_handle
         mem_block.size = <SIZE_T>size
@@ -470,7 +486,7 @@ cdef class AppHandle:
         cdef int i = 0
         cdef SIZE_T mem_size = 0
         cdef char found = 0
-        cdef MemoryBlock mem_block
+        cdef CMemoryBlock mem_block
 
         # Iterate in reverse order to safely remove elements without affecting the iteration
         for i in range(self._allocated_memory_blocks.size() - 1, -1, -1):
@@ -497,7 +513,7 @@ cdef class AppHandle:
 
     def dealloc_all_memory(self):
 
-        cdef MemoryBlock mem_block
+        cdef CMemoryBlock mem_block
         
         for i in range(self._allocated_memory_blocks.size()):
             mem_block = self._allocated_memory_blocks.at(i)
@@ -565,3 +581,4 @@ cdef class AppHandle:
         free(self._window_name)
         free(self._process_image_filename)
         free(self._modules_info)
+"""

@@ -7,9 +7,9 @@ include_libs = [
 ]
 
 process_ext = Extension(
-    "VirtualMemoryToolkit.process",
+    "VirtualMemoryToolkit.handle",
     [
-        "VirtualMemoryToolkit/process.pyx"
+        "VirtualMemoryToolkit/handle.pyx"
     ],
     language="c++",
     libraries=include_libs
