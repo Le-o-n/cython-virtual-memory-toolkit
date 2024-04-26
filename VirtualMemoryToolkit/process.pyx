@@ -53,7 +53,12 @@ cdef CProcess* CProcess_new(CAppHandle* app_handle) nogil:
     
     return process
 
+
 cdef void CProcess_dealloc(CProcess* process):
+
+    #for memory block in allocated memory block
+    #       VirtualFreeEx(memory block)
+
     CAppHandle_dealloc(process[0].app_handle)
     del process[0].allocated_memory_blocks
     free(process[0].loaded_modules)
