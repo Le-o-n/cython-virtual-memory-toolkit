@@ -3,7 +3,7 @@
 
 #include <windows.h>
 
-typedef struct CAppHandle {
+typedef struct{
     HANDLE process_handle;
     HWND window_handle;
     DWORD pid;
