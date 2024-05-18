@@ -5,5 +5,11 @@
         "nlerp",
         "slerp",
         "unproject"
-    ]
+    ],
+    "files.associations": {
+        "MLTable": "yaml",
+        "*.jj": "java",
+        "*.pyd": "cython",
+        "vector": "cpp"
+    }
 }

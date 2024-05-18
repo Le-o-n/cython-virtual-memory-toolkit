@@ -24,6 +24,8 @@ from .windows_types cimport FIND_PROCESS_LPARAM
 cdef extern from "Windows.h":
     DWORD PROCESS_ALL_ACCESS
     DWORD MEM_COMMIT
+    DWORD MEM_RESERVE
+    DWORD MEM_RELEASE
     DWORD PAGE_READWRITE
     DWORD PAGE_WRITECOPY
     DWORD PAGE_EXECUTE_READWRITE
@@ -47,10 +49,8 @@ cdef extern from "Windows.h":
     LPVOID VirtualAllocEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect) nogil
     BOOL VirtualFreeEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType) nogil
 
-
 cdef extern from "psapi.h":
     DWORD GetProcessImageFileNameA(HANDLE hProcess, LPSTR out_lpImageFileName, DWORD nSize) nogil
-
 
 cdef extern from "tlhelp32.h":
     SIZE_T MAX_MODULE_NAME32   # = 255
@@ -64,8 +64,6 @@ cdef extern from "tlhelp32.h":
 
 cdef extern from "windows_defs.h":
     cdef SIZE_T MAX_MODULES
-
-    
 
 
 cdef inline MODULEENTRY32* CollectAllModuleInformation(HANDLE snapshot_handle) nogil:
