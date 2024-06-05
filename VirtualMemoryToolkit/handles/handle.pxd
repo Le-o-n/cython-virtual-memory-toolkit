@@ -3,7 +3,7 @@
 from libc.stdlib cimport malloc, free, calloc
 from libc.string cimport memcpy, memcmp
 from libcpp.vector cimport vector
-from utils.errors import UnableToAcquireHandle
+from errors import UnableToAcquireHandle
 
 from windows.windows_types cimport BYTE
 from windows.windows_types cimport PBYTE
@@ -53,7 +53,7 @@ from windows.windows_defs cimport PrivilagedMemoryRead
 from windows.windows_defs cimport PrivilagedMemoryWrite
 from windows.windows_defs cimport PrivilagedSearchMemoryBytes
 from windows.windows_defs cimport CollectAllModuleInformation
-from windows.windows_defs cimport FindProcessFromWindowName
+from windows.windows_defs cimport FindProcessFromWindowTitleSubstring
 
 from windows.windows_defs cimport MAX_PATH
 from windows.windows_defs cimport TH32CS_SNAPMODULE32
@@ -77,7 +77,7 @@ cdef extern from "handle.h":
         char* window_title
 
 cdef inline CAppHandle* CAppHandle_new(CAppHandle* app_handle, char* title_sub_string) nogil:
-    cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowName(title_sub_string)
+    cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowTitleSubstring(title_sub_string)
     app_handle.window_handle = window_data.out_window_handle
     app_handle.process_handle = window_data.out_all_access_process_handle
     app_handle.pid = window_data.out_pid
