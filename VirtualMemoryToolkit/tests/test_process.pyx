@@ -63,7 +63,7 @@ cpdef int run():
         print("PASSED")
 
 
-    print("     - create_notepad_cprocess    ... ", end="", flush=True)
+    print("     - create_notepad_cprocess   ... ", end="", flush=True)
     if notepad_apphandle:
         notepad_cprocess = create_notepad_cprocess(notepad_apphandle)
         if not notepad_cprocess:
