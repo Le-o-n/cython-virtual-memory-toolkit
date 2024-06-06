@@ -1,8 +1,8 @@
 from libc.stdlib cimport malloc, free, calloc 
 from libc.string cimport memcpy, memcmp, strstr
-from handles.handle cimport CAppHandle
-from windows.windows_types cimport BYTE, SIZE_T, HANDLE, LPCVOID, LPVOID, PBYTE
-from windows.windows_defs cimport PrivilagedSearchMemoryBytes, PrivilagedMemoryRead, PrivilagedMemoryWrite
+from VirtualMemoryToolkit.handles.handle cimport CAppHandle
+from VirtualMemoryToolkit.windows.windows_types cimport BYTE, SIZE_T, HANDLE, LPCVOID, LPVOID, PBYTE
+from VirtualMemoryToolkit.windows.windows_defs cimport PrivilagedSearchMemoryBytes, PrivilagedMemoryRead, PrivilagedMemoryWrite
 
 cdef extern from "memory_structures.h":
     ctypedef struct CModule:

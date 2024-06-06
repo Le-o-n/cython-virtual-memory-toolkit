@@ -4,7 +4,7 @@
 #include <windows.h>
 
 typedef struct FIND_PROCESS_LPARAM {
-    char* in_window_name_substring;         // Input: Part of the window name to search for
+    const char* in_window_name_substring;         // Input: Part of the window name to search for
     HWND out_window_handle;                 // Output: Handle to the found window
     DWORD out_pid;                          // Output: Process ID of the found process
     HANDLE out_all_access_process_handle;   // Output: Handle to the process with all access rights

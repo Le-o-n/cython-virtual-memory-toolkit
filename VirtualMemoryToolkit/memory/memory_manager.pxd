@@ -1,9 +1,9 @@
-from windows.windows_types cimport BYTE, HANDLE, LPVOID, SIZE_T
-from windows.windows_defs cimport VirtualAllocEx, VirtualFreeEx, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE, MEM_RELEASE
+from VirtualMemoryToolkit.windows.windows_types cimport BYTE, HANDLE, LPVOID, SIZE_T
+from VirtualMemoryToolkit.windows.windows_defs cimport VirtualAllocEx, VirtualFreeEx, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE, MEM_RELEASE
 
 from memory_structures cimport CVirtualAddress
 
-from handles.handle cimport CAppHandle, CAppHandle_free
+from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_free
 from libc.stdlib cimport malloc, free, calloc 
 from libc.string cimport memcpy, memcmp, strstr
 

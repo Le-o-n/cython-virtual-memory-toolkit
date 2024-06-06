@@ -5,68 +5,68 @@ from libc.string cimport memcpy, memcmp, strlen, strcpy
 from libcpp.vector cimport vector
 from errors import UnableToAcquireHandle
 
-from windows.windows_types cimport BYTE
-from windows.windows_types cimport PBYTE
-from windows.windows_types cimport QWORD   
-from windows.windows_types cimport DWORD         
-from windows.windows_types cimport WORD        
-from windows.windows_types cimport PDWORD       
-from windows.windows_types cimport HANDLE
-from windows.windows_types cimport HWND
-from windows.windows_types cimport HMODULE
-from windows.windows_types cimport ULONG_PTR
-from windows.windows_types cimport SIZE_T
-from windows.windows_types cimport LPSTR
-from windows.windows_types cimport LPCSTR
-from windows.windows_types cimport LPCVOID
-from windows.windows_types cimport LPVOID
-from windows.windows_types cimport PVOID
-from windows.windows_types cimport WCHAR
-from windows.windows_types cimport LPCWSTR
-from windows.windows_types cimport LPARAM
-from windows.windows_types cimport BOOL
-from windows.windows_types cimport WNDENUMPROC
-from windows.windows_types cimport MEMORY_BASIC_INFORMATION
-from windows.windows_types cimport PMEMORY_BASIC_INFORMATION
-from windows.windows_types cimport MODULEENTRY32
-from windows.windows_types cimport FIND_PROCESS_LPARAM
+from VirtualMemoryToolkit.windows.windows_types cimport BYTE
+from VirtualMemoryToolkit.windows.windows_types cimport PBYTE
+from VirtualMemoryToolkit.windows.windows_types cimport QWORD   
+from VirtualMemoryToolkit.windows.windows_types cimport DWORD         
+from VirtualMemoryToolkit.windows.windows_types cimport WORD        
+from VirtualMemoryToolkit.windows.windows_types cimport PDWORD       
+from VirtualMemoryToolkit.windows.windows_types cimport HANDLE
+from VirtualMemoryToolkit.windows.windows_types cimport HWND
+from VirtualMemoryToolkit.windows.windows_types cimport HMODULE
+from VirtualMemoryToolkit.windows.windows_types cimport ULONG_PTR
+from VirtualMemoryToolkit.windows.windows_types cimport SIZE_T
+from VirtualMemoryToolkit.windows.windows_types cimport LPSTR
+from VirtualMemoryToolkit.windows.windows_types cimport LPCSTR
+from VirtualMemoryToolkit.windows.windows_types cimport LPCVOID
+from VirtualMemoryToolkit.windows.windows_types cimport LPVOID
+from VirtualMemoryToolkit.windows.windows_types cimport PVOID
+from VirtualMemoryToolkit.windows.windows_types cimport WCHAR
+from VirtualMemoryToolkit.windows.windows_types cimport LPCWSTR
+from VirtualMemoryToolkit.windows.windows_types cimport LPARAM
+from VirtualMemoryToolkit.windows.windows_types cimport BOOL
+from VirtualMemoryToolkit.windows.windows_types cimport WNDENUMPROC
+from VirtualMemoryToolkit.windows.windows_types cimport MEMORY_BASIC_INFORMATION
+from VirtualMemoryToolkit.windows.windows_types cimport PMEMORY_BASIC_INFORMATION
+from VirtualMemoryToolkit.windows.windows_types cimport MODULEENTRY32
+from VirtualMemoryToolkit.windows.windows_types cimport FIND_PROCESS_LPARAM
 
-from windows.windows_defs cimport GetWindowTextLengthA 
-from windows.windows_defs cimport GetWindowTextA 
-from windows.windows_defs cimport IsWindowVisible 
-from windows.windows_defs cimport GetWindowThreadProcessId 
-from windows.windows_defs cimport OpenProcess
-from windows.windows_defs cimport EnumWindows
-from windows.windows_defs cimport VirtualQueryEx
-from windows.windows_defs cimport VirtualProtectEx
-from windows.windows_defs cimport ReadProcessMemory
-from windows.windows_defs cimport WriteProcessMemory
-from windows.windows_defs cimport GetProcessImageFileNameA
-from windows.windows_defs cimport Module32First
-from windows.windows_defs cimport Module32Next
-from windows.windows_defs cimport CreateToolhelp32Snapshot
-from windows.windows_defs cimport GetLastError
-from windows.windows_defs cimport VirtualAllocEx
-from windows.windows_defs cimport VirtualFreeEx
-from windows.windows_defs cimport CloseHandle
-from windows.windows_defs cimport PrivilagedMemoryRead
-from windows.windows_defs cimport PrivilagedMemoryWrite
-from windows.windows_defs cimport PrivilagedSearchMemoryBytes
-from windows.windows_defs cimport CollectAllModuleInformation
-from windows.windows_defs cimport FindProcessFromWindowTitleSubstring
+from VirtualMemoryToolkit.windows.windows_defs cimport GetWindowTextLengthA 
+from VirtualMemoryToolkit.windows.windows_defs cimport GetWindowTextA 
+from VirtualMemoryToolkit.windows.windows_defs cimport IsWindowVisible 
+from VirtualMemoryToolkit.windows.windows_defs cimport GetWindowThreadProcessId 
+from VirtualMemoryToolkit.windows.windows_defs cimport OpenProcess
+from VirtualMemoryToolkit.windows.windows_defs cimport EnumWindows
+from VirtualMemoryToolkit.windows.windows_defs cimport VirtualQueryEx
+from VirtualMemoryToolkit.windows.windows_defs cimport VirtualProtectEx
+from VirtualMemoryToolkit.windows.windows_defs cimport ReadProcessMemory
+from VirtualMemoryToolkit.windows.windows_defs cimport WriteProcessMemory
+from VirtualMemoryToolkit.windows.windows_defs cimport GetProcessImageFileNameA
+from VirtualMemoryToolkit.windows.windows_defs cimport Module32First
+from VirtualMemoryToolkit.windows.windows_defs cimport Module32Next
+from VirtualMemoryToolkit.windows.windows_defs cimport CreateToolhelp32Snapshot
+from VirtualMemoryToolkit.windows.windows_defs cimport GetLastError
+from VirtualMemoryToolkit.windows.windows_defs cimport VirtualAllocEx
+from VirtualMemoryToolkit.windows.windows_defs cimport VirtualFreeEx
+from VirtualMemoryToolkit.windows.windows_defs cimport CloseHandle
+from VirtualMemoryToolkit.windows.windows_defs cimport PrivilagedMemoryRead
+from VirtualMemoryToolkit.windows.windows_defs cimport PrivilagedMemoryWrite
+from VirtualMemoryToolkit.windows.windows_defs cimport PrivilagedSearchMemoryBytes
+from VirtualMemoryToolkit.windows.windows_defs cimport CollectAllModuleInformation
+from VirtualMemoryToolkit.windows.windows_defs cimport FindProcessFromWindowTitleSubstring
 
-from windows.windows_defs cimport MAX_PATH
-from windows.windows_defs cimport TH32CS_SNAPMODULE32
-from windows.windows_defs cimport TH32CS_SNAPMODULE
-from windows.windows_defs cimport MAX_MODULES
-from windows.windows_defs cimport PROCESS_ALL_ACCESS
-from windows.windows_defs cimport MEM_COMMIT
-from windows.windows_defs cimport PAGE_READWRITE
-from windows.windows_defs cimport PAGE_WRITECOPY
-from windows.windows_defs cimport PAGE_EXECUTE_READWRITE
-from windows.windows_defs cimport PAGE_EXECUTE_WRITECOPY
-from windows.windows_defs cimport PAGE_NOACCESS
-from windows.windows_defs cimport MEM_DECOMMIT
+from VirtualMemoryToolkit.windows.windows_defs cimport MAX_PATH
+from VirtualMemoryToolkit.windows.windows_defs cimport TH32CS_SNAPMODULE32
+from VirtualMemoryToolkit.windows.windows_defs cimport TH32CS_SNAPMODULE
+from VirtualMemoryToolkit.windows.windows_defs cimport MAX_MODULES
+from VirtualMemoryToolkit.windows.windows_defs cimport PROCESS_ALL_ACCESS
+from VirtualMemoryToolkit.windows.windows_defs cimport MEM_COMMIT
+from VirtualMemoryToolkit.windows.windows_defs cimport PAGE_READWRITE
+from VirtualMemoryToolkit.windows.windows_defs cimport PAGE_WRITECOPY
+from VirtualMemoryToolkit.windows.windows_defs cimport PAGE_EXECUTE_READWRITE
+from VirtualMemoryToolkit.windows.windows_defs cimport PAGE_EXECUTE_WRITECOPY
+from VirtualMemoryToolkit.windows.windows_defs cimport PAGE_NOACCESS
+from VirtualMemoryToolkit.windows.windows_defs cimport MEM_DECOMMIT
 
 
 cdef extern from "handle.h":
@@ -141,6 +141,12 @@ cdef inline void CAppHandle_free(CAppHandle* app_handle) nogil:
     """
     if not app_handle:
         return
+        
+    if app_handle[0].window_handle:
+        CloseHandle(app_handle[0].window_handle)
+    
+    if app_handle[0].process_handle:
+        CloseHandle(app_handle[0].process_handle)
 
     if app_handle[0].window_title:
         free(app_handle[0].window_title)
