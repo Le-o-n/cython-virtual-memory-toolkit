@@ -86,6 +86,6 @@ cdef inline CAppHandle* CAppHandle_new(CAppHandle* app_handle, char* title_sub_s
     return app_handle
 
 
-cdef inline void CAppHandle_dealloc(CAppHandle* app_handle):
+cdef inline void CAppHandle_free(CAppHandle* app_handle):
     free(app_handle[0].window_title)
     free(app_handle)

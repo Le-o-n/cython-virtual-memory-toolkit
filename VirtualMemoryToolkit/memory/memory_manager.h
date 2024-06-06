@@ -5,7 +5,7 @@
 #include "handle.h"
 
 typedef struct{
-    size_t address;
+    void* address;
     size_t size;
     CMemoryRegionNode* next;
     CMemoryRegionNode* prev;

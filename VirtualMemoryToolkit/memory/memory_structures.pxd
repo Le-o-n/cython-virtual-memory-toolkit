@@ -272,11 +272,15 @@ cdef inline bint CVirtualAddress_write_int1(CVirtualAddress* virtual_address, co
     
     return 0 if bytes_written == sizeof(BYTE) else 1
 
-cdef inline bint CVirtualAddress_read_bytes(CVirtualAddress* virtual_address, unsigned char* out_bytes, size_t num_bytes):
-    pass
+cdef inline bint CVirtualAddress_read_bytes(CVirtualAddress* virtual_address, unsigned char* out_bytes, size_t num_bytes) nogil:
+    
+    with gil:
+        raise NotImplementedError()
 
-cdef inline bint CVirtualAddress_write_bytes(CVirtualAddress* virtual_address, const unsigned char* write_bytes, size_t num_bytes):
-    pass
+cdef inline bint CVirtualAddress_write_bytes(CVirtualAddress* virtual_address, const unsigned char* write_bytes, size_t num_bytes) nogil:
+
+    with gil:
+        raise NotImplementedError()
     # somehow have bytes that don't overwrite like ??
 
 cdef inline void CVirtualAddress_free(CVirtualAddress* virtual_address) nogil:
