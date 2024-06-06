@@ -44,9 +44,17 @@ cdef int allocate_memory_region(CMemoryManager* memory_manager):
     cdef CMemoryRegionNode* virtual_memory_region = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
     if not virtual_memory_region:
         return 1
+    return 0
+
+cdef int allocate_memory_regions(CMemoryManager* memory_manager):
+    cdef CMemoryRegionNode* virtual_memory_region = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
+    if not virtual_memory_region:
+        return 1
     
-    print(hex(<unsigned long long>virtual_memory_region[0].address))
-    input()
+    cdef CMemoryRegionNode* virtual_memory_region2 = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
+    if not virtual_memory_region2:
+        return 1
+
     return 0
 
 cpdef int run():
@@ -83,13 +91,56 @@ cpdef int run():
         print("FAILED")
         error_count += 1
 
-
     print("     - allocate_memory_region     ... ", end="", flush=True)
     if not notepad_apphandle or not notepad_memory_manager:
         print("FAILED")
         error_count += 1
     else:
-        error_count += allocate_memory_region(notepad_memory_manager)
+        if allocate_memory_region(notepad_memory_manager):
+            print("FAILED")
+            error_count += 1
+        else:
+            print("PASSED")
+
+    print("     - free_memory_region     ... ", end="", flush=True)
+    if not notepad_apphandle or not notepad_memory_manager:
+        print("FAILED")
+        error_count += 1
+    else:
+        if CMemoryManager_virtual_free_all(notepad_memory_manager):
+            print("FAILED")
+            error_count += 1
+        if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
+            print("FAILED")
+            error_count += 1
+        else:
+            print("PASSED")
+         
+
+    print("     - allocate_memory_regions     ... ", end="", flush=True)
+    if not notepad_apphandle or not notepad_memory_manager:
+        print("FAILED")
+        error_count += 1
+    else:
+        if allocate_memory_regions(notepad_memory_manager):
+            print("FAILED")
+            error_count += 1
+        else:
+            print("PASSED")
+
+    print("     - free_memory_regions     ... ", end="", flush=True)
+    if not notepad_apphandle or not notepad_memory_manager:
+        print("FAILED")
+        error_count += 1
+    else:
+        if CMemoryManager_virtual_free_all(notepad_memory_manager):
+            print("FAILED")
+            error_count += 1
+        if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
+            print("FAILED")
+            error_count += 1
+        else:
+            print("PASSED")
 
     if notepad_memory_manager:
         CMemoryManager_free(notepad_memory_manager)
@@ -97,7 +148,5 @@ cpdef int run():
     if notepad_apphandle:
         CAppHandle_free(notepad_apphandle)
 
-    #TODO  CRASHES WHILE FREEING ALL THE MEMORY using CMemoryManager_virtual_free_all(...)
-    input("About to terminate notepad")
     notepad_process.terminate()
     return error_count

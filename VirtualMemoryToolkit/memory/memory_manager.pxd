@@ -157,7 +157,7 @@ cdef inline bint CMemoryManager_virtual_free(CMemoryManager* memory_manager, CMe
 
 
 
-cdef inline void CMemoryManager_virtual_free_all(CMemoryManager* memory_manager) nogil:
+cdef inline bint CMemoryManager_virtual_free_all(CMemoryManager* memory_manager) nogil:
     """
     Frees all memory regions managed by the memory manager.
 
@@ -166,29 +166,26 @@ cdef inline void CMemoryManager_virtual_free_all(CMemoryManager* memory_manager)
     """
     cdef CMemoryRegionNode* cur_node = memory_manager[0].memory_regions_head
     cdef CMemoryRegionNode* next_node = <CMemoryRegionNode*>NULL
-    cdef unsigned long long addr = 0
 
     while cur_node:
         next_node = cur_node[0].next
-        addr = <unsigned long long> cur_node[0].address
         if CMemoryManager_virtual_free(memory_manager, cur_node):
-            with gil:
-                print("Failed to free memory: " + hex(addr))
-        else:
-            with gil:
-                print("Freed Address: " + hex(addr))
+            return 1
         cur_node = next_node
 
 
 
-cdef inline void CMemoryManager_free(CMemoryManager* memory_manager) nogil:
+cdef inline bint CMemoryManager_free(CMemoryManager* memory_manager) nogil:
     """
     Deallocates the memory manager and frees all associated resources.
 
     Parameters:
         memory_manager (CMemoryManager*): The memory manager.
     """
+    cdef bint return_code = 0
     if memory_manager:
-        CMemoryManager_virtual_free_all(memory_manager)
+        return_code = CMemoryManager_virtual_free_all(memory_manager)
         free(memory_manager)
+
+    return return_code
     
