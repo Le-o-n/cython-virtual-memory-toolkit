@@ -1,5 +1,5 @@
 from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
-from VirtualMemoryToolkit.memory.memory_manager cimport CMemoryManager, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_free, CMemoryManager_virtual_free_all
+from VirtualMemoryToolkit.memory.memory_manager cimport CMemoryManager, CMemoryRegionNode, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_free, CMemoryManager_virtual_free_all
 
 
 import subprocess
@@ -40,7 +40,14 @@ cdef CMemoryManager* create_notepad_memory_manager(CAppHandle* notepad_apphandle
     """
     return CMemoryManager_init(notepad_apphandle)
     
-
+cdef int allocate_memory_region(CMemoryManager* memory_manager):
+    cdef CMemoryRegionNode* virtual_memory_region = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
+    if not virtual_memory_region:
+        return 1
+    
+    print(hex(<unsigned long long>virtual_memory_region[0].address))
+    input()
+    return 0
 
 cpdef int run():
     print("\n Running Memory Tests ")
@@ -76,10 +83,21 @@ cpdef int run():
         print("FAILED")
         error_count += 1
 
+
+    print("     - allocate_memory_region     ... ", end="", flush=True)
+    if not notepad_apphandle and notepad_memory_manager:
+        print("FAILED")
+        error_count += 1
+    else:
+        error_count += allocate_memory_region(notepad_memory_manager)
+
     if notepad_memory_manager:
         CMemoryManager_free(notepad_memory_manager)
 
     if notepad_apphandle:
         CAppHandle_free(notepad_apphandle)
+    
+    #TODO  CRASHES WHILE FREEING ALL THE MEMORY using CMemoryManager_virtual_free_all(...)
+    input()
     notepad_process.terminate()
     return error_count

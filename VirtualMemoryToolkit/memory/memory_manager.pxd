@@ -155,6 +155,11 @@ cdef inline void CMemoryManager_virtual_free_all(CMemoryManager* memory_manager)
     cdef CMemoryRegionNode* next_node
     while cur_node:
         next_node = cur_node[0].next
+
+        if not CMemoryManager_virtual_free(memory_manager, cur_node):
+            pass # failed
+
+
         CMemoryRegionNode_free(cur_node)
         cur_node = next_node
 
