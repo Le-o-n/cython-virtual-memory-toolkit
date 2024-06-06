@@ -1,5 +1,5 @@
 from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
-from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_new, CProcess_free
+from VirtualMemoryToolkit.memory.memory_manager cimport CMemoryManager, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_free, CMemoryManager_virtual_free_all
 
 
 import subprocess
@@ -27,22 +27,23 @@ cdef CAppHandle* get_handle_to_notepad():
 
     return app_handle
 
-cdef CProcess* create_notepad_cprocess(CAppHandle* notepad_apphandle):
+cdef CMemoryManager* create_notepad_memory_manager(CAppHandle* notepad_apphandle):
     """
-    Creates a CProcess for the notepad instance.
+    Creates a CMemoryManager for the notepad instance.
 
     Parameters:
         notepad_apphandle (CAppHandle*): app handle to the notepad instance.
     
     Returns:
-        CProcess* if successful.
+        CMemoryManager* if successful.
         NULL otherwise
     """
-    return CProcess_new(notepad_apphandle)
+    return CMemoryManager_init(notepad_apphandle)
     
 
+
 cpdef int run():
-    print("\n Running Process Tests ")
+    print("\n Running Memory Tests ")
     
     notepad_process = create_notepad_instance()
     
@@ -51,7 +52,7 @@ cpdef int run():
 
     cdef int error_count = 0
     cdef CAppHandle* notepad_apphandle = <CAppHandle*>0
-    cdef CProcess* notepad_cprocess = <CProcess*>0
+    cdef CMemoryManager* notepad_memory_manager = <CMemoryManager*>0
 
     
     print("     - get_handle_to_notepad     ... ", end="", flush=True)
@@ -63,10 +64,10 @@ cpdef int run():
         print("PASSED")
 
 
-    print("     - create_notepad_cprocess   ... ", end="", flush=True)
+    print("     - create_notepad_memory_manager ... ", end="", flush=True)
     if notepad_apphandle:
-        notepad_cprocess = create_notepad_cprocess(notepad_apphandle)
-        if not notepad_cprocess:
+        notepad_memory_manager = create_notepad_memory_manager(notepad_apphandle)
+        if not notepad_memory_manager:
             print("FAILED")
             error_count += 1
         else:
@@ -75,8 +76,9 @@ cpdef int run():
         print("FAILED")
         error_count += 1
 
-    if notepad_cprocess:
-        CProcess_free(notepad_cprocess)
+    if notepad_memory_manager:
+        CMemoryManager_free(notepad_memory_manager)
+
     if notepad_apphandle:
         CAppHandle_free(notepad_apphandle)
     notepad_process.terminate()

@@ -4,19 +4,20 @@
 #include <windows.h>
 #include "handle.h"
 
-typedef struct{
-    void* address;
+typedef struct CMemoryRegionNode
+{
+    void *address;
     size_t size;
-    CMemoryRegionNode* next;
-    CMemoryRegionNode* prev;
-}CMemoryRegionNode;
+    struct CMemoryRegionNode *next;
+    struct CMemoryRegionNode *prev;
+} CMemoryRegionNode;
 
+typedef struct
+{
+    CAppHandle *app_handle;
+    CMemoryRegionNode *memory_regions_head;
+    CMemoryRegionNode *memory_regions_tail;
 
-typedef struct{
-    CAppHandle* app_handle;
-    CMemoryRegionNode* memory_regions_head;
-    CMemoryRegionNode* memory_regions_tail;
-
-}CMemoryManager;
+} CMemoryManager;
 
 #endif // MEMORY_MANAGER_H

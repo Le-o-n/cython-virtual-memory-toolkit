@@ -23,7 +23,8 @@ cdef int get_handle_to_notepad():
 
     cdef return_code = not app_handle
 
-    CAppHandle_free(app_handle)
+    if app_handle:
+        CAppHandle_free(app_handle)
     return return_code
 
 cpdef int run():
@@ -33,6 +34,8 @@ cpdef int run():
     Returns:
         int: The number of errors encountered during the tests.
     """
+    print("\n Running Handles Tests ")
+    
     notepad_process = create_notepad_instance()
     
     # Add a slight delay to ensure Notepad has time to open
@@ -40,7 +43,7 @@ cpdef int run():
 
     cdef int error_count = 0
 
-    print(" Running Handles Tests ")
+    
     
     print("     - get_handle_to_notepad  ... ", end="", flush=True)
     

@@ -15,16 +15,6 @@ include_dirs = [
     virtual_memory_toolkit_dir,
 ]
 
-# Define the extensions
-process_ext = Extension(
-    "VirtualMemoryToolkit.tests.test_process",
-    [
-        "VirtualMemoryToolkit/tests/test_process.pyx"
-    ],
-    language="c++",
-    libraries=include_libs,
-    include_dirs=include_dirs
-)
 
 handles_ext = Extension(
     "VirtualMemoryToolkit.tests.test_handles",
@@ -36,13 +26,36 @@ handles_ext = Extension(
     include_dirs=include_dirs
 )
 
+process_ext = Extension(
+    "VirtualMemoryToolkit.tests.test_process",
+    [
+        "VirtualMemoryToolkit/tests/test_process.pyx"
+    ],
+    language="c++",
+    libraries=include_libs,
+    include_dirs=include_dirs
+)
+
+
+memory_ext = Extension(
+    "VirtualMemoryToolkit.tests.test_memory",
+    [
+        "VirtualMemoryToolkit/tests/test_memory.pyx"
+    ],
+    language="c++",
+    libraries=include_libs,
+    include_dirs=include_dirs
+)
 # Setup script
 setup(
     name='VirtualMemoryToolkit',
     ext_modules=cythonize(
-        [
+        [   
+            handles_ext,
             process_ext,
-            handles_ext
+            memory_ext
+            
+            
         ]
     ),
     include_dirs=include_dirs,

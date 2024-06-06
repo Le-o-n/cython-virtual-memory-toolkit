@@ -1,7 +1,6 @@
 from VirtualMemoryToolkit.windows.windows_types cimport BYTE, HANDLE, LPVOID, SIZE_T
 from VirtualMemoryToolkit.windows.windows_defs cimport VirtualAllocEx, VirtualFreeEx, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE, MEM_RELEASE
 
-from memory_structures cimport CVirtualAddress
 
 from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_free
 from libc.stdlib cimport malloc, free, calloc 
@@ -35,6 +34,7 @@ cdef inline CMemoryRegionNode* CMemoryRegionNode_init() nogil:
         return NULL  # Memory allocation failed
 
     return memory_region
+
 
 
 cdef inline void CMemoryRegionNode_free(CMemoryRegionNode* node) nogil:
@@ -158,7 +158,9 @@ cdef inline void CMemoryManager_virtual_free_all(CMemoryManager* memory_manager)
         CMemoryRegionNode_free(cur_node)
         cur_node = next_node
 
-cdef inline void CMemoryManager_free(CMemoryManager* memory_manager):
+
+
+cdef inline void CMemoryManager_free(CMemoryManager* memory_manager) nogil:
     """
     Deallocates the memory manager and frees all associated resources.
 
@@ -169,4 +171,3 @@ cdef inline void CMemoryManager_free(CMemoryManager* memory_manager):
         CMemoryManager_virtual_free_all(memory_manager)
         free(memory_manager)
     
-
