@@ -85,7 +85,7 @@ cpdef int run():
 
 
     print("     - allocate_memory_region     ... ", end="", flush=True)
-    if not notepad_apphandle and notepad_memory_manager:
+    if not notepad_apphandle or not notepad_memory_manager:
         print("FAILED")
         error_count += 1
     else:
@@ -93,11 +93,11 @@ cpdef int run():
 
     if notepad_memory_manager:
         CMemoryManager_free(notepad_memory_manager)
-
+        
     if notepad_apphandle:
         CAppHandle_free(notepad_apphandle)
-    
+
     #TODO  CRASHES WHILE FREEING ALL THE MEMORY using CMemoryManager_virtual_free_all(...)
-    input()
+    input("About to terminate notepad")
     notepad_process.terminate()
     return error_count

@@ -64,12 +64,9 @@ cdef inline CMemoryManager* CMemoryManager_init(CAppHandle* app_handle) nogil:
         return NULL  # Memory allocation failed
 
     memory_manager[0].app_handle = app_handle
-    memory_manager[0].memory_regions_head = CMemoryRegionNode_init()
-    if not memory_manager[0].memory_regions_head:
-        CMemoryManager_free(memory_manager)
-        return NULL  # Memory allocation failed
-
-    memory_manager[0].memory_regions_tail = memory_manager[0].memory_regions_head
+    memory_manager[0].memory_regions_head = <CMemoryRegionNode*>NULL
+    memory_manager[0].memory_regions_tail = <CMemoryRegionNode*>NULL
+    
     return memory_manager
 
 cdef inline CMemoryRegionNode* CMemoryManager_virtual_alloc(CMemoryManager* memory_manager, size_t size) nogil:
@@ -84,9 +81,13 @@ cdef inline CMemoryRegionNode* CMemoryManager_virtual_alloc(CMemoryManager* memo
         CMemoryRegionNode*: A pointer to the newly created memory region node.
         Returns NULL if memory allocation fails.
     """
+    if not memory_manager:
+        return NULL
+
     cdef CMemoryRegionNode* new_memory = CMemoryRegionNode_init()
+
     if not new_memory:
-        return NULL  # Memory allocation failed
+        return NULL
 
     new_memory[0].address = VirtualAllocEx(
         <HANDLE>memory_manager[0].app_handle[0].process_handle,
@@ -95,15 +96,23 @@ cdef inline CMemoryRegionNode* CMemoryManager_virtual_alloc(CMemoryManager* memo
         MEM_COMMIT | MEM_RESERVE,
         PAGE_EXECUTE_READWRITE
     )
+
     if not new_memory[0].address:
         CMemoryRegionNode_free(new_memory)
         return NULL  # Memory allocation failed
 
     new_memory[0].size = size
     new_memory[0].prev = memory_manager[0].memory_regions_tail
-    memory_manager[0].memory_regions_tail.next = new_memory
-    memory_manager[0].memory_regions_tail = new_memory
 
+    if memory_manager[0].memory_regions_tail:
+        memory_manager[0].memory_regions_tail.next = new_memory
+
+    if not memory_manager[0].memory_regions_head or not memory_manager[0].memory_regions_tail:
+        memory_manager[0].memory_regions_head = new_memory
+        memory_manager[0].memory_regions_tail = new_memory
+
+    
+    
     return new_memory
 
 cdef inline bint CMemoryManager_virtual_free(CMemoryManager* memory_manager, CMemoryRegionNode* memory_region) nogil:
@@ -117,8 +126,8 @@ cdef inline bint CMemoryManager_virtual_free(CMemoryManager* memory_manager, CMe
     Returns:
         bint: 0 on success, 1 on failure.
     """
-    if memory_region == memory_manager[0].memory_regions_head:
-        return 1  # Cannot free the head node
+    if not memory_region:
+        return 1
 
     if VirtualFreeEx(
         memory_manager[0].app_handle[0].process_handle,
@@ -132,12 +141,16 @@ cdef inline bint CMemoryManager_virtual_free(CMemoryManager* memory_manager, CMe
     cdef CMemoryRegionNode* next_node = memory_region[0].next
 
     if next_node:
-        prev_node[0].next = next_node
         next_node[0].prev = prev_node
     else:
-        # End of the queue
-        prev_node[0].next = NULL
+        # cur_node is tail
         memory_manager[0].memory_regions_tail = prev_node
+
+    if prev_node:
+        prev_node[0].next = next_node
+    else:
+        # cur_node is head
+        memory_manager[0].memory_regions_head = next_node
 
     CMemoryRegionNode_free(memory_region)
     return 0
@@ -152,15 +165,18 @@ cdef inline void CMemoryManager_virtual_free_all(CMemoryManager* memory_manager)
         memory_manager (CMemoryManager*): The memory manager.
     """
     cdef CMemoryRegionNode* cur_node = memory_manager[0].memory_regions_head
-    cdef CMemoryRegionNode* next_node
+    cdef CMemoryRegionNode* next_node = <CMemoryRegionNode*>NULL
+    cdef unsigned long long addr = 0
+
     while cur_node:
         next_node = cur_node[0].next
-
-        if not CMemoryManager_virtual_free(memory_manager, cur_node):
-            pass # failed
-
-
-        CMemoryRegionNode_free(cur_node)
+        addr = <unsigned long long> cur_node[0].address
+        if CMemoryManager_virtual_free(memory_manager, cur_node):
+            with gil:
+                print("Failed to free memory: " + hex(addr))
+        else:
+            with gil:
+                print("Freed Address: " + hex(addr))
         cur_node = next_node
 
 
