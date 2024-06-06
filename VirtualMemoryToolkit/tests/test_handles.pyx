@@ -16,10 +16,6 @@ cdef int get_handle_to_notepad():
     Returns:
         int: 0 on success, 1 on failure.
     """
-    notepad_process = create_notepad_instance()
-    
-    # Add a slight delay to ensure Notepad has time to open
-    time.sleep(1)
 
     cdef const char* notepad_title = b"Notepad"
     
@@ -27,7 +23,6 @@ cdef int get_handle_to_notepad():
 
     cdef return_code = not app_handle
 
-    notepad_process.terminate()
     CAppHandle_free(app_handle)
     return return_code
 
@@ -38,6 +33,11 @@ cpdef int run():
     Returns:
         int: The number of errors encountered during the tests.
     """
+    notepad_process = create_notepad_instance()
+    
+    # Add a slight delay to ensure Notepad has time to open
+    time.sleep(1)
+
     cdef int error_count = 0
 
     print(" Running Handles Tests ")
@@ -50,4 +50,5 @@ cpdef int run():
     else:
         print("PASSED")
 
+    notepad_process.terminate()
     return error_count

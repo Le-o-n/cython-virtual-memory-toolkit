@@ -3,7 +3,7 @@ from libc.stdlib cimport malloc, free
 from VirtualMemoryToolkit.handles.handle cimport CAppHandle
 
 from VirtualMemoryToolkit.windows.windows_types cimport MODULEENTRY32
-from VirtualMemoryToolkit.windows.windows_types cimport HANDLE
+from VirtualMemoryToolkit.windows.windows_types cimport HANDLE, DWORD
 
 from VirtualMemoryToolkit.windows.windows_defs cimport GetProcessImageFileNameA
 from VirtualMemoryToolkit.windows.windows_defs cimport CollectAllModuleInformation

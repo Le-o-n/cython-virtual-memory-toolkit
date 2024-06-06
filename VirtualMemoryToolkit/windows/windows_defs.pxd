@@ -32,7 +32,7 @@ cdef extern from "Windows.h":
     DWORD PAGE_EXECUTE_WRITECOPY
     DWORD PAGE_NOACCESS
     DWORD MEM_DECOMMIT
-    DWORD INVALID_HANDLE_VALUE
+    void* INVALID_HANDLE_VALUE
 
     HANDLE OpenProcess(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessId) nogil
     HWND FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName) nogil
