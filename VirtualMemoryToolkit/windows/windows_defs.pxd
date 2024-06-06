@@ -24,6 +24,8 @@ from .windows_types cimport FIND_PROCESS_LPARAM
 cdef extern from "Windows.h":
     DWORD PROCESS_ALL_ACCESS
     DWORD MEM_COMMIT
+    DWORD MEM_RESERVE
+    DWORD MEM_RELEASE
     DWORD PAGE_READWRITE
     DWORD PAGE_WRITECOPY
     DWORD PAGE_EXECUTE_READWRITE
@@ -47,10 +49,8 @@ cdef extern from "Windows.h":
     LPVOID VirtualAllocEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect) nogil
     BOOL VirtualFreeEx(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType) nogil
 
-
 cdef extern from "psapi.h":
     DWORD GetProcessImageFileNameA(HANDLE hProcess, LPSTR out_lpImageFileName, DWORD nSize) nogil
-
 
 cdef extern from "tlhelp32.h":
     SIZE_T MAX_MODULE_NAME32   # = 255
@@ -64,8 +64,6 @@ cdef extern from "tlhelp32.h":
 
 cdef extern from "windows_defs.h":
     cdef SIZE_T MAX_MODULES
-
-    
 
 
 cdef inline MODULEENTRY32* CollectAllModuleInformation(HANDLE snapshot_handle) nogil:
@@ -89,18 +87,25 @@ cdef inline MODULEENTRY32* CollectAllModuleInformation(HANDLE snapshot_handle) n
 
     return modules
 
-cdef inline SIZE_T PrivilagedMemoryRead(HANDLE process_handle, LPCVOID base_address,LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
+cdef inline SIZE_T PrivilagedMemoryRead(HANDLE process_handle, LPCVOID base_address, LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
+    """
+    Reads memory from a specified address in a process's virtual memory, adjusting page protection as necessary.
 
+    Parameters:
+        process_handle (HANDLE): The handle to the process whose memory will be read.
+        base_address (LPCVOID): The base address from where the memory will be read.
+        out_read_buffer (LPVOID): The buffer where the read data will be stored.
+        number_of_bytes (SIZE_T): The number of bytes to read.
+
+    Returns:
+        SIZE_T: The number of bytes successfully read, or 0 if the operation fails.
+    """
     cdef MEMORY_BASIC_INFORMATION mbi
     if VirtualQueryEx(process_handle, base_address, &mbi, sizeof(mbi)) == 0:
-        with gil:
-            raise MemoryError("Failed to query memory information. Address: ", hex(<SIZE_T> base_address))
-        
+        return 0  # Failed to query memory information
 
     if mbi.State != MEM_COMMIT or mbi.Protect == PAGE_NOACCESS:
-        with gil:
-            raise MemoryError("Memory is not committed or is marked as no access. Address: ", hex(<SIZE_T> base_address))
-        
+        return 0  # Memory is not committed or is marked as no access
 
     cdef DWORD old_page_protection
     cdef bint changed_page_protection
@@ -110,39 +115,57 @@ cdef inline SIZE_T PrivilagedMemoryRead(HANDLE process_handle, LPCVOID base_addr
         <LPVOID>base_address,
         number_of_bytes,
         PAGE_EXECUTE_READWRITE,
-        <PDWORD>&old_page_protection
+        &old_page_protection
     )
 
     if not changed_page_protection:
-        with gil:
-            raise MemoryError("Unknown error, cannot modify virtual memory page protection! Address: ", hex(<SIZE_T> base_address))
-        
+        return 0  # Failed to change page protection
 
     cdef SIZE_T read_bytes = 0
-    ReadProcessMemory(
+    if not ReadProcessMemory(
         process_handle, 
         base_address, 
         out_read_buffer, 
         number_of_bytes, 
         &read_bytes
-    )
+    ):
+        # Restore the original page protection before returning
+        VirtualProtectEx(
+            process_handle,
+            <LPVOID>base_address,
+            number_of_bytes,
+            old_page_protection,
+            &old_page_protection
+        )
+        return 0  # Failed to read memory
 
+    # Restore the original page protection
     changed_page_protection = VirtualProtectEx(
         process_handle,
         <LPVOID>base_address,
         number_of_bytes,
         old_page_protection,
-        <PDWORD>&old_page_protection
+        &old_page_protection
     )
 
     if not changed_page_protection:
-        with gil:
-            raise MemoryError("Unknown error, cannot restore page protection! Address: ", hex(<SIZE_T> base_address))
-        
+        return 0  # Failed to restore page protection
+
     return read_bytes
 
-cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
-    
+cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPCVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
+    """
+    Writes memory to a specified address in a process's virtual memory, adjusting page protection as necessary.
+
+    Parameters:
+        process_handle (HANDLE): The handle to the process whose memory will be written.
+        base_address (LPCVOID): The base address where the memory will be written.
+        write_buffer (LPCVOID): The buffer containing the data to write.
+        number_of_bytes (SIZE_T): The number of bytes to write.
+
+    Returns:
+        SIZE_T: The number of bytes successfully written, or 0 if the operation fails.
+    """
     cdef DWORD old_page_protection
     cdef bint changed_page_protection
     
@@ -151,79 +174,98 @@ cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPVOID base_addr
         <LPVOID>base_address,
         number_of_bytes,
         PAGE_EXECUTE_READWRITE,
-        <PDWORD>&old_page_protection
+        &old_page_protection
     )
 
     if not changed_page_protection:
-        with gil:
-            raise MemoryError("Unknown error, cannot modify virtual memory page protection!")
-     
+        return 0  # Failed to change page protection
 
     cdef SIZE_T written_bytes = 0
-    WriteProcessMemory(
+    if not WriteProcessMemory(
         process_handle,
-        base_address, 
+        <LPVOID>base_address, 
         write_buffer, 
         number_of_bytes, 
         &written_bytes
-    )
+    ):
+        # Restore the original page protection before returning
+        VirtualProtectEx(
+            process_handle,
+            <LPVOID>base_address,
+            number_of_bytes,
+            old_page_protection,
+            &old_page_protection
+        )
+        return 0  # Failed to write memory
 
+    # Restore the original page protection
     changed_page_protection = VirtualProtectEx(
         process_handle,
         <LPVOID>base_address,
         number_of_bytes,
         old_page_protection,
-        <PDWORD>&old_page_protection
+        &old_page_protection
     )
 
     if not changed_page_protection:
-        with gil:
-            raise MemoryError("Unknown error, cannot restore page protection!")
+        return 0  # Failed to restore page protection
 
     return written_bytes
 
-cdef inline SIZE_T PrivilagedSearchMemoryBytes(HANDLE process, SIZE_T start_address, SIZE_T end_address, PBYTE pattern, SIZE_T pattern_size) nogil:
+cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_address, LPCVOID end_address, PBYTE pattern, SIZE_T pattern_size, LPVOID* out_found_address) nogil:
+    """
+    Searches for a byte pattern within a specified memory range.
 
+    Parameters:
+        process (HANDLE): The handle to the process whose memory will be searched.
+        start_address (LPCVOID): The start address of the search range.
+        end_address (LPCVOID): The end address of the search range.
+        pattern (PBYTE): The byte pattern to search for.
+        pattern_size (SIZE_T): The size of the byte pattern.
+        out_found_address (LPVOID*): Pointer to store the found address if the pattern is found.
+
+    Returns:
+        BOOL: True (0) if the pattern is found, False (1) if it is not found or an error occurs.
+    """
     cdef MEMORY_BASIC_INFORMATION mbi
-    cdef SIZE_T address = start_address
-    cdef SIZE_T read_bytes
-    cdef BOOL found = False
-    cdef BYTE* read_bytes_buffer = <BYTE*>calloc(pattern_size, sizeof(BYTE))
-    
+    cdef SIZE_T address = <SIZE_T>start_address
     cdef SIZE_T region_end
     cdef SIZE_T search_end
     cdef SIZE_T current_address
+    cdef BYTE* read_bytes_buffer = <BYTE*>calloc(pattern_size, sizeof(BYTE))
 
     if not read_bytes_buffer:
-        raise MemoryError("Cannot allocate memory for read buffer")
+        return 1  # Memory allocation failed
 
-    while address < end_address:
+    while address < <SIZE_T>end_address:
         if VirtualQueryEx(process, <LPCVOID>address, &mbi, sizeof(mbi)) == 0:
             break  # Failed to query memory information
 
         if mbi.State == MEM_COMMIT:
             region_end = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
-            search_end = min(end_address, region_end) - pattern_size + 1
+            search_end = min(<SIZE_T>end_address, region_end) - pattern_size + 1
             current_address = address
 
             while current_address < search_end:
-                if not PrivilagedMemoryRead(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, pattern_size):
+                if PrivilagedMemoryRead(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, pattern_size) != pattern_size:
                     break  # Failed to read memory at current address
 
                 if memcmp(<const void*>pattern, <const void*>read_bytes_buffer, pattern_size) == 0:
                     free(read_bytes_buffer)
-                    return current_address  # Pattern found
+                    out_found_address[0] = <LPVOID>current_address
+                    return 0  # Pattern found
 
                 current_address += 1
             address = region_end
         else:
-            # if region is not committed
-            address = <SIZE_T>mbi.BaseAddress + mbi.RegionSize # skip to end of region
+            # If region is not committed, skip to the end of the region
+            address = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
 
     free(read_bytes_buffer)
-    return 0  # Pattern not found
+    return 1  # Pattern not found or error occurred
 
-cdef inline BOOL _FindProcessFromWindowNameCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
+
+cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam
     cdef int length = GetWindowTextLengthA(hWnd)
     cdef char* current_window_title = <char*>malloc(sizeof(char) * (length + 1))
@@ -254,13 +296,13 @@ cdef inline BOOL _FindProcessFromWindowNameCallback(HWND hWnd, LPARAM lparam) no
     free(current_window_title)
     return True
 
-cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowName(char* window_name_sub_string) nogil:
+cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowTitleSubstring(char* window_name_sub_string) nogil:
     cdef FIND_PROCESS_LPARAM data
     
     data.in_window_name_substring = window_name_sub_string
     data.out_all_access_process_handle = <HANDLE>0
     data.out_pid = 0
     data.out_window_handle = <HWND>0
-    EnumWindows(_FindProcessFromWindowNameCallback, <LPARAM>&data)
+    EnumWindows(_FindProcessFromWindowTitleSubstringCallback, <LPARAM>&data)
 
     return data

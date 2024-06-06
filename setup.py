@@ -6,8 +6,9 @@ include_libs = [
     "kernel32",
 ]
 
+
 process_ext = Extension(
-    "VirtualMemoryToolkit.process",
+    "VirtualMemoryToolkit.handle",
     [
         "VirtualMemoryToolkit/process.pyx"
     ],

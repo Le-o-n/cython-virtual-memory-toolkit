@@ -1,84 +1,63 @@
-
-
-from libc.stdlib cimport malloc, free, calloc
-from libc.string cimport memcpy, memcmp
 from libcpp.vector cimport vector
-from .errors import UnableToAcquireHandle
+from libc.stdlib cimport malloc, free, calloc
 
-from .windows.windows_types cimport BYTE
-from .windows.windows_types cimport PBYTE
-from .windows.windows_types cimport QWORD   
-from .windows.windows_types cimport DWORD         
-from .windows.windows_types cimport WORD        
-from .windows.windows_types cimport PDWORD       
-from .windows.windows_types cimport HANDLE
-from .windows.windows_types cimport HWND
-from .windows.windows_types cimport HMODULE
-from .windows.windows_types cimport ULONG_PTR
-from .windows.windows_types cimport SIZE_T
-from .windows.windows_types cimport LPSTR
-from .windows.windows_types cimport LPCSTR
-from .windows.windows_types cimport LPCVOID
-from .windows.windows_types cimport LPVOID
-from .windows.windows_types cimport PVOID
-from .windows.windows_types cimport WCHAR
-from .windows.windows_types cimport LPCWSTR
-from .windows.windows_types cimport LPARAM
-from .windows.windows_types cimport BOOL
-from .windows.windows_types cimport WNDENUMPROC
-from .windows.windows_types cimport MEMORY_BASIC_INFORMATION
-from .windows.windows_types cimport PMEMORY_BASIC_INFORMATION
-from .windows.windows_types cimport MODULEENTRY32
-from .windows.windows_types cimport FIND_PROCESS_LPARAM
+from handles.handle cimport CAppHandle, CAppHandle_new, CAppHandle_dealloc
 
-from .windows.windows_defs cimport GetWindowTextLengthA as get_window_text_length_a
-from .windows.windows_defs cimport GetWindowTextA as get_window_text_a
-from .windows.windows_defs cimport IsWindowVisible as is_window_visible
-from .windows.windows_defs cimport GetWindowThreadProcessId as get_window_thread_process_id
-from .windows.windows_defs cimport OpenProcess as open_process
-from .windows.windows_defs cimport EnumWindows as enum_windows
-from .windows.windows_defs cimport VirtualQueryEx as virtual_query_ex
-from .windows.windows_defs cimport VirtualProtectEx as virtual_protect_ex
-from .windows.windows_defs cimport ReadProcessMemory as read_process_memory
-from .windows.windows_defs cimport WriteProcessMemory as write_process_memory
-from .windows.windows_defs cimport GetProcessImageFileNameA as get_process_image_file_name_a
-from .windows.windows_defs cimport Module32First as module_32_first
-from .windows.windows_defs cimport Module32Next as module_32_next
-from .windows.windows_defs cimport CreateToolhelp32Snapshot as create_tool_help_32_snapshot
-from .windows.windows_defs cimport GetLastError as get_last_error
-from .windows.windows_defs cimport VirtualAllocEx as virtual_alloc_ex
-from .windows.windows_defs cimport VirtualFreeEx as virtual_free_ex
-from .windows.windows_defs cimport CloseHandle as close_handle
-from .windows.windows_defs cimport PrivilagedMemoryRead as privilaged_memory_read
-from .windows.windows_defs cimport PrivilagedMemoryWrite as privilaged_memory_write
-from .windows.windows_defs cimport PrivilagedSearchMemoryBytes as privilaged_memory_search_bytes
-from .windows.windows_defs cimport CollectAllModuleInformation as collect_all_module_information
-from .windows.windows_defs cimport FindProcessFromWindowName as find_process_from_window_name
+from windows.windows_types cimport SIZE_T
+from windows.windows_types cimport MODULEENTRY32
+from windows.windows_types cimport HANDLE
 
-from .windows.windows_defs cimport MAX_PATH
-from .windows.windows_defs cimport TH32CS_SNAPMODULE32
-from .windows.windows_defs cimport TH32CS_SNAPMODULE
-from .windows.windows_defs cimport MAX_MODULES
-from .windows.windows_defs cimport PROCESS_ALL_ACCESS
-from .windows.windows_defs cimport MEM_COMMIT
-from .windows.windows_defs cimport PAGE_READWRITE
-from .windows.windows_defs cimport PAGE_WRITECOPY
-from .windows.windows_defs cimport PAGE_EXECUTE_READWRITE
-from .windows.windows_defs cimport PAGE_EXECUTE_WRITECOPY
-from .windows.windows_defs cimport PAGE_NOACCESS
-from .windows.windows_defs cimport MEM_DECOMMIT
+from windows.windows_defs cimport GetProcessImageFileNameA
+from windows.windows_defs cimport CollectAllModuleInformation
+from windows.windows_defs cimport CreateToolhelp32Snapshot
 
-#sizeof(char)         # 1
-#sizeof(short)        # 2
-#sizeof(int)          # 4
-#sizeof(long)         # 4
-#sizeof(long long)    # 8
-#sizeof(float)        # 4
-#sizeof(double)       # 8
-#sizeof(void*)        # 8
+from windows.windows_defs cimport TH32CS_SNAPMODULE
+from windows.windows_defs cimport TH32CS_SNAPMODULE32
+from windows.windows_defs cimport MAX_PATH
 
 
-cdef struct MemoryBlock:
+
+cdef struct CProcess:
+    CAppHandle* app_handle
+    MODULEENTRY32* loaded_modules
+    char* image_filename
+
+cdef CProcess* CProcess_new(CAppHandle* app_handle) nogil:
+    cdef CProcess* process = <CProcess*> malloc(sizeof(CProcess))
+    
+    cdef HANDLE snapshot32 = CreateToolhelp32Snapshot(
+        TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE,
+        app_handle[0].pid
+    )
+
+    if not snapshot32:
+        with gil:
+            raise Exception("Unable to get snapshot of process.")
+
+    process[0].app_handle = app_handle
+    process[0].loaded_modules = CollectAllModuleInformation(snapshot32)
+    process[0].image_filename = <char*>malloc(sizeof(char) * MAX_PATH)
+
+    if not GetProcessImageFileNameA(
+        app_handle.process_handle, 
+        process.image_filename,
+        sizeof(char) * MAX_PATH
+    ):
+        with gil:
+            raise Exception("Unable to get process file name.")
+    
+    return process
+
+
+cdef void CProcess_dealloc(CProcess* process):
+
+    CAppHandle_dealloc(process[0].app_handle)
+    free(process[0].loaded_modules)
+    free(process[0].image_filename)
+
+"""
+
+cdef struct CMemoryBlock:
     void* process_handle
     void* address
     SIZE_T size
@@ -94,7 +73,7 @@ cdef class AppHandle:
     cdef char* _process_image_filename
     cdef MODULEENTRY32* _modules_info
     
-    cdef vector[MemoryBlock] _allocated_memory_blocks
+    cdef vector[CMemoryBlock] _allocated_memory_blocks
 
     _py_modules_ordered_list: list[tuple[bytes, int]] = [] 
     _py_modules_dict: dict[bytes, int] = {}
@@ -457,7 +436,7 @@ cdef class AppHandle:
             <DWORD>protection_type
         )
 
-        cdef MemoryBlock mem_block
+        cdef CMemoryBlock mem_block
         mem_block.address = <void*>address
         mem_block.process_handle = <void*>self.process_handle
         mem_block.size = <SIZE_T>size
@@ -470,7 +449,7 @@ cdef class AppHandle:
         cdef int i = 0
         cdef SIZE_T mem_size = 0
         cdef char found = 0
-        cdef MemoryBlock mem_block
+        cdef CMemoryBlock mem_block
 
         # Iterate in reverse order to safely remove elements without affecting the iteration
         for i in range(self._allocated_memory_blocks.size() - 1, -1, -1):
@@ -497,7 +476,7 @@ cdef class AppHandle:
 
     def dealloc_all_memory(self):
 
-        cdef MemoryBlock mem_block
+        cdef CMemoryBlock mem_block
         
         for i in range(self._allocated_memory_blocks.size()):
             mem_block = self._allocated_memory_blocks.at(i)
@@ -565,3 +544,4 @@ cdef class AppHandle:
         free(self._window_name)
         free(self._process_image_filename)
         free(self._modules_info)
+"""

@@ -1,6 +1,6 @@
 
-from VirtualMemoryToolkit.process import AppHandle  # type: ignore
-from VirtualMemoryToolkit.errors.handle_error import UnableToAcquireHandle
+from VirtualMemoryToolkit.handle import AppHandle  # type: ignore
+from VirtualMemoryToolkit.utils.errors import UnableToAcquireHandle
 import time
 
 app: AppHandle | None = None
