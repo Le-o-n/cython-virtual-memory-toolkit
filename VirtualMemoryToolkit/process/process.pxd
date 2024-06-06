@@ -1,7 +1,6 @@
 from libc.stdlib cimport malloc, free
 
 from handles.handle cimport CAppHandle
-from memory.memory_structures cimport CModule, CModule_init, CModule_free
 
 from windows.windows_types cimport MODULEENTRY32
 from windows.windows_types cimport HANDLE
