@@ -1,3 +1,3 @@
 @echo off
 
-cythonize --inplace ./production_test.pyx 
+python setup.py build_ext --inplace

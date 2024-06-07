@@ -6,7 +6,7 @@ from VirtualMemoryToolkit.windows.windows_defs cimport PrivilagedSearchMemoryByt
 from VirtualMemoryToolkit.process.process cimport CProcess
 from VirtualMemoryToolkit.windows.windows_defs cimport MAX_MODULES, MODULEENTRY32
 
-cdef extern from "memory_structures.h":
+cdef extern from "VirtualMemoryToolkit/memory/memory_structures.h":
     ctypedef struct CModule:
         CAppHandle* app_handle
         char* name

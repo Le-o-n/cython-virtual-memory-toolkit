@@ -3,12 +3,26 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "production.production_test",
+        "depends": [
+            "C:\\Users\\LeonBass\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\VirtualMemoryToolkit\\handles\\handle.h",
+            "C:\\Users\\LeonBass\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\VirtualMemoryToolkit\\windows\\windows_defs.h",
+            "C:\\Users\\LeonBass\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\VirtualMemoryToolkit\\windows\\windows_types.h"
+        ],
+        "include_dirs": [
+            "C:\\Users\\LeonBass\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages",
+            "C:\\Users\\LeonBass\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\VirtualMemoryToolkit"
+        ],
+        "language": "c++",
+        "libraries": [
+            "User32",
+            "Kernel32"
+        ],
+        "name": "production_test",
         "sources": [
-            "C:\\Users\\LeonBass\\Documents\\visual_studio_code\\cython-virtual-memory-toolkit\\production\\production_test.pyx"
+            "production_test.pyx"
         ]
     },
-    "module_name": "production.production_test"
+    "module_name": "production_test"
 }
 END: Cython Metadata */
 
@@ -549,19 +563,35 @@ END: Cython Metadata */
 #endif
 #define __PYX_REINTERPRET_FUNCION(func_pointer, other_pointer) ((func_pointer)(void(*)(void))(other_pointer))
 
+#ifndef __cplusplus
+  #error "Cython files generated with the C++ option must be compiled with a C++ compiler."
+#endif
 #ifndef CYTHON_INLINE
   #if defined(__clang__)
     #define CYTHON_INLINE __inline__ __attribute__ ((__unused__))
-  #elif defined(__GNUC__)
-    #define CYTHON_INLINE __inline__
-  #elif defined(_MSC_VER)
-    #define CYTHON_INLINE __inline
-  #elif defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-    #define CYTHON_INLINE inline
   #else
-    #define CYTHON_INLINE
+    #define CYTHON_INLINE inline
   #endif
 #endif
+template<typename T>
+void __Pyx_call_destructor(T& x) {
+    x.~T();
+}
+template<typename T>
+class __Pyx_FakeReference {
+  public:
+    __Pyx_FakeReference() : ptr(NULL) { }
+    __Pyx_FakeReference(const T& ref) : ptr(const_cast<T*>(&ref)) { }
+    T *operator->() { return ptr; }
+    T *operator&() { return ptr; }
+    operator T&() { return *ptr; }
+    template<typename U> bool operator ==(const U& other) const { return *ptr == other; }
+    template<typename U> bool operator !=(const U& other) const { return *ptr != other; }
+    template<typename U> bool operator==(const __Pyx_FakeReference<U>& other) const { return *ptr == *other.ptr; }
+    template<typename U> bool operator!=(const __Pyx_FakeReference<U>& other) const { return *ptr != *other.ptr; }
+  private:
+    T *ptr;
+};
 
 #define __PYX_BUILD_PY_SSIZE_T "n"
 #define CYTHON_FORMAT_SSIZE_T "z"
@@ -1186,15 +1216,11 @@ static CYTHON_INLINE float __PYX_NAN() {
     #warning Please do not define the '__PYX_EXTERN_C' macro externally. Use 'CYTHON_EXTERN_C' instead.
     #endif
 #else
-  #ifdef __cplusplus
-    #define __PYX_EXTERN_C extern "C"
-  #else
-    #define __PYX_EXTERN_C extern
-  #endif
+    #define __PYX_EXTERN_C extern "C++"
 #endif
 
-#define __PYX_HAVE__production__production_test
-#define __PYX_HAVE_API__production__production_test
+#define __PYX_HAVE__production_test
+#define __PYX_HAVE_API__production_test
 /* Early includes */
 #include <string.h>
 #include <stdlib.h>
@@ -1204,11 +1230,11 @@ static CYTHON_INLINE float __PYX_NAN() {
 #include "typeinfo"
 #include <vector>
 #include "Windows.h"
-#include "windows_types.h"
+#include "VirtualMemoryToolkit/windows/windows_types.h"
 #include "tlhelp32.h"
 #include "psapi.h"
-#include "windows_defs.h"
-#include "handle.h"
+#include "VirtualMemoryToolkit/windows/windows_defs.h"
+#include "VirtualMemoryToolkit/handles/handle.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -1655,6 +1681,57 @@ static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject 
 /* ErrOccurredWithGIL.proto */
 static CYTHON_INLINE int __Pyx_ErrOccurredWithGIL(void);
 
+/* PyObject_Str.proto */
+#define __Pyx_PyObject_Str(obj)\
+    (likely(PyString_CheckExact(obj)) ? __Pyx_NewRef(obj) : PyObject_Str(obj))
+
+/* PyFunctionFastCall.proto */
+#if CYTHON_FAST_PYCALL
+#if !CYTHON_VECTORCALL
+#define __Pyx_PyFunction_FastCall(func, args, nargs)\
+    __Pyx_PyFunction_FastCallDict((func), (args), (nargs), NULL)
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs);
+#endif
+#define __Pyx_BUILD_ASSERT_EXPR(cond)\
+    (sizeof(char [1 - 2*!(cond)]) - 1)
+#ifndef Py_MEMBER_SIZE
+#define Py_MEMBER_SIZE(type, member) sizeof(((type *)0)->member)
+#endif
+#if !CYTHON_VECTORCALL
+#if PY_VERSION_HEX >= 0x03080000
+  #include "frameobject.h"
+#if PY_VERSION_HEX >= 0x030b00a6 && !CYTHON_COMPILING_IN_LIMITED_API
+  #ifndef Py_BUILD_CORE
+    #define Py_BUILD_CORE 1
+  #endif
+  #include "internal/pycore_frame.h"
+#endif
+  #define __Pxy_PyFrame_Initialize_Offsets()
+  #define __Pyx_PyFrame_GetLocalsplus(frame)  ((frame)->f_localsplus)
+#else
+  static size_t __pyx_pyframe_localsplus_offset = 0;
+  #include "frameobject.h"
+  #define __Pxy_PyFrame_Initialize_Offsets()\
+    ((void)__Pyx_BUILD_ASSERT_EXPR(sizeof(PyFrameObject) == offsetof(PyFrameObject, f_localsplus) + Py_MEMBER_SIZE(PyFrameObject, f_localsplus)),\
+     (void)(__pyx_pyframe_localsplus_offset = ((size_t)PyFrame_Type.tp_basicsize) - Py_MEMBER_SIZE(PyFrameObject, f_localsplus)))
+  #define __Pyx_PyFrame_GetLocalsplus(frame)\
+    (assert(__pyx_pyframe_localsplus_offset), (PyObject **)(((char *)(frame)) + __pyx_pyframe_localsplus_offset))
+#endif
+#endif
+#endif
+
+/* PyObjectCallMethO.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
+#endif
+
+/* PyObjectFastCall.proto */
+#define __Pyx_PyObject_FastCall(func, args, nargs)  __Pyx_PyObject_FastCallDict(func, args, (size_t)(nargs), NULL)
+static CYTHON_INLINE PyObject* __Pyx_PyObject_FastCallDict(PyObject *func, PyObject **args, size_t nargs, PyObject *kwargs);
+
+/* PyObjectCallOneArg.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
+
 /* TupleAndListFromArray.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyList_FromArray(PyObject *const *src, Py_ssize_t n);
@@ -1926,6 +2003,9 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 #endif
 
 /* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_DWORD(DWORD value);
+
+/* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 /* CIntToPy.proto */
@@ -1979,8 +2059,6 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 /* #### Code section: module_declarations ### */
 
-/* Module declarations from "VirtualMemoryToolkit.handles" */
-
 /* Module declarations from "libc.string" */
 
 /* Module declarations from "libc.stdlib" */
@@ -1998,36 +2076,39 @@ static CYTHON_INLINE BOOL __pyx_f_20VirtualMemoryToolkit_7windows_12windows_defs
 static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_20VirtualMemoryToolkit_7windows_12windows_defs_FindProcessFromWindowTitleSubstring(char const *); /*proto*/
 
 /* Module declarations from "VirtualMemoryToolkit.handles.handle" */
+static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHandle_from_title_substring(char const *); /*proto*/
+static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHandle_free(CAppHandle *); /*proto*/
 
-/* Module declarations from "production.production_test" */
-static int __pyx_f_10production_15production_test_run(int __pyx_skip_dispatch); /*proto*/
+/* Module declarations from "production_test" */
+static int __pyx_f_15production_test_run(int __pyx_skip_dispatch); /*proto*/
 /* #### Code section: typeinfo ### */
 /* #### Code section: before_global_var ### */
-#define __Pyx_MODULE_NAME "production.production_test"
-extern int __pyx_module_is_main_production__production_test;
-int __pyx_module_is_main_production__production_test = 0;
+#define __Pyx_MODULE_NAME "production_test"
+extern int __pyx_module_is_main_production_test;
+int __pyx_module_is_main_production_test = 0;
 
-/* Implementation of "production.production_test" */
+/* Implementation of "production_test" */
 /* #### Code section: global_var ### */
 static PyObject *__pyx_builtin_print;
 static PyObject *__pyx_builtin_MemoryError;
 /* #### Code section: string_decls ### */
-static const char __pyx_k__4[] = "?";
+static const char __pyx_k__3[] = "";
+static const char __pyx_k__5[] = "?";
 static const char __pyx_k_run[] = "run";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_print[] = "print";
+static const char __pyx_k_No_handle[] = "No handle :(";
 static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
-static const char __pyx_k_Hello_from_cython[] = "Hello from cython";
+static const char __pyx_k_production_test[] = "production_test";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_production_test_pyx[] = "production_test.pyx";
-static const char __pyx_k_production_production_test[] = "production.production_test";
 static const char __pyx_k_Failed_to_allocate_modules_array[] = "Failed to allocate modules array";
 /* #### Code section: decls ### */
-static PyObject *__pyx_pf_10production_15production_test_run(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_15production_test_run(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 /* #### Code section: late_includes ### */
 /* #### Code section: module_state ### */
 typedef struct {
@@ -2069,25 +2150,24 @@ typedef struct {
   #endif
   #if CYTHON_USE_MODULE_STATE
   #endif
-  #if CYTHON_USE_MODULE_STATE
-  #endif
   PyObject *__pyx_kp_s_Failed_to_allocate_modules_array;
-  PyObject *__pyx_kp_s_Hello_from_cython;
   PyObject *__pyx_n_s_MemoryError;
-  PyObject *__pyx_n_s__4;
+  PyObject *__pyx_kp_s_No_handle;
+  PyObject *__pyx_kp_s__3;
+  PyObject *__pyx_n_s__5;
   PyObject *__pyx_n_s_asyncio_coroutines;
   PyObject *__pyx_n_s_cline_in_traceback;
   PyObject *__pyx_n_s_is_coroutine;
   PyObject *__pyx_n_s_main;
   PyObject *__pyx_n_s_name;
   PyObject *__pyx_n_s_print;
-  PyObject *__pyx_n_s_production_production_test;
+  PyObject *__pyx_n_s_production_test;
   PyObject *__pyx_kp_s_production_test_pyx;
   PyObject *__pyx_n_s_run;
   PyObject *__pyx_n_s_test;
   PyObject *__pyx_tuple_;
   PyObject *__pyx_tuple__2;
-  PyObject *__pyx_codeobj__3;
+  PyObject *__pyx_codeobj__4;
 } __pyx_mstate;
 
 #if CYTHON_USE_MODULE_STATE
@@ -2131,22 +2211,23 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_FusedFunctionType);
   #endif
   Py_CLEAR(clear_module_state->__pyx_kp_s_Failed_to_allocate_modules_array);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_Hello_from_cython);
   Py_CLEAR(clear_module_state->__pyx_n_s_MemoryError);
-  Py_CLEAR(clear_module_state->__pyx_n_s__4);
+  Py_CLEAR(clear_module_state->__pyx_kp_s_No_handle);
+  Py_CLEAR(clear_module_state->__pyx_kp_s__3);
+  Py_CLEAR(clear_module_state->__pyx_n_s__5);
   Py_CLEAR(clear_module_state->__pyx_n_s_asyncio_coroutines);
   Py_CLEAR(clear_module_state->__pyx_n_s_cline_in_traceback);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_coroutine);
   Py_CLEAR(clear_module_state->__pyx_n_s_main);
   Py_CLEAR(clear_module_state->__pyx_n_s_name);
   Py_CLEAR(clear_module_state->__pyx_n_s_print);
-  Py_CLEAR(clear_module_state->__pyx_n_s_production_production_test);
+  Py_CLEAR(clear_module_state->__pyx_n_s_production_test);
   Py_CLEAR(clear_module_state->__pyx_kp_s_production_test_pyx);
   Py_CLEAR(clear_module_state->__pyx_n_s_run);
   Py_CLEAR(clear_module_state->__pyx_n_s_test);
   Py_CLEAR(clear_module_state->__pyx_tuple_);
   Py_CLEAR(clear_module_state->__pyx_tuple__2);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__3);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__4);
   return 0;
 }
 #endif
@@ -2168,22 +2249,23 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_FusedFunctionType);
   #endif
   Py_VISIT(traverse_module_state->__pyx_kp_s_Failed_to_allocate_modules_array);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_Hello_from_cython);
   Py_VISIT(traverse_module_state->__pyx_n_s_MemoryError);
-  Py_VISIT(traverse_module_state->__pyx_n_s__4);
+  Py_VISIT(traverse_module_state->__pyx_kp_s_No_handle);
+  Py_VISIT(traverse_module_state->__pyx_kp_s__3);
+  Py_VISIT(traverse_module_state->__pyx_n_s__5);
   Py_VISIT(traverse_module_state->__pyx_n_s_asyncio_coroutines);
   Py_VISIT(traverse_module_state->__pyx_n_s_cline_in_traceback);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_coroutine);
   Py_VISIT(traverse_module_state->__pyx_n_s_main);
   Py_VISIT(traverse_module_state->__pyx_n_s_name);
   Py_VISIT(traverse_module_state->__pyx_n_s_print);
-  Py_VISIT(traverse_module_state->__pyx_n_s_production_production_test);
+  Py_VISIT(traverse_module_state->__pyx_n_s_production_test);
   Py_VISIT(traverse_module_state->__pyx_kp_s_production_test_pyx);
   Py_VISIT(traverse_module_state->__pyx_n_s_run);
   Py_VISIT(traverse_module_state->__pyx_n_s_test);
   Py_VISIT(traverse_module_state->__pyx_tuple_);
   Py_VISIT(traverse_module_state->__pyx_tuple__2);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__3);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__4);
   return 0;
 }
 #endif
@@ -2226,25 +2308,24 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #endif
 #if CYTHON_USE_MODULE_STATE
 #endif
-#if CYTHON_USE_MODULE_STATE
-#endif
 #define __pyx_kp_s_Failed_to_allocate_modules_array __pyx_mstate_global->__pyx_kp_s_Failed_to_allocate_modules_array
-#define __pyx_kp_s_Hello_from_cython __pyx_mstate_global->__pyx_kp_s_Hello_from_cython
 #define __pyx_n_s_MemoryError __pyx_mstate_global->__pyx_n_s_MemoryError
-#define __pyx_n_s__4 __pyx_mstate_global->__pyx_n_s__4
+#define __pyx_kp_s_No_handle __pyx_mstate_global->__pyx_kp_s_No_handle
+#define __pyx_kp_s__3 __pyx_mstate_global->__pyx_kp_s__3
+#define __pyx_n_s__5 __pyx_mstate_global->__pyx_n_s__5
 #define __pyx_n_s_asyncio_coroutines __pyx_mstate_global->__pyx_n_s_asyncio_coroutines
 #define __pyx_n_s_cline_in_traceback __pyx_mstate_global->__pyx_n_s_cline_in_traceback
 #define __pyx_n_s_is_coroutine __pyx_mstate_global->__pyx_n_s_is_coroutine
 #define __pyx_n_s_main __pyx_mstate_global->__pyx_n_s_main
 #define __pyx_n_s_name __pyx_mstate_global->__pyx_n_s_name
 #define __pyx_n_s_print __pyx_mstate_global->__pyx_n_s_print
-#define __pyx_n_s_production_production_test __pyx_mstate_global->__pyx_n_s_production_production_test
+#define __pyx_n_s_production_test __pyx_mstate_global->__pyx_n_s_production_test
 #define __pyx_kp_s_production_test_pyx __pyx_mstate_global->__pyx_kp_s_production_test_pyx
 #define __pyx_n_s_run __pyx_mstate_global->__pyx_n_s_run
 #define __pyx_n_s_test __pyx_mstate_global->__pyx_n_s_test
 #define __pyx_tuple_ __pyx_mstate_global->__pyx_tuple_
 #define __pyx_tuple__2 __pyx_mstate_global->__pyx_tuple__2
-#define __pyx_codeobj__3 __pyx_mstate_global->__pyx_codeobj__3
+#define __pyx_codeobj__4 __pyx_mstate_global->__pyx_codeobj__4
 /* #### Code section: module_code ### */
 
 /* "VirtualMemoryToolkit/windows/windows_defs.pxd":70
@@ -3464,7 +3545,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_20VirtualMemoryToolkit_7windows
   return __pyx_r;
 }
 
-/* "handle.pxd":79
+/* "VirtualMemoryToolkit/handles/handle.pxd":79
  *         char* window_title
  * 
  * cdef inline CAppHandle* CAppHandle_new() nogil:             # <<<<<<<<<<<<<<
@@ -3477,7 +3558,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   CAppHandle *__pyx_r;
   int __pyx_t_1;
 
-  /* "handle.pxd":87
+  /* "VirtualMemoryToolkit/handles/handle.pxd":87
  *         Returns NULL if memory allocation fails.
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))             # <<<<<<<<<<<<<<
@@ -3486,7 +3567,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   __pyx_v_app_handle = ((CAppHandle *)malloc((sizeof(CAppHandle))));
 
-  /* "handle.pxd":88
+  /* "VirtualMemoryToolkit/handles/handle.pxd":88
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -3496,7 +3577,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_1 = (!(__pyx_v_app_handle != 0));
   if (__pyx_t_1) {
 
-    /* "handle.pxd":89
+    /* "VirtualMemoryToolkit/handles/handle.pxd":89
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:
  *         return NULL  # Memory allocation failed             # <<<<<<<<<<<<<<
@@ -3506,7 +3587,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "handle.pxd":88
+    /* "VirtualMemoryToolkit/handles/handle.pxd":88
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -3515,7 +3596,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   }
 
-  /* "handle.pxd":91
+  /* "VirtualMemoryToolkit/handles/handle.pxd":91
  *         return NULL  # Memory allocation failed
  * 
  *     app_handle[0].process_handle = NULL             # <<<<<<<<<<<<<<
@@ -3524,7 +3605,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   (__pyx_v_app_handle[0]).process_handle = NULL;
 
-  /* "handle.pxd":92
+  /* "VirtualMemoryToolkit/handles/handle.pxd":92
  * 
  *     app_handle[0].process_handle = NULL
  *     app_handle[0].window_handle = NULL             # <<<<<<<<<<<<<<
@@ -3533,7 +3614,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   (__pyx_v_app_handle[0]).window_handle = NULL;
 
-  /* "handle.pxd":93
+  /* "VirtualMemoryToolkit/handles/handle.pxd":93
  *     app_handle[0].process_handle = NULL
  *     app_handle[0].window_handle = NULL
  *     app_handle[0].pid = 0             # <<<<<<<<<<<<<<
@@ -3542,7 +3623,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   (__pyx_v_app_handle[0]).pid = 0;
 
-  /* "handle.pxd":94
+  /* "VirtualMemoryToolkit/handles/handle.pxd":94
  *     app_handle[0].window_handle = NULL
  *     app_handle[0].pid = 0
  *     app_handle[0].window_title = NULL             # <<<<<<<<<<<<<<
@@ -3551,7 +3632,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   (__pyx_v_app_handle[0]).window_title = NULL;
 
-  /* "handle.pxd":96
+  /* "VirtualMemoryToolkit/handles/handle.pxd":96
  *     app_handle[0].window_title = NULL
  * 
  *     return app_handle             # <<<<<<<<<<<<<<
@@ -3561,7 +3642,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_r = __pyx_v_app_handle;
   goto __pyx_L0;
 
-  /* "handle.pxd":79
+  /* "VirtualMemoryToolkit/handles/handle.pxd":79
  *         char* window_title
  * 
  * cdef inline CAppHandle* CAppHandle_new() nogil:             # <<<<<<<<<<<<<<
@@ -3574,7 +3655,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   return __pyx_r;
 }
 
-/* "handle.pxd":100
+/* "VirtualMemoryToolkit/handles/handle.pxd":100
  * 
  * 
  * cdef inline CAppHandle* CAppHandle_from_title_substring(const char* title_sub_string) nogil:             # <<<<<<<<<<<<<<
@@ -3599,7 +3680,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   PyGILState_STATE __pyx_gilstate_save;
   #endif
 
-  /* "handle.pxd":111
+  /* "VirtualMemoryToolkit/handles/handle.pxd":111
  *         Returns NULL if any operation fails.
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))             # <<<<<<<<<<<<<<
@@ -3608,7 +3689,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   __pyx_v_app_handle = ((CAppHandle *)malloc((sizeof(CAppHandle))));
 
-  /* "handle.pxd":112
+  /* "VirtualMemoryToolkit/handles/handle.pxd":112
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -3618,7 +3699,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_1 = (!(__pyx_v_app_handle != 0));
   if (__pyx_t_1) {
 
-    /* "handle.pxd":113
+    /* "VirtualMemoryToolkit/handles/handle.pxd":113
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:
  *         return NULL  # Memory allocation failed             # <<<<<<<<<<<<<<
@@ -3628,7 +3709,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "handle.pxd":112
+    /* "VirtualMemoryToolkit/handles/handle.pxd":112
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -3637,7 +3718,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   }
 
-  /* "handle.pxd":115
+  /* "VirtualMemoryToolkit/handles/handle.pxd":115
  *         return NULL  # Memory allocation failed
  * 
  *     cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowTitleSubstring(title_sub_string)             # <<<<<<<<<<<<<<
@@ -3647,7 +3728,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_2 = __pyx_f_20VirtualMemoryToolkit_7windows_12windows_defs_FindProcessFromWindowTitleSubstring(__pyx_v_title_sub_string); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(2, 115, __pyx_L1_error)
   __pyx_v_window_data = __pyx_t_2;
 
-  /* "handle.pxd":116
+  /* "VirtualMemoryToolkit/handles/handle.pxd":116
  * 
  *     cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowTitleSubstring(title_sub_string)
  *     if not window_data.out_window_handle or not window_data.out_all_access_process_handle:             # <<<<<<<<<<<<<<
@@ -3665,7 +3746,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_L5_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "handle.pxd":117
+    /* "VirtualMemoryToolkit/handles/handle.pxd":117
  *     cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowTitleSubstring(title_sub_string)
  *     if not window_data.out_window_handle or not window_data.out_all_access_process_handle:
  *         free(app_handle)             # <<<<<<<<<<<<<<
@@ -3674,7 +3755,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
     free(__pyx_v_app_handle);
 
-    /* "handle.pxd":118
+    /* "VirtualMemoryToolkit/handles/handle.pxd":118
  *     if not window_data.out_window_handle or not window_data.out_all_access_process_handle:
  *         free(app_handle)
  *         return NULL  # Failed to find process from window title substring             # <<<<<<<<<<<<<<
@@ -3684,7 +3765,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "handle.pxd":116
+    /* "VirtualMemoryToolkit/handles/handle.pxd":116
  * 
  *     cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowTitleSubstring(title_sub_string)
  *     if not window_data.out_window_handle or not window_data.out_all_access_process_handle:             # <<<<<<<<<<<<<<
@@ -3693,7 +3774,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   }
 
-  /* "handle.pxd":120
+  /* "VirtualMemoryToolkit/handles/handle.pxd":120
  *         return NULL  # Failed to find process from window title substring
  * 
  *     app_handle[0].window_handle = window_data.out_window_handle             # <<<<<<<<<<<<<<
@@ -3703,7 +3784,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_4 = __pyx_v_window_data.out_window_handle;
   (__pyx_v_app_handle[0]).window_handle = __pyx_t_4;
 
-  /* "handle.pxd":121
+  /* "VirtualMemoryToolkit/handles/handle.pxd":121
  * 
  *     app_handle[0].window_handle = window_data.out_window_handle
  *     app_handle[0].process_handle = window_data.out_all_access_process_handle             # <<<<<<<<<<<<<<
@@ -3713,7 +3794,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_5 = __pyx_v_window_data.out_all_access_process_handle;
   (__pyx_v_app_handle[0]).process_handle = __pyx_t_5;
 
-  /* "handle.pxd":122
+  /* "VirtualMemoryToolkit/handles/handle.pxd":122
  *     app_handle[0].window_handle = window_data.out_window_handle
  *     app_handle[0].process_handle = window_data.out_all_access_process_handle
  *     app_handle[0].pid = window_data.out_pid             # <<<<<<<<<<<<<<
@@ -3723,7 +3804,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_6 = __pyx_v_window_data.out_pid;
   (__pyx_v_app_handle[0]).pid = __pyx_t_6;
 
-  /* "handle.pxd":124
+  /* "VirtualMemoryToolkit/handles/handle.pxd":124
  *     app_handle[0].pid = window_data.out_pid
  * 
  *     app_handle[0].window_title = <char*>malloc((strlen(window_data.out_full_window_name) + 1) * sizeof(char))             # <<<<<<<<<<<<<<
@@ -3732,7 +3813,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   (__pyx_v_app_handle[0]).window_title = ((char *)malloc(((strlen(__pyx_v_window_data.out_full_window_name) + 1) * (sizeof(char)))));
 
-  /* "handle.pxd":125
+  /* "VirtualMemoryToolkit/handles/handle.pxd":125
  * 
  *     app_handle[0].window_title = <char*>malloc((strlen(window_data.out_full_window_name) + 1) * sizeof(char))
  *     if not app_handle[0].window_title:             # <<<<<<<<<<<<<<
@@ -3742,7 +3823,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_1 = (!((__pyx_v_app_handle[0]).window_title != 0));
   if (__pyx_t_1) {
 
-    /* "handle.pxd":126
+    /* "VirtualMemoryToolkit/handles/handle.pxd":126
  *     app_handle[0].window_title = <char*>malloc((strlen(window_data.out_full_window_name) + 1) * sizeof(char))
  *     if not app_handle[0].window_title:
  *         free(app_handle)             # <<<<<<<<<<<<<<
@@ -3751,7 +3832,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
     free(__pyx_v_app_handle);
 
-    /* "handle.pxd":127
+    /* "VirtualMemoryToolkit/handles/handle.pxd":127
  *     if not app_handle[0].window_title:
  *         free(app_handle)
  *         return NULL  # Memory allocation failed             # <<<<<<<<<<<<<<
@@ -3761,7 +3842,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "handle.pxd":125
+    /* "VirtualMemoryToolkit/handles/handle.pxd":125
  * 
  *     app_handle[0].window_title = <char*>malloc((strlen(window_data.out_full_window_name) + 1) * sizeof(char))
  *     if not app_handle[0].window_title:             # <<<<<<<<<<<<<<
@@ -3770,7 +3851,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   }
 
-  /* "handle.pxd":129
+  /* "VirtualMemoryToolkit/handles/handle.pxd":129
  *         return NULL  # Memory allocation failed
  * 
  *     strcpy(app_handle[0].window_title, window_data.out_full_window_name)             # <<<<<<<<<<<<<<
@@ -3779,7 +3860,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   (void)(strcpy((__pyx_v_app_handle[0]).window_title, __pyx_v_window_data.out_full_window_name));
 
-  /* "handle.pxd":131
+  /* "VirtualMemoryToolkit/handles/handle.pxd":131
  *     strcpy(app_handle[0].window_title, window_data.out_full_window_name)
  * 
  *     return app_handle             # <<<<<<<<<<<<<<
@@ -3789,7 +3870,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_r = __pyx_v_app_handle;
   goto __pyx_L0;
 
-  /* "handle.pxd":100
+  /* "VirtualMemoryToolkit/handles/handle.pxd":100
  * 
  * 
  * cdef inline CAppHandle* CAppHandle_from_title_substring(const char* title_sub_string) nogil:             # <<<<<<<<<<<<<<
@@ -3811,7 +3892,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   return __pyx_r;
 }
 
-/* "handle.pxd":135
+/* "VirtualMemoryToolkit/handles/handle.pxd":135
  * 
  * 
  * cdef inline void CAppHandle_free(CAppHandle* app_handle) nogil:             # <<<<<<<<<<<<<<
@@ -3822,7 +3903,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
 static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHandle_free(CAppHandle *__pyx_v_app_handle) {
   int __pyx_t_1;
 
-  /* "handle.pxd":142
+  /* "VirtualMemoryToolkit/handles/handle.pxd":142
  *         app_handle (CAppHandle*): The CAppHandle instance to be freed.
  *     """
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -3832,7 +3913,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
   __pyx_t_1 = (!(__pyx_v_app_handle != 0));
   if (__pyx_t_1) {
 
-    /* "handle.pxd":143
+    /* "VirtualMemoryToolkit/handles/handle.pxd":143
  *     """
  *     if not app_handle:
  *         return             # <<<<<<<<<<<<<<
@@ -3841,7 +3922,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
     goto __pyx_L0;
 
-    /* "handle.pxd":142
+    /* "VirtualMemoryToolkit/handles/handle.pxd":142
  *         app_handle (CAppHandle*): The CAppHandle instance to be freed.
  *     """
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -3850,7 +3931,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
   }
 
-  /* "handle.pxd":145
+  /* "VirtualMemoryToolkit/handles/handle.pxd":145
  *         return
  * 
  *     if app_handle[0].window_handle:             # <<<<<<<<<<<<<<
@@ -3860,7 +3941,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
   __pyx_t_1 = ((__pyx_v_app_handle[0]).window_handle != 0);
   if (__pyx_t_1) {
 
-    /* "handle.pxd":146
+    /* "VirtualMemoryToolkit/handles/handle.pxd":146
  * 
  *     if app_handle[0].window_handle:
  *         CloseHandle(app_handle[0].window_handle)             # <<<<<<<<<<<<<<
@@ -3869,7 +3950,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
     (void)(CloseHandle((__pyx_v_app_handle[0]).window_handle));
 
-    /* "handle.pxd":145
+    /* "VirtualMemoryToolkit/handles/handle.pxd":145
  *         return
  * 
  *     if app_handle[0].window_handle:             # <<<<<<<<<<<<<<
@@ -3878,7 +3959,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
   }
 
-  /* "handle.pxd":148
+  /* "VirtualMemoryToolkit/handles/handle.pxd":148
  *         CloseHandle(app_handle[0].window_handle)
  * 
  *     if app_handle[0].process_handle:             # <<<<<<<<<<<<<<
@@ -3888,7 +3969,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
   __pyx_t_1 = ((__pyx_v_app_handle[0]).process_handle != 0);
   if (__pyx_t_1) {
 
-    /* "handle.pxd":149
+    /* "VirtualMemoryToolkit/handles/handle.pxd":149
  * 
  *     if app_handle[0].process_handle:
  *         CloseHandle(app_handle[0].process_handle)             # <<<<<<<<<<<<<<
@@ -3897,7 +3978,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
     (void)(CloseHandle((__pyx_v_app_handle[0]).process_handle));
 
-    /* "handle.pxd":148
+    /* "VirtualMemoryToolkit/handles/handle.pxd":148
  *         CloseHandle(app_handle[0].window_handle)
  * 
  *     if app_handle[0].process_handle:             # <<<<<<<<<<<<<<
@@ -3906,7 +3987,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
   }
 
-  /* "handle.pxd":151
+  /* "VirtualMemoryToolkit/handles/handle.pxd":151
  *         CloseHandle(app_handle[0].process_handle)
  * 
  *     if app_handle[0].window_title:             # <<<<<<<<<<<<<<
@@ -3916,7 +3997,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
   __pyx_t_1 = ((__pyx_v_app_handle[0]).window_title != 0);
   if (__pyx_t_1) {
 
-    /* "handle.pxd":152
+    /* "VirtualMemoryToolkit/handles/handle.pxd":152
  * 
  *     if app_handle[0].window_title:
  *         free(app_handle[0].window_title)             # <<<<<<<<<<<<<<
@@ -3924,7 +4005,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
     free((__pyx_v_app_handle[0]).window_title);
 
-    /* "handle.pxd":151
+    /* "VirtualMemoryToolkit/handles/handle.pxd":151
  *         CloseHandle(app_handle[0].process_handle)
  * 
  *     if app_handle[0].window_title:             # <<<<<<<<<<<<<<
@@ -3933,14 +4014,14 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
   }
 
-  /* "handle.pxd":153
+  /* "VirtualMemoryToolkit/handles/handle.pxd":153
  *     if app_handle[0].window_title:
  *         free(app_handle[0].window_title)
  *     free(app_handle)             # <<<<<<<<<<<<<<
  */
   free(__pyx_v_app_handle);
 
-  /* "handle.pxd":135
+  /* "VirtualMemoryToolkit/handles/handle.pxd":135
  * 
  * 
  * cdef inline void CAppHandle_free(CAppHandle* app_handle) nogil:             # <<<<<<<<<<<<<<
@@ -3952,55 +4033,113 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
   __pyx_L0:;
 }
 
-/* "production/production_test.pyx":4
+/* "production_test.pyx":4
  * 
  * 
  * cpdef int run():             # <<<<<<<<<<<<<<
- *     print("Hello from cython")
  * 
+ *     cdef CAppHandle* notepad_handle = CAppHandle_from_title_substring(<const char*>"Notepad")
  */
 
-static PyObject *__pyx_pw_10production_15production_test_1run(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static int __pyx_f_10production_15production_test_run(CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_15production_test_1run(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static int __pyx_f_15production_test_run(CYTHON_UNUSED int __pyx_skip_dispatch) {
+  CAppHandle *__pyx_v_notepad_handle;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
+  CAppHandle *__pyx_t_1;
+  int __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("run", 1);
 
-  /* "production/production_test.pyx":5
- * 
+  /* "production_test.pyx":6
  * cpdef int run():
- *     print("Hello from cython")             # <<<<<<<<<<<<<<
+ * 
+ *     cdef CAppHandle* notepad_handle = CAppHandle_from_title_substring(<const char*>"Notepad")             # <<<<<<<<<<<<<<
+ * 
+ *     if not notepad_handle:
+ */
+  __pyx_t_1 = __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHandle_from_title_substring(((char const *)((char const *)"Notepad"))); if (unlikely(__pyx_t_1 == ((CAppHandle *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_v_notepad_handle = __pyx_t_1;
+
+  /* "production_test.pyx":8
+ *     cdef CAppHandle* notepad_handle = CAppHandle_from_title_substring(<const char*>"Notepad")
+ * 
+ *     if not notepad_handle:             # <<<<<<<<<<<<<<
+ *         print("No handle :(")
+ *     else:
+ */
+  __pyx_t_2 = (!(__pyx_v_notepad_handle != 0));
+  if (__pyx_t_2) {
+
+    /* "production_test.pyx":9
+ * 
+ *     if not notepad_handle:
+ *         print("No handle :(")             # <<<<<<<<<<<<<<
+ *     else:
+ *         print("" + str(notepad_handle[0].pid))
+ */
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 9, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+    /* "production_test.pyx":8
+ *     cdef CAppHandle* notepad_handle = CAppHandle_from_title_substring(<const char*>"Notepad")
+ * 
+ *     if not notepad_handle:             # <<<<<<<<<<<<<<
+ *         print("No handle :(")
+ *     else:
+ */
+    goto __pyx_L3;
+  }
+
+  /* "production_test.pyx":11
+ *         print("No handle :(")
+ *     else:
+ *         print("" + str(notepad_handle[0].pid))             # <<<<<<<<<<<<<<
  * 
  *     return 0
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 5, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  /*else*/ {
+    __pyx_t_3 = __Pyx_PyInt_From_DWORD((__pyx_v_notepad_handle[0]).pid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_4 = __Pyx_PyObject_Str(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = PyNumber_Add(__pyx_kp_s__3, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_print, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 11, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  }
+  __pyx_L3:;
 
-  /* "production/production_test.pyx":7
- *     print("Hello from cython")
+  /* "production_test.pyx":13
+ *         print("" + str(notepad_handle[0].pid))
  * 
  *     return 0             # <<<<<<<<<<<<<<
  */
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "production/production_test.pyx":4
+  /* "production_test.pyx":4
  * 
  * 
  * cpdef int run():             # <<<<<<<<<<<<<<
- *     print("Hello from cython")
  * 
+ *     cdef CAppHandle* notepad_handle = CAppHandle_from_title_substring(<const char*>"Notepad")
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("production.production_test.run", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_AddTraceback("production_test.run", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -4008,22 +4147,22 @@ static int __pyx_f_10production_15production_test_run(CYTHON_UNUSED int __pyx_sk
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10production_15production_test_1run(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_10production_15production_test_1run = {"run", (PyCFunction)__pyx_pw_10production_15production_test_1run, METH_NOARGS, 0};
-static PyObject *__pyx_pw_10production_15production_test_1run(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_15production_test_1run(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_15production_test_1run = {"run", (PyCFunction)__pyx_pw_15production_test_1run, METH_NOARGS, 0};
+static PyObject *__pyx_pw_15production_test_1run(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("run (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_10production_15production_test_run(__pyx_self);
+  __pyx_r = __pyx_pf_15production_test_run(__pyx_self);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10production_15production_test_run(CYTHON_UNUSED PyObject *__pyx_self) {
+static PyObject *__pyx_pf_15production_test_run(CYTHON_UNUSED PyObject *__pyx_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -4033,7 +4172,7 @@ static PyObject *__pyx_pf_10production_15production_test_run(CYTHON_UNUSED PyObj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("run", 1);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_10production_15production_test_run(0); if (unlikely(__pyx_t_1 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_15production_test_run(0); if (unlikely(__pyx_t_1 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 4, __pyx_L1_error)
   __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
@@ -4043,7 +4182,7 @@ static PyObject *__pyx_pf_10production_15production_test_run(CYTHON_UNUSED PyObj
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("production.production_test.run", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("production_test.run", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -4068,16 +4207,17 @@ static PyMethodDef __pyx_methods[] = {
 static int __Pyx_CreateStringTabAndInitStrings(void) {
   __Pyx_StringTabEntry __pyx_string_tab[] = {
     {&__pyx_kp_s_Failed_to_allocate_modules_array, __pyx_k_Failed_to_allocate_modules_array, sizeof(__pyx_k_Failed_to_allocate_modules_array), 0, 0, 1, 0},
-    {&__pyx_kp_s_Hello_from_cython, __pyx_k_Hello_from_cython, sizeof(__pyx_k_Hello_from_cython), 0, 0, 1, 0},
     {&__pyx_n_s_MemoryError, __pyx_k_MemoryError, sizeof(__pyx_k_MemoryError), 0, 0, 1, 1},
-    {&__pyx_n_s__4, __pyx_k__4, sizeof(__pyx_k__4), 0, 0, 1, 1},
+    {&__pyx_kp_s_No_handle, __pyx_k_No_handle, sizeof(__pyx_k_No_handle), 0, 0, 1, 0},
+    {&__pyx_kp_s__3, __pyx_k__3, sizeof(__pyx_k__3), 0, 0, 1, 0},
+    {&__pyx_n_s__5, __pyx_k__5, sizeof(__pyx_k__5), 0, 0, 1, 1},
     {&__pyx_n_s_asyncio_coroutines, __pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 0, 1, 1},
     {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
     {&__pyx_n_s_is_coroutine, __pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 0, 1, 1},
     {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
     {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
     {&__pyx_n_s_print, __pyx_k_print, sizeof(__pyx_k_print), 0, 0, 1, 1},
-    {&__pyx_n_s_production_production_test, __pyx_k_production_production_test, sizeof(__pyx_k_production_production_test), 0, 0, 1, 1},
+    {&__pyx_n_s_production_test, __pyx_k_production_test, sizeof(__pyx_k_production_test), 0, 0, 1, 1},
     {&__pyx_kp_s_production_test_pyx, __pyx_k_production_test_pyx, sizeof(__pyx_k_production_test_pyx), 0, 0, 1, 0},
     {&__pyx_n_s_run, __pyx_k_run, sizeof(__pyx_k_run), 0, 0, 1, 1},
     {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
@@ -4087,7 +4227,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
 }
 /* #### Code section: cached_builtins ### */
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 5, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 9, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 78, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -4110,25 +4250,25 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "production/production_test.pyx":5
+  /* "production_test.pyx":9
  * 
- * cpdef int run():
- *     print("Hello from cython")             # <<<<<<<<<<<<<<
- * 
- *     return 0
+ *     if not notepad_handle:
+ *         print("No handle :(")             # <<<<<<<<<<<<<<
+ *     else:
+ *         print("" + str(notepad_handle[0].pid))
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_Hello_from_cython); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 5, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_No_handle); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "production/production_test.pyx":4
+  /* "production_test.pyx":4
  * 
  * 
  * cpdef int run():             # <<<<<<<<<<<<<<
- *     print("Hello from cython")
  * 
+ *     cdef CAppHandle* notepad_handle = CAppHandle_from_title_substring(<const char*>"Notepad")
  */
-  __pyx_codeobj__3 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_production_test_pyx, __pyx_n_s_run, 4, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__3)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_production_test_pyx, __pyx_n_s_run, 4, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -4464,14 +4604,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_production__production_test) {
+  if (__pyx_module_is_main_production_test) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "production.production_test")) {
-      if (unlikely((PyDict_SetItemString(modules, "production.production_test", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "production_test")) {
+      if (unlikely((PyDict_SetItemString(modules, "production_test", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -4492,20 +4632,20 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "production/production_test.pyx":4
+  /* "production_test.pyx":4
  * 
  * 
  * cpdef int run():             # <<<<<<<<<<<<<<
- *     print("Hello from cython")
  * 
+ *     cdef CAppHandle* notepad_handle = CAppHandle_from_title_substring(<const char*>"Notepad")
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10production_15production_test_1run, 0, __pyx_n_s_run, NULL, __pyx_n_s_production_production_test, __pyx_d, ((PyObject *)__pyx_codeobj__3)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15production_test_1run, 0, __pyx_n_s_run, NULL, __pyx_n_s_production_test, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_run, __pyx_t_2) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "production/production_test.pyx":1
- * from VirtualMemoryToolkit.handles cimport handle             # <<<<<<<<<<<<<<
+  /* "production_test.pyx":1
+ * from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free             # <<<<<<<<<<<<<<
  * 
  * 
  */
@@ -4521,7 +4661,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d && stringtab_initialized) {
-      __Pyx_AddTraceback("init production.production_test", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init production_test", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     #if !CYTHON_USE_MODULE_STATE
     Py_CLEAR(__pyx_m);
@@ -4535,7 +4675,7 @@ if (!__Pyx_RefNanny) {
     }
     #endif
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init production.production_test");
+    PyErr_SetString(PyExc_ImportError, "init production_test");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -4938,6 +5078,238 @@ static CYTHON_INLINE int __Pyx_ErrOccurredWithGIL(void) {
   PyGILState_Release(_save);
   #endif
   return err;
+}
+
+/* PyFunctionFastCall */
+#if CYTHON_FAST_PYCALL && !CYTHON_VECTORCALL
+static PyObject* __Pyx_PyFunction_FastCallNoKw(PyCodeObject *co, PyObject **args, Py_ssize_t na,
+                                               PyObject *globals) {
+    PyFrameObject *f;
+    PyThreadState *tstate = __Pyx_PyThreadState_Current;
+    PyObject **fastlocals;
+    Py_ssize_t i;
+    PyObject *result;
+    assert(globals != NULL);
+    /* XXX Perhaps we should create a specialized
+       PyFrame_New() that doesn't take locals, but does
+       take builtins without sanity checking them.
+       */
+    assert(tstate != NULL);
+    f = PyFrame_New(tstate, co, globals, NULL);
+    if (f == NULL) {
+        return NULL;
+    }
+    fastlocals = __Pyx_PyFrame_GetLocalsplus(f);
+    for (i = 0; i < na; i++) {
+        Py_INCREF(*args);
+        fastlocals[i] = *args++;
+    }
+    result = PyEval_EvalFrameEx(f,0);
+    ++tstate->recursion_depth;
+    Py_DECREF(f);
+    --tstate->recursion_depth;
+    return result;
+}
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs) {
+    PyCodeObject *co = (PyCodeObject *)PyFunction_GET_CODE(func);
+    PyObject *globals = PyFunction_GET_GLOBALS(func);
+    PyObject *argdefs = PyFunction_GET_DEFAULTS(func);
+    PyObject *closure;
+#if PY_MAJOR_VERSION >= 3
+    PyObject *kwdefs;
+#endif
+    PyObject *kwtuple, **k;
+    PyObject **d;
+    Py_ssize_t nd;
+    Py_ssize_t nk;
+    PyObject *result;
+    assert(kwargs == NULL || PyDict_Check(kwargs));
+    nk = kwargs ? PyDict_Size(kwargs) : 0;
+    #if PY_MAJOR_VERSION < 3
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object"))) {
+        return NULL;
+    }
+    #else
+    if (unlikely(Py_EnterRecursiveCall(" while calling a Python object"))) {
+        return NULL;
+    }
+    #endif
+    if (
+#if PY_MAJOR_VERSION >= 3
+            co->co_kwonlyargcount == 0 &&
+#endif
+            likely(kwargs == NULL || nk == 0) &&
+            co->co_flags == (CO_OPTIMIZED | CO_NEWLOCALS | CO_NOFREE)) {
+        if (argdefs == NULL && co->co_argcount == nargs) {
+            result = __Pyx_PyFunction_FastCallNoKw(co, args, nargs, globals);
+            goto done;
+        }
+        else if (nargs == 0 && argdefs != NULL
+                 && co->co_argcount == Py_SIZE(argdefs)) {
+            /* function called with no arguments, but all parameters have
+               a default value: use default values as arguments .*/
+            args = &PyTuple_GET_ITEM(argdefs, 0);
+            result =__Pyx_PyFunction_FastCallNoKw(co, args, Py_SIZE(argdefs), globals);
+            goto done;
+        }
+    }
+    if (kwargs != NULL) {
+        Py_ssize_t pos, i;
+        kwtuple = PyTuple_New(2 * nk);
+        if (kwtuple == NULL) {
+            result = NULL;
+            goto done;
+        }
+        k = &PyTuple_GET_ITEM(kwtuple, 0);
+        pos = i = 0;
+        while (PyDict_Next(kwargs, &pos, &k[i], &k[i+1])) {
+            Py_INCREF(k[i]);
+            Py_INCREF(k[i+1]);
+            i += 2;
+        }
+        nk = i / 2;
+    }
+    else {
+        kwtuple = NULL;
+        k = NULL;
+    }
+    closure = PyFunction_GET_CLOSURE(func);
+#if PY_MAJOR_VERSION >= 3
+    kwdefs = PyFunction_GET_KW_DEFAULTS(func);
+#endif
+    if (argdefs != NULL) {
+        d = &PyTuple_GET_ITEM(argdefs, 0);
+        nd = Py_SIZE(argdefs);
+    }
+    else {
+        d = NULL;
+        nd = 0;
+    }
+#if PY_MAJOR_VERSION >= 3
+    result = PyEval_EvalCodeEx((PyObject*)co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, kwdefs, closure);
+#else
+    result = PyEval_EvalCodeEx(co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, closure);
+#endif
+    Py_XDECREF(kwtuple);
+done:
+    Py_LeaveRecursiveCall();
+    return result;
+}
+#endif
+
+/* PyObjectCallMethO */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg) {
+    PyObject *self, *result;
+    PyCFunction cfunc;
+    cfunc = __Pyx_CyOrPyCFunction_GET_FUNCTION(func);
+    self = __Pyx_CyOrPyCFunction_GET_SELF(func);
+    #if PY_MAJOR_VERSION < 3
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    #else
+    if (unlikely(Py_EnterRecursiveCall(" while calling a Python object")))
+        return NULL;
+    #endif
+    result = cfunc(self, arg);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
+#endif
+
+/* PyObjectFastCall */
+#if PY_VERSION_HEX < 0x03090000 || CYTHON_COMPILING_IN_LIMITED_API
+static PyObject* __Pyx_PyObject_FastCall_fallback(PyObject *func, PyObject **args, size_t nargs, PyObject *kwargs) {
+    PyObject *argstuple;
+    PyObject *result = 0;
+    size_t i;
+    argstuple = PyTuple_New((Py_ssize_t)nargs);
+    if (unlikely(!argstuple)) return NULL;
+    for (i = 0; i < nargs; i++) {
+        Py_INCREF(args[i]);
+        if (__Pyx_PyTuple_SET_ITEM(argstuple, (Py_ssize_t)i, args[i]) < 0) goto bad;
+    }
+    result = __Pyx_PyObject_Call(func, argstuple, kwargs);
+  bad:
+    Py_DECREF(argstuple);
+    return result;
+}
+#endif
+static CYTHON_INLINE PyObject* __Pyx_PyObject_FastCallDict(PyObject *func, PyObject **args, size_t _nargs, PyObject *kwargs) {
+    Py_ssize_t nargs = __Pyx_PyVectorcall_NARGS(_nargs);
+#if CYTHON_COMPILING_IN_CPYTHON
+    if (nargs == 0 && kwargs == NULL) {
+        if (__Pyx_CyOrPyCFunction_Check(func) && likely( __Pyx_CyOrPyCFunction_GET_FLAGS(func) & METH_NOARGS))
+            return __Pyx_PyObject_CallMethO(func, NULL);
+    }
+    else if (nargs == 1 && kwargs == NULL) {
+        if (__Pyx_CyOrPyCFunction_Check(func) && likely( __Pyx_CyOrPyCFunction_GET_FLAGS(func) & METH_O))
+            return __Pyx_PyObject_CallMethO(func, args[0]);
+    }
+#endif
+    #if PY_VERSION_HEX < 0x030800B1
+    #if CYTHON_FAST_PYCCALL
+    if (PyCFunction_Check(func)) {
+        if (kwargs) {
+            return _PyCFunction_FastCallDict(func, args, nargs, kwargs);
+        } else {
+            return _PyCFunction_FastCallKeywords(func, args, nargs, NULL);
+        }
+    }
+    #if PY_VERSION_HEX >= 0x030700A1
+    if (!kwargs && __Pyx_IS_TYPE(func, &PyMethodDescr_Type)) {
+        return _PyMethodDescr_FastCallKeywords(func, args, nargs, NULL);
+    }
+    #endif
+    #endif
+    #if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCallDict(func, args, nargs, kwargs);
+    }
+    #endif
+    #endif
+    if (kwargs == NULL) {
+        #if CYTHON_VECTORCALL
+        #if PY_VERSION_HEX < 0x03090000
+        vectorcallfunc f = _PyVectorcall_Function(func);
+        #else
+        vectorcallfunc f = PyVectorcall_Function(func);
+        #endif
+        if (f) {
+            return f(func, args, (size_t)nargs, NULL);
+        }
+        #elif defined(__Pyx_CyFunction_USED) && CYTHON_BACKPORT_VECTORCALL
+        if (__Pyx_CyFunction_CheckExact(func)) {
+            __pyx_vectorcallfunc f = __Pyx_CyFunction_func_vectorcall(func);
+            if (f) return f(func, args, (size_t)nargs, NULL);
+        }
+        #endif
+    }
+    if (nargs == 0) {
+        return __Pyx_PyObject_Call(func, __pyx_empty_tuple, kwargs);
+    }
+    #if PY_VERSION_HEX >= 0x03090000 && !CYTHON_COMPILING_IN_LIMITED_API
+    return PyObject_VectorcallDict(func, args, (size_t)nargs, kwargs);
+    #else
+    return __Pyx_PyObject_FastCall_fallback(func, args, (size_t)nargs, kwargs);
+    #endif
+}
+
+/* PyObjectCallOneArg */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *args[2] = {NULL, arg};
+    return __Pyx_PyObject_FastCall(func, args+1, 1 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET);
 }
 
 /* TupleAndListFromArray */
@@ -6759,6 +7131,70 @@ bad:
 #endif
 
 /* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_DWORD(DWORD value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const DWORD neg_one = (DWORD) -1, const_zero = (DWORD) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(DWORD) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(DWORD) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(DWORD) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(DWORD) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(DWORD) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
+        return _PyLong_FromByteArray(bytes, sizeof(DWORD),
+                                     little, !is_unsigned);
+#else
+        PyObject *from_bytes, *result = NULL;
+        PyObject *py_bytes = NULL, *arg_tuple = NULL, *kwds = NULL, *order_str = NULL;
+        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
+        if (!from_bytes) return NULL;
+        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(DWORD));
+        if (!py_bytes) goto limited_bad;
+        order_str = PyUnicode_FromString(little ? "little" : "big");
+        if (!order_str) goto limited_bad;
+        arg_tuple = PyTuple_Pack(2, py_bytes, order_str);
+        if (!arg_tuple) goto limited_bad;
+        if (!is_unsigned) {
+            kwds = PyDict_New();
+            if (!kwds) goto limited_bad;
+            if (PyDict_SetItemString(kwds, "signed", __Pyx_NewRef(Py_True))) goto limited_bad;
+        }
+        result = PyObject_Call(from_bytes, arg_tuple, kwds);
+        limited_bad:
+        Py_XDECREF(kwds);
+        Py_XDECREF(arg_tuple);
+        Py_XDECREF(order_str);
+        Py_XDECREF(py_bytes);
+        Py_XDECREF(from_bytes);
+        return result;
+#endif
+    }
+}
+
+/* CIntToPy */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic push
@@ -6896,7 +7332,7 @@ __Pyx_PyType_GetName(PyTypeObject* tp)
     if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) {
         PyErr_Clear();
         Py_XDECREF(name);
-        name = __Pyx_NewRef(__pyx_n_s__4);
+        name = __Pyx_NewRef(__pyx_n_s__5);
     }
     return name;
 }

@@ -6,7 +6,7 @@ from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_free
 from libc.stdlib cimport malloc, free, calloc 
 from libc.string cimport memcpy, memcmp, strstr
 
-cdef extern from "memory_manager.h":
+cdef extern from "VirtualMemoryToolkit/memory/memory_manager.h":
 
     ctypedef struct CMemoryRegionNode:
         void* address
