@@ -79,6 +79,8 @@ cdef inline void CProcess_free(CProcess* process) nogil:
     if not process:
         return
     
-    free(process[0].loaded_modules)
-    free(process[0].image_filename)
+    if process[0].loaded_modules:
+        free(process[0].loaded_modules)
+    if process[0].image_filename:
+        free(process[0].image_filename)
     free(process)

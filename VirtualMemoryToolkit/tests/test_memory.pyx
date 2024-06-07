@@ -1,6 +1,7 @@
 from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
 from VirtualMemoryToolkit.memory.memory_manager cimport CMemoryManager, CMemoryRegionNode, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_free, CMemoryManager_virtual_free_all
-
+from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_new
+from VirtualMemoryToolkit.memory.memory_structures cimport CModule, CModule_from_process, CModule_free
 
 import subprocess
 import time
@@ -48,14 +49,24 @@ cdef int allocate_memory_region(CMemoryManager* memory_manager):
 
 cdef int allocate_memory_regions(CMemoryManager* memory_manager):
     cdef CMemoryRegionNode* virtual_memory_region = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
-    if not virtual_memory_region:
+    cdef CMemoryRegionNode* virtual_memory_region2 = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
+
+    return not virtual_memory_region or not virtual_memory_region2
+
+cdef int extract_modules(CAppHandle* app_handle) nogil:
+    cdef const char* module_substring = "notepad" # notepad.exe
+    cdef CModule* module = <CModule*>0
+    cdef CProcess* process = CProcess_new(app_handle)
+
+    if not process:
         return 1
     
-    cdef CMemoryRegionNode* virtual_memory_region2 = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
-    if not virtual_memory_region2:
-        return 1
+    module = CModule_from_process(process, module_substring)
 
-    return 0
+    if module:
+        return 0
+    return 1
+
 
 cpdef int run():
     print("\n Running Memory Tests ")
@@ -141,6 +152,23 @@ cpdef int run():
             error_count += 1
         else:
             print("PASSED")
+
+    
+    print("     - module_extraction     ... ", end="", flush=True)
+    if not notepad_apphandle or not notepad_memory_manager:
+        print("FAILED")
+        error_count += 1
+    else:
+        if extract_modules(notepad_apphandle):
+            print("FAILED")
+            error_count += 1
+        else:
+            print("PASSED")
+
+
+
+
+
 
     if notepad_memory_manager:
         CMemoryManager_free(notepad_memory_manager)

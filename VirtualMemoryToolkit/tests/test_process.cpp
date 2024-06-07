@@ -10,9 +10,9 @@
             "VirtualMemoryToolkit\\windows\\windows_types.h"
         ],
         "include_dirs": [
-            ".\\VirtualMemoryToolkit\\process",
             ".\\VirtualMemoryToolkit\\handles",
             ".\\VirtualMemoryToolkit\\windows",
+            ".\\VirtualMemoryToolkit\\process",
             "C:\\Users\\LeonBass\\Documents\\visual_studio_code\\cython-virtual-memory-toolkit\\VirtualMemoryToolkit"
         ],
         "language": "c++",
@@ -4520,7 +4520,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7process_7process_CProc
  *     if not process:
  *         return             # <<<<<<<<<<<<<<
  * 
- *     free(process[0].loaded_modules)
+ *     if process[0].loaded_modules:
  */
     goto __pyx_L0;
 
@@ -4536,23 +4536,61 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7process_7process_CProc
   /* "VirtualMemoryToolkit/process/process.pxd":82
  *         return
  * 
- *     free(process[0].loaded_modules)             # <<<<<<<<<<<<<<
- *     free(process[0].image_filename)
- *     free(process)
+ *     if process[0].loaded_modules:             # <<<<<<<<<<<<<<
+ *         free(process[0].loaded_modules)
+ *     if process[0].image_filename:
  */
-  free((__pyx_v_process[0]).loaded_modules);
+  __pyx_t_1 = ((__pyx_v_process[0]).loaded_modules != 0);
+  if (__pyx_t_1) {
 
-  /* "VirtualMemoryToolkit/process/process.pxd":83
+    /* "VirtualMemoryToolkit/process/process.pxd":83
  * 
- *     free(process[0].loaded_modules)
- *     free(process[0].image_filename)             # <<<<<<<<<<<<<<
- *     free(process)
+ *     if process[0].loaded_modules:
+ *         free(process[0].loaded_modules)             # <<<<<<<<<<<<<<
+ *     if process[0].image_filename:
+ *         free(process[0].image_filename)
  */
-  free((__pyx_v_process[0]).image_filename);
+    free((__pyx_v_process[0]).loaded_modules);
+
+    /* "VirtualMemoryToolkit/process/process.pxd":82
+ *         return
+ * 
+ *     if process[0].loaded_modules:             # <<<<<<<<<<<<<<
+ *         free(process[0].loaded_modules)
+ *     if process[0].image_filename:
+ */
+  }
 
   /* "VirtualMemoryToolkit/process/process.pxd":84
- *     free(process[0].loaded_modules)
- *     free(process[0].image_filename)
+ *     if process[0].loaded_modules:
+ *         free(process[0].loaded_modules)
+ *     if process[0].image_filename:             # <<<<<<<<<<<<<<
+ *         free(process[0].image_filename)
+ *     free(process)
+ */
+  __pyx_t_1 = ((__pyx_v_process[0]).image_filename != 0);
+  if (__pyx_t_1) {
+
+    /* "VirtualMemoryToolkit/process/process.pxd":85
+ *         free(process[0].loaded_modules)
+ *     if process[0].image_filename:
+ *         free(process[0].image_filename)             # <<<<<<<<<<<<<<
+ *     free(process)
+ */
+    free((__pyx_v_process[0]).image_filename);
+
+    /* "VirtualMemoryToolkit/process/process.pxd":84
+ *     if process[0].loaded_modules:
+ *         free(process[0].loaded_modules)
+ *     if process[0].image_filename:             # <<<<<<<<<<<<<<
+ *         free(process[0].image_filename)
+ *     free(process)
+ */
+  }
+
+  /* "VirtualMemoryToolkit/process/process.pxd":86
+ *     if process[0].image_filename:
+ *         free(process[0].image_filename)
  *     free(process)             # <<<<<<<<<<<<<<
  */
   free(__pyx_v_process);
