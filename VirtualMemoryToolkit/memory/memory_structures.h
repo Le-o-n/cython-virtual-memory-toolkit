@@ -6,7 +6,7 @@
 
 typedef struct
 {
-    CAppHandle *app_hangle;
+    CAppHandle *app_handle;
     char *name;
     void *base_address;
     size_t size;

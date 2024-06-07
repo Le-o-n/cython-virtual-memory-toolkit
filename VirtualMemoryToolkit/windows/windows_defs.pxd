@@ -32,6 +32,7 @@ cdef extern from "Windows.h":
     DWORD PAGE_EXECUTE_WRITECOPY
     DWORD PAGE_NOACCESS
     DWORD MEM_DECOMMIT
+    void* INVALID_HANDLE_VALUE
 
     HANDLE OpenProcess(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessId) nogil
     HWND FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName) nogil
@@ -296,7 +297,7 @@ cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM 
     free(current_window_title)
     return True
 
-cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowTitleSubstring(char* window_name_sub_string) nogil:
+cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowTitleSubstring(const char* window_name_sub_string) nogil:
     cdef FIND_PROCESS_LPARAM data
     
     data.in_window_name_substring = window_name_sub_string

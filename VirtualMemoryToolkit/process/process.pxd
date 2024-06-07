@@ -1,17 +1,17 @@
 from libc.stdlib cimport malloc, free
 
-from handles.handle cimport CAppHandle
+from VirtualMemoryToolkit.handles.handle cimport CAppHandle
 
-from windows.windows_types cimport MODULEENTRY32
-from windows.windows_types cimport HANDLE
+from VirtualMemoryToolkit.windows.windows_types cimport MODULEENTRY32
+from VirtualMemoryToolkit.windows.windows_types cimport HANDLE, DWORD
 
-from windows.windows_defs cimport GetProcessImageFileNameA
-from windows.windows_defs cimport CollectAllModuleInformation
-from windows.windows_defs cimport CreateToolhelp32Snapshot
+from VirtualMemoryToolkit.windows.windows_defs cimport GetProcessImageFileNameA
+from VirtualMemoryToolkit.windows.windows_defs cimport CollectAllModuleInformation
+from VirtualMemoryToolkit.windows.windows_defs cimport CreateToolhelp32Snapshot
 
-from windows.windows_defs cimport TH32CS_SNAPMODULE
-from windows.windows_defs cimport TH32CS_SNAPMODULE32
-from windows.windows_defs cimport MAX_PATH, INVALID_HANDLE_VALUE
+from VirtualMemoryToolkit.windows.windows_defs cimport TH32CS_SNAPMODULE
+from VirtualMemoryToolkit.windows.windows_defs cimport TH32CS_SNAPMODULE32
+from VirtualMemoryToolkit.windows.windows_defs cimport MAX_PATH, INVALID_HANDLE_VALUE
 
 cdef extern from "process.h":
     ctypedef struct CProcess:
@@ -79,6 +79,8 @@ cdef inline void CProcess_free(CProcess* process) nogil:
     if not process:
         return
     
-    free(process[0].loaded_modules)
-    free(process[0].image_filename)
+    if process[0].loaded_modules:
+        free(process[0].loaded_modules)
+    if process[0].image_filename:
+        free(process[0].image_filename)
     free(process)

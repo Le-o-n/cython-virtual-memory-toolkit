@@ -1,8 +1,10 @@
 from libc.stdlib cimport malloc, free, calloc 
-from libc.string cimport memcpy, memcmp, strstr
-from handles.handle cimport CAppHandle
-from windows.windows_types cimport BYTE, SIZE_T, HANDLE, LPCVOID, LPVOID, PBYTE
-from windows.windows_defs cimport PrivilagedSearchMemoryBytes, PrivilagedMemoryRead, PrivilagedMemoryWrite
+from libc.string cimport memcpy, memcmp, strstr, strdup
+from VirtualMemoryToolkit.handles.handle cimport CAppHandle
+from VirtualMemoryToolkit.windows.windows_types cimport BYTE, SIZE_T, HANDLE, LPCVOID, LPVOID, PBYTE
+from VirtualMemoryToolkit.windows.windows_defs cimport PrivilagedSearchMemoryBytes, PrivilagedMemoryRead, PrivilagedMemoryWrite
+from VirtualMemoryToolkit.process.process cimport CProcess
+from VirtualMemoryToolkit.windows.windows_defs cimport MAX_MODULES, MODULEENTRY32
 
 cdef extern from "memory_structures.h":
     ctypedef struct CModule:
@@ -40,6 +42,68 @@ cdef inline CModule* CModule_init(CAppHandle* app_handle, char* name, void* base
     module[0].size = size
 
     return module
+
+cdef inline CModule* CModule_from_process(CProcess* process, const char* module_sub_string) nogil:
+    """
+    Create a CModule from a CProcess based on a substring of the module name.
+
+    Parameters:
+    process : CProcess*
+        A pointer to the CProcess containing the modules.
+    module_sub_String : const char*
+        The substring to search for within the module names.
+
+    Returns:
+    CModule*
+        A pointer to a newly created CModule if a matching module is found, or NULL if not.
+
+    This function searches through the MODULEENTRY32 array in the provided CProcess
+    for a module whose name contains the specified substring. If such a module is found,
+    a new CModule is allocated, initialized with the module's details, and returned.
+
+    If the process, module_sub_String, or process[0].loaded_modules is NULL,
+    or if no matching module is found, the function returns NULL.
+    """
+    if not process:
+        return NULL
+    
+    if not module_sub_string:
+        return NULL
+
+    if not process[0].loaded_modules:
+        return NULL
+
+    cdef MODULEENTRY32 cur_moduleentry
+    cdef void* cur_module_address
+    cdef size_t cur_module_size
+    cdef char* cur_module_fullname
+    cdef CModule* module
+
+    for i in range(MAX_MODULES):
+        cur_moduleentry = process[0].loaded_modules[i]
+
+        if not cur_moduleentry.szModule[0]:  # Check if the module entry is empty
+            break
+        
+        cur_module_fullname = cur_moduleentry.szModule
+        
+        if strstr(cur_module_fullname, module_sub_string) != NULL:
+            cur_module_address = cur_moduleentry.modBaseAddr
+            cur_module_size = cur_moduleentry.modBaseSize
+            
+            # Allocate and initialize CModule
+            module = <CModule*> malloc(sizeof(CModule))
+            if not module:
+                return NULL
+
+            module.app_handle = process[0].app_handle  # Assuming CProcess has an app_handle
+            module.name = strdup(cur_module_fullname)
+            module.base_address = cur_module_address
+            module.size = cur_module_size
+
+            return module
+
+    return NULL  # Module not found
 
 cdef inline void CModule_free(CModule* module) nogil:
     """

@@ -37,7 +37,7 @@ cdef extern from "Windows.h":
 
 cdef extern from "windows_types.h":
     ctypedef struct FIND_PROCESS_LPARAM:
-        char* in_window_name_substring
+        const char* in_window_name_substring
         HWND out_window_handle
         DWORD out_pid
         HANDLE out_all_access_process_handle
