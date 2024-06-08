@@ -15,8 +15,8 @@ include_dirs = [
 # Define the extension module
 extensions = [
     Extension(
-        name="handle_example",
-        sources=["handle_example.pyx"],
+        name="example",
+        sources=["example.pyx"],
         include_dirs=include_dirs,
         language="c++",
         libraries=libraries

@@ -2,7 +2,7 @@
 #define PROCESS_H
 
 #include <windows.h>
-#include "handle.h"
+#include "VirtualMemoryToolkit/handles/handle.h"
 #include <TlHelp32.h>
 
 typedef struct

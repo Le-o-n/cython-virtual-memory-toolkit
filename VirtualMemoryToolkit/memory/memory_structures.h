@@ -2,7 +2,7 @@
 #define MEMORY_STRUCTURES_H
 
 #include <windows.h>
-#include "handle.h"
+#include "VirtualMemoryToolkit/handles/handle.h"
 
 typedef struct
 {
