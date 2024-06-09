@@ -35,7 +35,7 @@ cdef extern from "Windows.h":
     ctypedef MEMORY_BASIC_INFORMATION* PMEMORY_BASIC_INFORMATION
 
 
-cdef extern from "windows_types.h":
+cdef extern from "VirtualMemoryToolkit/windows/windows_types.h":
     ctypedef struct FIND_PROCESS_LPARAM:
         const char* in_window_name_substring
         HWND out_window_handle

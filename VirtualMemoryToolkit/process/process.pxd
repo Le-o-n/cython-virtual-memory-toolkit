@@ -13,7 +13,7 @@ from VirtualMemoryToolkit.windows.windows_defs cimport TH32CS_SNAPMODULE
 from VirtualMemoryToolkit.windows.windows_defs cimport TH32CS_SNAPMODULE32
 from VirtualMemoryToolkit.windows.windows_defs cimport MAX_PATH, INVALID_HANDLE_VALUE
 
-cdef extern from "process.h":
+cdef extern from "VirtualMemoryToolkit/process/process.h":
     ctypedef struct CProcess:
         CAppHandle* app_handle
         MODULEENTRY32* loaded_modules

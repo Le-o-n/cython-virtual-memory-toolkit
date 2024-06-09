@@ -1,12 +1,12 @@
 from VirtualMemoryToolkit.windows.windows_types cimport BYTE, HANDLE, LPVOID, SIZE_T
 from VirtualMemoryToolkit.windows.windows_defs cimport VirtualAllocEx, VirtualFreeEx, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE, MEM_RELEASE
-
+from VirtualMemoryToolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_init
 
 from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_free
 from libc.stdlib cimport malloc, free, calloc 
 from libc.string cimport memcpy, memcmp, strstr
 
-cdef extern from "memory_manager.h":
+cdef extern from "VirtualMemoryToolkit/memory/memory_manager.h":
 
     ctypedef struct CMemoryRegionNode:
         void* address
@@ -35,8 +35,6 @@ cdef inline CMemoryRegionNode* CMemoryRegionNode_init() nogil:
 
     return memory_region
 
-
-
 cdef inline void CMemoryRegionNode_free(CMemoryRegionNode* node) nogil:
     """
     Frees the memory allocated for a CMemoryRegionNode structure.
@@ -46,7 +44,6 @@ cdef inline void CMemoryRegionNode_free(CMemoryRegionNode* node) nogil:
     """
     if node:
         free(node)
-
 
 cdef inline CMemoryManager* CMemoryManager_init(CAppHandle* app_handle) nogil:
     """
@@ -69,7 +66,7 @@ cdef inline CMemoryManager* CMemoryManager_init(CAppHandle* app_handle) nogil:
     
     return memory_manager
 
-cdef inline CMemoryRegionNode* CMemoryManager_virtual_alloc(CMemoryManager* memory_manager, size_t size) nogil:
+cdef inline CVirtualAddress* CMemoryManager_virtual_alloc(CMemoryManager* memory_manager, size_t size) nogil:
     """
     Allocates virtual memory and adds a new memory region node to the memory manager.
 
@@ -111,9 +108,13 @@ cdef inline CMemoryRegionNode* CMemoryManager_virtual_alloc(CMemoryManager* memo
         memory_manager[0].memory_regions_head = new_memory
         memory_manager[0].memory_regions_tail = new_memory
 
+    cdef CVirtualAddress* virtual_address = CVirtualAddress_init(memory_manager[0].app_handle, <void*>new_memory[0].address)
     
-    
-    return new_memory
+    if not virtual_address:
+        CMemoryRegionNode_free(new_memory)
+        return NULL
+
+    return virtual_address
 
 cdef inline bint CMemoryManager_virtual_free(CMemoryManager* memory_manager, CMemoryRegionNode* memory_region) nogil:
     """
@@ -155,7 +156,23 @@ cdef inline bint CMemoryManager_virtual_free(CMemoryManager* memory_manager, CMe
     CMemoryRegionNode_free(memory_region)
     return 0
 
+cdef inline bint CMemoryManager_virtual_free_address(CMemoryManager* memory_manager, CVirtualAddress* memory_address) nogil:
+    """
+    Frees a specific memory region from the starting address and removes it from the memory manager's linked list.
 
+    Parameters:
+        memory_manager (CMemoryManager*): The memory manager.
+        memory_address (CMemoryAddress*): The memory's starting address to be freed.
+
+    Returns:
+        bint: 0 on success, 1 on failure.
+    """
+    cdef CMemoryRegionNode* cur_node = memory_manager[0].memory_regions_head
+    while cur_node:
+        if <unsigned long long>cur_node[0].address == <unsigned long long>memory_address[0].address:
+            return CMemoryManager_virtual_free(memory_manager, cur_node)
+        cur_node = cur_node[0].next
+    return 1
 
 cdef inline bint CMemoryManager_virtual_free_all(CMemoryManager* memory_manager) nogil:
     """
@@ -172,8 +189,6 @@ cdef inline bint CMemoryManager_virtual_free_all(CMemoryManager* memory_manager)
         if CMemoryManager_virtual_free(memory_manager, cur_node):
             return 1
         cur_node = next_node
-
-
 
 cdef inline bint CMemoryManager_free(CMemoryManager* memory_manager) nogil:
     """

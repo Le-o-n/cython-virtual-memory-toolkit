@@ -69,7 +69,7 @@ from VirtualMemoryToolkit.windows.windows_defs cimport PAGE_NOACCESS
 from VirtualMemoryToolkit.windows.windows_defs cimport MEM_DECOMMIT
 
 
-cdef extern from "handle.h":
+cdef extern from "VirtualMemoryToolkit/handles/handle.h":
     ctypedef struct CAppHandle:
         HANDLE process_handle
         HWND window_handle
