@@ -456,12 +456,12 @@ cdef inline bint CVirtualAddress_write_int64(const CVirtualAddress* virtual_addr
     
     return bytes_written != 8
 
-cdef inline bint CVirtualAddress_read_bytes(CVirtualAddress* virtual_address, unsigned char* out_bytes, size_t num_bytes) nogil:
+cdef inline bint CVirtualAddress_read_bytes(const CVirtualAddress* virtual_address, unsigned char* out_bytes, size_t num_bytes) nogil:
     
     with gil:
         raise NotImplementedError()
 
-cdef inline bint CVirtualAddress_write_bytes(CVirtualAddress* virtual_address, const unsigned char* write_bytes, size_t num_bytes) nogil:
+cdef inline bint CVirtualAddress_write_bytes(const CVirtualAddress* virtual_address, const unsigned char* write_bytes, size_t num_bytes) nogil:
 
     with gil:
         raise NotImplementedError()
