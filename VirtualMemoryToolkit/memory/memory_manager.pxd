@@ -35,8 +35,6 @@ cdef inline CMemoryRegionNode* CMemoryRegionNode_init() nogil:
 
     return memory_region
 
-
-
 cdef inline void CMemoryRegionNode_free(CMemoryRegionNode* node) nogil:
     """
     Frees the memory allocated for a CMemoryRegionNode structure.
@@ -46,7 +44,6 @@ cdef inline void CMemoryRegionNode_free(CMemoryRegionNode* node) nogil:
     """
     if node:
         free(node)
-
 
 cdef inline CMemoryManager* CMemoryManager_init(CAppHandle* app_handle) nogil:
     """
@@ -177,8 +174,6 @@ cdef inline bint CMemoryManager_virtual_free_address(CMemoryManager* memory_mana
         cur_node = cur_node[0].next
     return 1
 
-
-
 cdef inline bint CMemoryManager_virtual_free_all(CMemoryManager* memory_manager) nogil:
     """
     Frees all memory regions managed by the memory manager.
@@ -194,8 +189,6 @@ cdef inline bint CMemoryManager_virtual_free_all(CMemoryManager* memory_manager)
         if CMemoryManager_virtual_free(memory_manager, cur_node):
             return 1
         cur_node = next_node
-
-
 
 cdef inline bint CMemoryManager_free(CMemoryManager* memory_manager) nogil:
     """
