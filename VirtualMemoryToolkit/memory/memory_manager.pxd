@@ -21,9 +21,13 @@ cdef extern from "VirtualMemoryToolkit/memory/memory_manager.h":
         CMemoryRegionNode* memory_regions_tail
 
 
-cdef inline CMemoryRegionNode* CMemoryRegionNode_init() nogil:
+cdef inline CMemoryRegionNode* CMemoryRegionNode_init(void* address, size_t size) nogil:
     """
     Initializes a new CMemoryRegionNode structure.
+
+    Parameters:
+        address (void*): The starting address of the memory region.
+        size (size_t): The size of the memory region in bytes
 
     Returns:
         CMemoryRegionNode*: A pointer to the newly created CMemoryRegionNode structure.
@@ -32,6 +36,9 @@ cdef inline CMemoryRegionNode* CMemoryRegionNode_init() nogil:
     cdef CMemoryRegionNode* memory_region = <CMemoryRegionNode*>calloc(1, sizeof(CMemoryRegionNode))
     if not memory_region:
         return NULL  # Memory allocation failed
+
+    memory_region[0].address = address
+    memory_region[0].size = size
 
     return memory_region
 
@@ -81,12 +88,7 @@ cdef inline CVirtualAddress* CMemoryManager_virtual_alloc(CMemoryManager* memory
     if not memory_manager:
         return NULL
 
-    cdef CMemoryRegionNode* new_memory = CMemoryRegionNode_init()
-
-    if not new_memory:
-        return NULL
-
-    new_memory[0].address = VirtualAllocEx(
+    cdef void* memory_address = VirtualAllocEx(
         <HANDLE>memory_manager[0].app_handle[0].process_handle,
         <LPVOID>0,
         <SIZE_T>size,
@@ -94,11 +96,14 @@ cdef inline CVirtualAddress* CMemoryManager_virtual_alloc(CMemoryManager* memory
         PAGE_EXECUTE_READWRITE
     )
 
-    if not new_memory[0].address:
-        CMemoryRegionNode_free(new_memory)
-        return NULL  # Memory allocation failed
+    if not memory_address:
+        return NULL
 
-    new_memory[0].size = size
+    cdef CMemoryRegionNode* new_memory = CMemoryRegionNode_init(memory_address, size)
+
+    if not new_memory:
+        return NULL
+
     new_memory[0].prev = memory_manager[0].memory_regions_tail
 
     if memory_manager[0].memory_regions_tail:

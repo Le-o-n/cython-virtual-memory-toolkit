@@ -1,6 +1,6 @@
 from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
 from VirtualMemoryToolkit.memory.memory_structures cimport CModule, CModule_free, CModule_from_process
-from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_new, CProcess_free
+from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_init, CProcess_free
 
 
 from libc.string cimport strdup
@@ -27,7 +27,7 @@ cdef CAppHandle* get_handle():
 cpdef int main():
     cdef char* module_substring = "USER32"
     cdef CAppHandle* app_handle = get_handle()
-    cdef CProcess* process = CProcess_new(app_handle)
+    cdef CProcess* process = CProcess_init(app_handle)
     cdef CModule* module = CModule_from_process(process, <const char*>module_substring)
 
     if not module:

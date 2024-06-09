@@ -76,10 +76,15 @@ cdef extern from "VirtualMemoryToolkit/handles/handle.h":
         DWORD pid
         char* window_title
 
-cdef inline CAppHandle* CAppHandle_new() nogil:
+cdef inline CAppHandle* CAppHandle_init(void* process_handle, void* window_handle, unsigned int pid, char* window_title) nogil:
     """
     Creates a new CAppHandle instance with NULL fields.
 
+    Parameters:
+        process_handle (void*): handle to the process
+        window_handle (void*): handle to the window
+        pid (unsigned int): process id for the process
+        window_title (char*): window title string
     Returns:
         CAppHandle*: A pointer to the newly created CAppHandle instance.
         Returns NULL if memory allocation fails.
@@ -88,10 +93,10 @@ cdef inline CAppHandle* CAppHandle_new() nogil:
     if not app_handle:
         return NULL  # Memory allocation failed
 
-    app_handle[0].process_handle = NULL
-    app_handle[0].window_handle = NULL
-    app_handle[0].pid = 0
-    app_handle[0].window_title = NULL
+    app_handle[0].process_handle = process_handle
+    app_handle[0].window_handle = window_handle
+    app_handle[0].pid = pid
+    app_handle[0].window_title = window_title
 
     return app_handle
 

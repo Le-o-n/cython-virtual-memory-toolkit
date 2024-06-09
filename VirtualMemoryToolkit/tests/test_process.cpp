@@ -10,9 +10,6 @@
             "VirtualMemoryToolkit\\windows\\windows_types.h"
         ],
         "include_dirs": [
-            ".\\VirtualMemoryToolkit\\handles",
-            ".\\VirtualMemoryToolkit\\windows",
-            ".\\VirtualMemoryToolkit\\process",
             "C:\\Users\\LeonBass\\Documents\\visual_studio_code\\cython-virtual-memory-toolkit\\VirtualMemoryToolkit"
         ],
         "language": "c++",
@@ -1233,12 +1230,12 @@ static CYTHON_INLINE float __PYX_NAN() {
 #include "typeinfo"
 #include <vector>
 #include "Windows.h"
-#include "windows_types.h"
+#include "VirtualMemoryToolkit/windows/windows_types.h"
 #include "tlhelp32.h"
 #include "psapi.h"
-#include "windows_defs.h"
-#include "handle.h"
-#include "process.h"
+#include "VirtualMemoryToolkit/windows/windows_defs.h"
+#include "VirtualMemoryToolkit/handles/handle.h"
+#include "VirtualMemoryToolkit/process/process.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -2105,7 +2102,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
 static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHandle_free(CAppHandle *); /*proto*/
 
 /* Module declarations from "VirtualMemoryToolkit.process.process" */
-static CYTHON_INLINE CProcess *__pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_new(CAppHandle *); /*proto*/
+static CYTHON_INLINE CProcess *__pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_init(CAppHandle *); /*proto*/
 static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_free(CProcess *); /*proto*/
 
 /* Module declarations from "VirtualMemoryToolkit.tests.test_process" */
@@ -4190,12 +4187,12 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
 /* "VirtualMemoryToolkit/process/process.pxd":23
  * 
  * 
- * cdef inline CProcess* CProcess_new(CAppHandle* app_handle) nogil:             # <<<<<<<<<<<<<<
+ * cdef inline CProcess* CProcess_init(CAppHandle* app_handle) nogil:             # <<<<<<<<<<<<<<
  *     """
  *     Creates a new CProcess instance and populates its fields.
  */
 
-static CYTHON_INLINE CProcess *__pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_new(CAppHandle *__pyx_v_app_handle) {
+static CYTHON_INLINE CProcess *__pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_init(CAppHandle *__pyx_v_app_handle) {
   CProcess *__pyx_v_process;
   HANDLE __pyx_v_snapshot32;
   CProcess *__pyx_r;
@@ -4475,7 +4472,7 @@ static CYTHON_INLINE CProcess *__pyx_f_20VirtualMemoryToolkit_7process_7process_
   /* "VirtualMemoryToolkit/process/process.pxd":23
  * 
  * 
- * cdef inline CProcess* CProcess_new(CAppHandle* app_handle) nogil:             # <<<<<<<<<<<<<<
+ * cdef inline CProcess* CProcess_init(CAppHandle* app_handle) nogil:             # <<<<<<<<<<<<<<
  *     """
  *     Creates a new CProcess instance and populates its fields.
  */
@@ -4485,7 +4482,7 @@ static CYTHON_INLINE CProcess *__pyx_f_20VirtualMemoryToolkit_7process_7process_
   #ifdef WITH_THREAD
   __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
   #endif
-  __Pyx_AddTraceback("VirtualMemoryToolkit.process.process.CProcess_new", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("VirtualMemoryToolkit.process.process.CProcess_init", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   #ifdef WITH_THREAD
   __Pyx_PyGILState_Release(__pyx_gilstate_save);
@@ -4804,11 +4801,11 @@ static CProcess *__pyx_f_20VirtualMemoryToolkit_5tests_12test_process_create_not
   /* "VirtualMemoryToolkit/tests/test_process.pyx":41
  *         NULL otherwise
  *     """
- *     return CProcess_new(notepad_apphandle)             # <<<<<<<<<<<<<<
+ *     return CProcess_init(notepad_apphandle)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_1 = __pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_new(__pyx_v_notepad_apphandle); if (unlikely(__pyx_t_1 == ((CProcess *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_init(__pyx_v_notepad_apphandle); if (unlikely(__pyx_t_1 == ((CProcess *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 41, __pyx_L1_error)
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
@@ -5895,7 +5892,7 @@ if (!__Pyx_RefNanny) {
 
   /* "VirtualMemoryToolkit/tests/test_process.pyx":1
  * from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free             # <<<<<<<<<<<<<<
- * from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_new, CProcess_free
+ * from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_init, CProcess_free
  * 
  */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)

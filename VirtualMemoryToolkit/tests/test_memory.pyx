@@ -1,6 +1,6 @@
 from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
 from VirtualMemoryToolkit.memory.memory_manager cimport CMemoryManager, CMemoryRegionNode, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_free, CMemoryManager_virtual_free_all
-from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_new, CProcess_free
+from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_init, CProcess_free
 from VirtualMemoryToolkit.memory.memory_structures cimport CModule, CModule_from_process, CModule_free
 from VirtualMemoryToolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_free, CVirtualAddress_from_static, CVirtualAddress_init, CVirtualAddress_read_int1,CVirtualAddress_write_int1 
 
@@ -43,21 +43,21 @@ cdef CMemoryManager* create_notepad_memory_manager(CAppHandle* notepad_apphandle
     return CMemoryManager_init(notepad_apphandle)
     
 cdef int allocate_memory_region(CMemoryManager* memory_manager):
-    cdef CMemoryRegionNode* virtual_memory_region = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
+    cdef CVirtualAddress* virtual_memory_region = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
     if not virtual_memory_region:
         return 1
     return 0
 
 cdef int allocate_memory_regions(CMemoryManager* memory_manager):
-    cdef CMemoryRegionNode* virtual_memory_region = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
-    cdef CMemoryRegionNode* virtual_memory_region2 = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
+    cdef CVirtualAddress* virtual_memory_region = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
+    cdef CVirtualAddress* virtual_memory_region2 = CMemoryManager_virtual_alloc(memory_manager, <size_t>8)
 
     return not virtual_memory_region or not virtual_memory_region2
 
 cdef int extract_modules(CAppHandle* app_handle) nogil:
     cdef const char* module_substring = "notepad" # notepad.exe
     cdef CModule* module = <CModule*>0
-    cdef CProcess* process = CProcess_new(app_handle)
+    cdef CProcess* process = CProcess_init(app_handle)
 
     if not process:
         return 1
@@ -74,7 +74,7 @@ cdef int extract_modules(CAppHandle* app_handle) nogil:
 cdef int addressing_read_write(CAppHandle* app_handle) nogil:
     cdef const char* module_substring = "KERNEL32" # KERNEL32.dll
     cdef CModule* module = <CModule*>0
-    cdef CProcess* process = CProcess_new(app_handle)
+    cdef CProcess* process = CProcess_init(app_handle)
     cdef unsigned long long address = 0
     cdef CVirtualAddress* virtual_address
     cdef unsigned char read_byte = 0

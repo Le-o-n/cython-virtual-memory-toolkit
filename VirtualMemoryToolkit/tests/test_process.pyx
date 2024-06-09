@@ -1,5 +1,5 @@
 from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
-from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_new, CProcess_free
+from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_init, CProcess_free
 
 
 import subprocess
@@ -38,7 +38,7 @@ cdef CProcess* create_notepad_cprocess(CAppHandle* notepad_apphandle):
         CProcess* if successful.
         NULL otherwise
     """
-    return CProcess_new(notepad_apphandle)
+    return CProcess_init(notepad_apphandle)
     
 
 cpdef int run():
