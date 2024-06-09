@@ -36,7 +36,7 @@ cdef extern from "Windows.h":
 
     HANDLE OpenProcess(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessId) nogil
     HWND FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName) nogil
-    int GetWindowThreadProcessId(HWND hWnd, DWORD* lpdwProcessId) nogil
+    int GetWindowThreadProcessId(HWND hWnd, PDWORD lpdwProcessId) nogil
     int CloseHandle(HANDLE handle) nogil
     BOOL ReadProcessMemory(HANDLE hProcess, LPCVOID lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, SIZE_T* out_lpNumberOfBytesRead) nogil
     BOOL WriteProcessMemory(HANDLE  hProcess, LPVOID lpBaseAddress, LPCVOID lpBuffer, SIZE_T nSize, SIZE_T *lpNumberOfBytesWritten) nogil
