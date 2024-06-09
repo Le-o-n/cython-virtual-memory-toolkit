@@ -236,10 +236,31 @@ cdef inline bint CVirtualAddress_read_float32(const CVirtualAddress* virtual_add
         sizeof(float)  # 32-bit float
     )
     
-    if bytes_read != sizeof(float):
-        return 1  # Failed to read the expected number of bytes
+    return bytes_read != sizeof(float)
 
-    return 0  # Success
+cdef inline bint CVirtualAddress_read_float32_offset(const CVirtualAddress* virtual_address, float* out_float, long long offset) nogil:
+    """
+    Reads a 32-bit float from the given virtual address + offset and stores it in out_float.
+
+    Parameters:
+        virtual_address (const CVirtualAddress*): The virtual base address.
+        out_float (float*): Pointer to store the read 32-bit float value.
+        offset (long long): offset from base address to read from
+    Returns:
+        bint: 0 on success, 1 on failure.
+    """
+    
+    cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset
+
+    # Attempt to read a 32-bit float from the specified virtual address
+    cdef SIZE_T bytes_read = PrivilagedMemoryRead(
+        virtual_address[0].app_handle[0].process_handle,
+        <LPCVOID>address,
+        <LPVOID>out_float,
+        sizeof(float)  # 32-bit float
+    )
+    
+    return bytes_read != sizeof(float)
 
 cdef inline bint CVirtualAddress_write_float32(const CVirtualAddress* virtual_address, const float write_float32) nogil:
     """
@@ -259,6 +280,28 @@ cdef inline bint CVirtualAddress_write_float32(const CVirtualAddress* virtual_ad
         sizeof(float)
     )
     return 0 if bytes_written == sizeof(float) else 1
+
+cdef inline bint CVirtualAddress_write_float32_offset(const CVirtualAddress* virtual_address, const float write_float32, long long offset) nogil:
+    """
+    Writes a 32-bit float value to the virtual address + offset.
+
+    Parameters:
+        virtual_address (CVirtualAddress*): The virtual base address.
+        write_float32 (float): The 32-bit float value to write.
+        offset (long long): Offset from the base address to write to.
+
+    Returns:
+        BYTE: 0 if the write operation is successful, 1 if it fails.
+    """
+    cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset
+
+    cdef SIZE_T bytes_written = PrivilagedMemoryWrite(
+        virtual_address[0].app_handle[0].process_handle,
+        <LPCVOID>address,
+        <LPCVOID>&write_float32,
+        4
+    )
+    return bytes_written != 4
 
 cdef inline bint CVirtualAddress_read_float64(const CVirtualAddress* virtual_address, double* out_double) nogil:
     """
