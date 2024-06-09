@@ -93,9 +93,9 @@ cdef inline CAppHandle* CAppHandle_init(void* process_handle, void* window_handl
     if not app_handle:
         return NULL  # Memory allocation failed
 
-    app_handle[0].process_handle = process_handle
-    app_handle[0].window_handle = window_handle
-    app_handle[0].pid = pid
+    app_handle[0].process_handle = <HANDLE>process_handle
+    app_handle[0].window_handle = <HWND>window_handle
+    app_handle[0].pid = <DWORD>pid
     app_handle[0].window_title = window_title
 
     return app_handle

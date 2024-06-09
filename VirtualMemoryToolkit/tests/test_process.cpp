@@ -4,12 +4,13 @@
 {
     "distutils": {
         "depends": [
-            "VirtualMemoryToolkit\\handles\\handle.h",
-            "VirtualMemoryToolkit\\process\\process.h",
-            "VirtualMemoryToolkit\\windows\\windows_defs.h",
-            "VirtualMemoryToolkit\\windows\\windows_types.h"
+            "C:\\Users\\LeonBass\\Documents\\visual_studio_code\\cython-virtual-memory-toolkit\\VirtualMemoryToolkit\\handles\\handle.h",
+            "C:\\Users\\LeonBass\\Documents\\visual_studio_code\\cython-virtual-memory-toolkit\\VirtualMemoryToolkit\\process\\process.h",
+            "C:\\Users\\LeonBass\\Documents\\visual_studio_code\\cython-virtual-memory-toolkit\\VirtualMemoryToolkit\\windows\\windows_defs.h",
+            "C:\\Users\\LeonBass\\Documents\\visual_studio_code\\cython-virtual-memory-toolkit\\VirtualMemoryToolkit\\windows\\windows_types.h"
         ],
         "include_dirs": [
+            "C:\\Users\\LeonBass\\Documents\\visual_studio_code\\cython-virtual-memory-toolkit",
             "C:\\Users\\LeonBass\\Documents\\visual_studio_code\\cython-virtual-memory-toolkit\\VirtualMemoryToolkit"
         ],
         "language": "c++",
@@ -3699,17 +3700,17 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_20VirtualMemoryToolkit_7windows
 /* "VirtualMemoryToolkit/handles/handle.pxd":79
  *         char* window_title
  * 
- * cdef inline CAppHandle* CAppHandle_new() nogil:             # <<<<<<<<<<<<<<
+ * cdef inline CAppHandle* CAppHandle_init(void* process_handle, void* window_handle, unsigned int pid, char* window_title) nogil:             # <<<<<<<<<<<<<<
  *     """
  *     Creates a new CAppHandle instance with NULL fields.
  */
 
-static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHandle_new(void) {
+static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHandle_init(void *__pyx_v_process_handle, void *__pyx_v_window_handle, unsigned int __pyx_v_pid, char *__pyx_v_window_title) {
   CAppHandle *__pyx_v_app_handle;
   CAppHandle *__pyx_r;
   int __pyx_t_1;
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":87
+  /* "VirtualMemoryToolkit/handles/handle.pxd":92
  *         Returns NULL if memory allocation fails.
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))             # <<<<<<<<<<<<<<
@@ -3718,7 +3719,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   __pyx_v_app_handle = ((CAppHandle *)malloc((sizeof(CAppHandle))));
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":88
+  /* "VirtualMemoryToolkit/handles/handle.pxd":93
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -3728,17 +3729,17 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_1 = (!(__pyx_v_app_handle != 0));
   if (__pyx_t_1) {
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":89
+    /* "VirtualMemoryToolkit/handles/handle.pxd":94
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:
  *         return NULL  # Memory allocation failed             # <<<<<<<<<<<<<<
  * 
- *     app_handle[0].process_handle = NULL
+ *     app_handle[0].process_handle = <HANDLE>process_handle
  */
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":88
+    /* "VirtualMemoryToolkit/handles/handle.pxd":93
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -3747,44 +3748,44 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   }
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":91
+  /* "VirtualMemoryToolkit/handles/handle.pxd":96
  *         return NULL  # Memory allocation failed
  * 
- *     app_handle[0].process_handle = NULL             # <<<<<<<<<<<<<<
- *     app_handle[0].window_handle = NULL
- *     app_handle[0].pid = 0
+ *     app_handle[0].process_handle = <HANDLE>process_handle             # <<<<<<<<<<<<<<
+ *     app_handle[0].window_handle = <HWND>window_handle
+ *     app_handle[0].pid = <DWORD>pid
  */
-  (__pyx_v_app_handle[0]).process_handle = NULL;
+  (__pyx_v_app_handle[0]).process_handle = ((HANDLE)__pyx_v_process_handle);
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":92
+  /* "VirtualMemoryToolkit/handles/handle.pxd":97
  * 
- *     app_handle[0].process_handle = NULL
- *     app_handle[0].window_handle = NULL             # <<<<<<<<<<<<<<
- *     app_handle[0].pid = 0
- *     app_handle[0].window_title = NULL
+ *     app_handle[0].process_handle = <HANDLE>process_handle
+ *     app_handle[0].window_handle = <HWND>window_handle             # <<<<<<<<<<<<<<
+ *     app_handle[0].pid = <DWORD>pid
+ *     app_handle[0].window_title = window_title
  */
-  (__pyx_v_app_handle[0]).window_handle = NULL;
+  (__pyx_v_app_handle[0]).window_handle = ((HWND)__pyx_v_window_handle);
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":93
- *     app_handle[0].process_handle = NULL
- *     app_handle[0].window_handle = NULL
- *     app_handle[0].pid = 0             # <<<<<<<<<<<<<<
- *     app_handle[0].window_title = NULL
+  /* "VirtualMemoryToolkit/handles/handle.pxd":98
+ *     app_handle[0].process_handle = <HANDLE>process_handle
+ *     app_handle[0].window_handle = <HWND>window_handle
+ *     app_handle[0].pid = <DWORD>pid             # <<<<<<<<<<<<<<
+ *     app_handle[0].window_title = window_title
  * 
  */
-  (__pyx_v_app_handle[0]).pid = 0;
+  (__pyx_v_app_handle[0]).pid = ((DWORD)__pyx_v_pid);
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":94
- *     app_handle[0].window_handle = NULL
- *     app_handle[0].pid = 0
- *     app_handle[0].window_title = NULL             # <<<<<<<<<<<<<<
+  /* "VirtualMemoryToolkit/handles/handle.pxd":99
+ *     app_handle[0].window_handle = <HWND>window_handle
+ *     app_handle[0].pid = <DWORD>pid
+ *     app_handle[0].window_title = window_title             # <<<<<<<<<<<<<<
  * 
  *     return app_handle
  */
-  (__pyx_v_app_handle[0]).window_title = NULL;
+  (__pyx_v_app_handle[0]).window_title = __pyx_v_window_title;
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":96
- *     app_handle[0].window_title = NULL
+  /* "VirtualMemoryToolkit/handles/handle.pxd":101
+ *     app_handle[0].window_title = window_title
  * 
  *     return app_handle             # <<<<<<<<<<<<<<
  * 
@@ -3796,7 +3797,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   /* "VirtualMemoryToolkit/handles/handle.pxd":79
  *         char* window_title
  * 
- * cdef inline CAppHandle* CAppHandle_new() nogil:             # <<<<<<<<<<<<<<
+ * cdef inline CAppHandle* CAppHandle_init(void* process_handle, void* window_handle, unsigned int pid, char* window_title) nogil:             # <<<<<<<<<<<<<<
  *     """
  *     Creates a new CAppHandle instance with NULL fields.
  */
@@ -3806,7 +3807,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   return __pyx_r;
 }
 
-/* "VirtualMemoryToolkit/handles/handle.pxd":100
+/* "VirtualMemoryToolkit/handles/handle.pxd":105
  * 
  * 
  * cdef inline CAppHandle* CAppHandle_from_title_substring(const char* title_sub_string) nogil:             # <<<<<<<<<<<<<<
@@ -3831,7 +3832,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   PyGILState_STATE __pyx_gilstate_save;
   #endif
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":111
+  /* "VirtualMemoryToolkit/handles/handle.pxd":116
  *         Returns NULL if any operation fails.
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))             # <<<<<<<<<<<<<<
@@ -3840,7 +3841,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   __pyx_v_app_handle = ((CAppHandle *)malloc((sizeof(CAppHandle))));
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":112
+  /* "VirtualMemoryToolkit/handles/handle.pxd":117
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -3850,7 +3851,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_1 = (!(__pyx_v_app_handle != 0));
   if (__pyx_t_1) {
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":113
+    /* "VirtualMemoryToolkit/handles/handle.pxd":118
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:
  *         return NULL  # Memory allocation failed             # <<<<<<<<<<<<<<
@@ -3860,7 +3861,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":112
+    /* "VirtualMemoryToolkit/handles/handle.pxd":117
  *     """
  *     cdef CAppHandle* app_handle = <CAppHandle*>malloc(sizeof(CAppHandle))
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -3869,17 +3870,17 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   }
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":115
+  /* "VirtualMemoryToolkit/handles/handle.pxd":120
  *         return NULL  # Memory allocation failed
  * 
  *     cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowTitleSubstring(title_sub_string)             # <<<<<<<<<<<<<<
  *     if not window_data.out_window_handle or not window_data.out_all_access_process_handle:
  *         free(app_handle)
  */
-  __pyx_t_2 = __pyx_f_20VirtualMemoryToolkit_7windows_12windows_defs_FindProcessFromWindowTitleSubstring(__pyx_v_title_sub_string); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(2, 115, __pyx_L1_error)
+  __pyx_t_2 = __pyx_f_20VirtualMemoryToolkit_7windows_12windows_defs_FindProcessFromWindowTitleSubstring(__pyx_v_title_sub_string); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(2, 120, __pyx_L1_error)
   __pyx_v_window_data = __pyx_t_2;
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":116
+  /* "VirtualMemoryToolkit/handles/handle.pxd":121
  * 
  *     cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowTitleSubstring(title_sub_string)
  *     if not window_data.out_window_handle or not window_data.out_all_access_process_handle:             # <<<<<<<<<<<<<<
@@ -3897,7 +3898,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_L5_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":117
+    /* "VirtualMemoryToolkit/handles/handle.pxd":122
  *     cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowTitleSubstring(title_sub_string)
  *     if not window_data.out_window_handle or not window_data.out_all_access_process_handle:
  *         free(app_handle)             # <<<<<<<<<<<<<<
@@ -3906,7 +3907,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
     free(__pyx_v_app_handle);
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":118
+    /* "VirtualMemoryToolkit/handles/handle.pxd":123
  *     if not window_data.out_window_handle or not window_data.out_all_access_process_handle:
  *         free(app_handle)
  *         return NULL  # Failed to find process from window title substring             # <<<<<<<<<<<<<<
@@ -3916,7 +3917,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":116
+    /* "VirtualMemoryToolkit/handles/handle.pxd":121
  * 
  *     cdef FIND_PROCESS_LPARAM window_data = FindProcessFromWindowTitleSubstring(title_sub_string)
  *     if not window_data.out_window_handle or not window_data.out_all_access_process_handle:             # <<<<<<<<<<<<<<
@@ -3925,7 +3926,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   }
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":120
+  /* "VirtualMemoryToolkit/handles/handle.pxd":125
  *         return NULL  # Failed to find process from window title substring
  * 
  *     app_handle[0].window_handle = window_data.out_window_handle             # <<<<<<<<<<<<<<
@@ -3935,7 +3936,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_4 = __pyx_v_window_data.out_window_handle;
   (__pyx_v_app_handle[0]).window_handle = __pyx_t_4;
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":121
+  /* "VirtualMemoryToolkit/handles/handle.pxd":126
  * 
  *     app_handle[0].window_handle = window_data.out_window_handle
  *     app_handle[0].process_handle = window_data.out_all_access_process_handle             # <<<<<<<<<<<<<<
@@ -3945,7 +3946,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_5 = __pyx_v_window_data.out_all_access_process_handle;
   (__pyx_v_app_handle[0]).process_handle = __pyx_t_5;
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":122
+  /* "VirtualMemoryToolkit/handles/handle.pxd":127
  *     app_handle[0].window_handle = window_data.out_window_handle
  *     app_handle[0].process_handle = window_data.out_all_access_process_handle
  *     app_handle[0].pid = window_data.out_pid             # <<<<<<<<<<<<<<
@@ -3955,7 +3956,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_6 = __pyx_v_window_data.out_pid;
   (__pyx_v_app_handle[0]).pid = __pyx_t_6;
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":124
+  /* "VirtualMemoryToolkit/handles/handle.pxd":129
  *     app_handle[0].pid = window_data.out_pid
  * 
  *     app_handle[0].window_title = <char*>malloc((strlen(window_data.out_full_window_name) + 1) * sizeof(char))             # <<<<<<<<<<<<<<
@@ -3964,7 +3965,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   (__pyx_v_app_handle[0]).window_title = ((char *)malloc(((strlen(__pyx_v_window_data.out_full_window_name) + 1) * (sizeof(char)))));
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":125
+  /* "VirtualMemoryToolkit/handles/handle.pxd":130
  * 
  *     app_handle[0].window_title = <char*>malloc((strlen(window_data.out_full_window_name) + 1) * sizeof(char))
  *     if not app_handle[0].window_title:             # <<<<<<<<<<<<<<
@@ -3974,7 +3975,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_t_1 = (!((__pyx_v_app_handle[0]).window_title != 0));
   if (__pyx_t_1) {
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":126
+    /* "VirtualMemoryToolkit/handles/handle.pxd":131
  *     app_handle[0].window_title = <char*>malloc((strlen(window_data.out_full_window_name) + 1) * sizeof(char))
  *     if not app_handle[0].window_title:
  *         free(app_handle)             # <<<<<<<<<<<<<<
@@ -3983,7 +3984,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
     free(__pyx_v_app_handle);
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":127
+    /* "VirtualMemoryToolkit/handles/handle.pxd":132
  *     if not app_handle[0].window_title:
  *         free(app_handle)
  *         return NULL  # Memory allocation failed             # <<<<<<<<<<<<<<
@@ -3993,7 +3994,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":125
+    /* "VirtualMemoryToolkit/handles/handle.pxd":130
  * 
  *     app_handle[0].window_title = <char*>malloc((strlen(window_data.out_full_window_name) + 1) * sizeof(char))
  *     if not app_handle[0].window_title:             # <<<<<<<<<<<<<<
@@ -4002,7 +4003,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   }
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":129
+  /* "VirtualMemoryToolkit/handles/handle.pxd":134
  *         return NULL  # Memory allocation failed
  * 
  *     strcpy(app_handle[0].window_title, window_data.out_full_window_name)             # <<<<<<<<<<<<<<
@@ -4011,7 +4012,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
  */
   (void)(strcpy((__pyx_v_app_handle[0]).window_title, __pyx_v_window_data.out_full_window_name));
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":131
+  /* "VirtualMemoryToolkit/handles/handle.pxd":136
  *     strcpy(app_handle[0].window_title, window_data.out_full_window_name)
  * 
  *     return app_handle             # <<<<<<<<<<<<<<
@@ -4021,7 +4022,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   __pyx_r = __pyx_v_app_handle;
   goto __pyx_L0;
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":100
+  /* "VirtualMemoryToolkit/handles/handle.pxd":105
  * 
  * 
  * cdef inline CAppHandle* CAppHandle_from_title_substring(const char* title_sub_string) nogil:             # <<<<<<<<<<<<<<
@@ -4043,7 +4044,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
   return __pyx_r;
 }
 
-/* "VirtualMemoryToolkit/handles/handle.pxd":135
+/* "VirtualMemoryToolkit/handles/handle.pxd":140
  * 
  * 
  * cdef inline void CAppHandle_free(CAppHandle* app_handle) nogil:             # <<<<<<<<<<<<<<
@@ -4054,7 +4055,7 @@ static CYTHON_INLINE CAppHandle *__pyx_f_20VirtualMemoryToolkit_7handles_6handle
 static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHandle_free(CAppHandle *__pyx_v_app_handle) {
   int __pyx_t_1;
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":142
+  /* "VirtualMemoryToolkit/handles/handle.pxd":147
  *         app_handle (CAppHandle*): The CAppHandle instance to be freed.
  *     """
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -4064,7 +4065,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
   __pyx_t_1 = (!(__pyx_v_app_handle != 0));
   if (__pyx_t_1) {
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":143
+    /* "VirtualMemoryToolkit/handles/handle.pxd":148
  *     """
  *     if not app_handle:
  *         return             # <<<<<<<<<<<<<<
@@ -4073,7 +4074,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
     goto __pyx_L0;
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":142
+    /* "VirtualMemoryToolkit/handles/handle.pxd":147
  *         app_handle (CAppHandle*): The CAppHandle instance to be freed.
  *     """
  *     if not app_handle:             # <<<<<<<<<<<<<<
@@ -4082,7 +4083,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
   }
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":145
+  /* "VirtualMemoryToolkit/handles/handle.pxd":150
  *         return
  * 
  *     if app_handle[0].window_handle:             # <<<<<<<<<<<<<<
@@ -4092,7 +4093,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
   __pyx_t_1 = ((__pyx_v_app_handle[0]).window_handle != 0);
   if (__pyx_t_1) {
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":146
+    /* "VirtualMemoryToolkit/handles/handle.pxd":151
  * 
  *     if app_handle[0].window_handle:
  *         CloseHandle(app_handle[0].window_handle)             # <<<<<<<<<<<<<<
@@ -4101,7 +4102,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
     (void)(CloseHandle((__pyx_v_app_handle[0]).window_handle));
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":145
+    /* "VirtualMemoryToolkit/handles/handle.pxd":150
  *         return
  * 
  *     if app_handle[0].window_handle:             # <<<<<<<<<<<<<<
@@ -4110,7 +4111,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
   }
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":148
+  /* "VirtualMemoryToolkit/handles/handle.pxd":153
  *         CloseHandle(app_handle[0].window_handle)
  * 
  *     if app_handle[0].process_handle:             # <<<<<<<<<<<<<<
@@ -4120,7 +4121,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
   __pyx_t_1 = ((__pyx_v_app_handle[0]).process_handle != 0);
   if (__pyx_t_1) {
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":149
+    /* "VirtualMemoryToolkit/handles/handle.pxd":154
  * 
  *     if app_handle[0].process_handle:
  *         CloseHandle(app_handle[0].process_handle)             # <<<<<<<<<<<<<<
@@ -4129,7 +4130,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
     (void)(CloseHandle((__pyx_v_app_handle[0]).process_handle));
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":148
+    /* "VirtualMemoryToolkit/handles/handle.pxd":153
  *         CloseHandle(app_handle[0].window_handle)
  * 
  *     if app_handle[0].process_handle:             # <<<<<<<<<<<<<<
@@ -4138,7 +4139,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
   }
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":151
+  /* "VirtualMemoryToolkit/handles/handle.pxd":156
  *         CloseHandle(app_handle[0].process_handle)
  * 
  *     if app_handle[0].window_title:             # <<<<<<<<<<<<<<
@@ -4148,7 +4149,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
   __pyx_t_1 = ((__pyx_v_app_handle[0]).window_title != 0);
   if (__pyx_t_1) {
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":152
+    /* "VirtualMemoryToolkit/handles/handle.pxd":157
  * 
  *     if app_handle[0].window_title:
  *         free(app_handle[0].window_title)             # <<<<<<<<<<<<<<
@@ -4156,7 +4157,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
     free((__pyx_v_app_handle[0]).window_title);
 
-    /* "VirtualMemoryToolkit/handles/handle.pxd":151
+    /* "VirtualMemoryToolkit/handles/handle.pxd":156
  *         CloseHandle(app_handle[0].process_handle)
  * 
  *     if app_handle[0].window_title:             # <<<<<<<<<<<<<<
@@ -4165,14 +4166,14 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHa
  */
   }
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":153
+  /* "VirtualMemoryToolkit/handles/handle.pxd":158
  *     if app_handle[0].window_title:
  *         free(app_handle[0].window_title)
  *     free(app_handle)             # <<<<<<<<<<<<<<
  */
   free(__pyx_v_app_handle);
 
-  /* "VirtualMemoryToolkit/handles/handle.pxd":135
+  /* "VirtualMemoryToolkit/handles/handle.pxd":140
  * 
  * 
  * cdef inline void CAppHandle_free(CAppHandle* app_handle) nogil:             # <<<<<<<<<<<<<<

@@ -2,7 +2,7 @@ from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_tit
 from VirtualMemoryToolkit.memory.memory_manager cimport CMemoryManager, CMemoryRegionNode, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_free, CMemoryManager_virtual_free_all
 from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_init, CProcess_free
 from VirtualMemoryToolkit.memory.memory_structures cimport CModule, CModule_from_process, CModule_free
-from VirtualMemoryToolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_free, CVirtualAddress_from_static, CVirtualAddress_init, CVirtualAddress_read_int1,CVirtualAddress_write_int1 
+from VirtualMemoryToolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_free, CVirtualAddress_from_static, CVirtualAddress_init, CVirtualAddress_read_int8,CVirtualAddress_write_int8 
 
 import subprocess
 import time
@@ -97,19 +97,19 @@ cdef int addressing_read_write(CAppHandle* app_handle) nogil:
         CModule_free(module)
         return 1
 
-    if CVirtualAddress_read_int1(virtual_address, &read_byte):
+    if CVirtualAddress_read_int8(virtual_address, &read_byte):
         CProcess_free(process)
         CModule_free(module)
         CVirtualAddress_free(virtual_address)
         return 1
 
-    if CVirtualAddress_write_int1(virtual_address, <const unsigned char>write_byte):
+    if CVirtualAddress_write_int8(virtual_address, <const unsigned char>write_byte):
         CProcess_free(process)
         CModule_free(module)
         CVirtualAddress_free(virtual_address)
         return 1
     
-    if CVirtualAddress_read_int1(virtual_address, &read_byte):
+    if CVirtualAddress_read_int8(virtual_address, &read_byte):
         CProcess_free(process)
         CModule_free(module)
         CVirtualAddress_free(virtual_address)
