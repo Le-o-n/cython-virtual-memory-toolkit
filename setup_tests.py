@@ -12,6 +12,7 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 virtual_memory_toolkit_dir = os.path.join(base_dir, "VirtualMemoryToolkit")
 
 include_dirs = [
+    base_dir,
     virtual_memory_toolkit_dir,
 ]
 

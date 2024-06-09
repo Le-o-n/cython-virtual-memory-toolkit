@@ -9,8 +9,6 @@
             "VirtualMemoryToolkit\\windows\\windows_types.h"
         ],
         "include_dirs": [
-            ".\\VirtualMemoryToolkit\\handles",
-            ".\\VirtualMemoryToolkit\\windows",
             "C:\\Users\\LeonBass\\Documents\\visual_studio_code\\cython-virtual-memory-toolkit\\VirtualMemoryToolkit"
         ],
         "language": "c++",
@@ -1231,11 +1229,11 @@ static CYTHON_INLINE float __PYX_NAN() {
 #include "typeinfo"
 #include <vector>
 #include "Windows.h"
-#include "windows_types.h"
+#include "VirtualMemoryToolkit/windows/windows_types.h"
 #include "tlhelp32.h"
 #include "psapi.h"
-#include "windows_defs.h"
-#include "handle.h"
+#include "VirtualMemoryToolkit/windows/windows_defs.h"
+#include "VirtualMemoryToolkit/handles/handle.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
