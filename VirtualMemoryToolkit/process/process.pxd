@@ -20,7 +20,7 @@ cdef extern from "VirtualMemoryToolkit/process/process.h":
         char* image_filename
     
 
-cdef inline CProcess* CProcess_new(CAppHandle* app_handle) nogil:
+cdef inline CProcess* CProcess_init(CAppHandle* app_handle) nogil:
     """
     Creates a new CProcess instance and populates its fields.
 
