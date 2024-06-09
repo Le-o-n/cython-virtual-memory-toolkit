@@ -205,6 +205,18 @@ cdef inline CVirtualAddress* CVirtualAddress_from_static(CAppHandle* app_handle,
 
     return v_address
 
+cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset):
+    """
+    Changes the CVirtualAddress address by an offset.
+
+    Parameters:
+        virtual_address (CVirtualAddress*): Address that will be changed by offset.
+        offset (long long): Offset to be added to the address.
+    
+    """
+    virtual_address[0].address = virtual_address[0].address + offset
+    return
+
 cdef inline bint CVirtualAddress_read_float32(const CVirtualAddress* virtual_address, float* out_float) nogil:
     """
     Reads a 32-bit float from the given virtual address and stores it in out_float.
