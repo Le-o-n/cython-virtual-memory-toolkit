@@ -205,7 +205,7 @@ cdef inline CVirtualAddress* CVirtualAddress_from_static(CAppHandle* app_handle,
 
     return v_address
 
-cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset):
+cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset) nogil:
     """
     Changes the CVirtualAddress address by an offset.
 

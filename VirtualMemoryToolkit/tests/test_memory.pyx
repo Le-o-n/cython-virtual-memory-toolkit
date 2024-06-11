@@ -3,7 +3,7 @@ from VirtualMemoryToolkit.memory.memory_manager cimport CMemoryManager, CMemoryR
 from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_init, CProcess_free
 from VirtualMemoryToolkit.memory.memory_structures cimport CModule, CModule_from_process, CModule_free
 from VirtualMemoryToolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_free, CVirtualAddress_from_static, CVirtualAddress_init, CVirtualAddress_read_int8,CVirtualAddress_write_int8 
-from VirtualMemoryToolkit.memory.memory_structures cimport CVirtualAddress_read_int32,CVirtualAddress_read_int32_offset, CVirtualAddress_write_int32, CVirtualAddress_write_int32_offset 
+from VirtualMemoryToolkit.memory.memory_structures cimport CVirtualAddress_read_int32 ,CVirtualAddress_read_int32_offset, CVirtualAddress_write_int32, CVirtualAddress_write_int32_offset, CVirtualAddress_offset
 
 
 import subprocess
@@ -147,8 +147,18 @@ cdef int addressing_read_write_offset(CAppHandle* app_handle) nogil:
         CVirtualAddress_free(my_virtual_array)
         CProcess_free(process)
         return 1
+    
+    CVirtualAddress_offset(my_virtual_array, <long long>2*sizeof(int))
+    
+    if CVirtualAddress_read_int32(my_virtual_array, &read_int):
+        CVirtualAddress_free(my_virtual_array)
+        CProcess_free(process)
+        return 1
 
-
+    if read_int != 100:
+        CVirtualAddress_free(my_virtual_array)
+        CProcess_free(process)
+        return 1
 
     CVirtualAddress_free(my_virtual_array)
     CProcess_free(process)

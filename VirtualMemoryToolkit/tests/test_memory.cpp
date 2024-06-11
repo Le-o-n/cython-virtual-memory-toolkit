@@ -2123,6 +2123,7 @@ static CYTHON_INLINE CModule *__pyx_f_20VirtualMemoryToolkit_6memory_17memory_st
 static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CModule_free(CModule *); /*proto*/
 static CYTHON_INLINE CVirtualAddress *__pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_init(CAppHandle *, void *); /*proto*/
 static CYTHON_INLINE CVirtualAddress *__pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_from_static(CAppHandle *, CModule *, void *); /*proto*/
+static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_offset(CVirtualAddress *, PY_LONG_LONG); /*proto*/
 static CYTHON_INLINE int __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_read_int8(CVirtualAddress const *, char *); /*proto*/
 static CYTHON_INLINE int __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_write_int8(CVirtualAddress const *, char const ); /*proto*/
 static CYTHON_INLINE int __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_read_int32(CVirtualAddress const *, int *); /*proto*/
@@ -5573,7 +5574,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_20VirtualMemoryToolkit_6memory_17m
  * 
  *     return v_address             # <<<<<<<<<<<<<<
  * 
- * cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset):
+ * cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset) nogil:
  */
   __pyx_r = __pyx_v_v_address;
   goto __pyx_L0;
@@ -5594,7 +5595,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_20VirtualMemoryToolkit_6memory_17m
 /* "VirtualMemoryToolkit/memory/memory_structures.pxd":208
  *     return v_address
  * 
- * cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset):             # <<<<<<<<<<<<<<
+ * cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset) nogil:             # <<<<<<<<<<<<<<
  *     """
  *     Changes the CVirtualAddress address by an offset.
  */
@@ -5622,7 +5623,7 @@ static CYTHON_INLINE void __pyx_f_20VirtualMemoryToolkit_6memory_17memory_struct
   /* "VirtualMemoryToolkit/memory/memory_structures.pxd":208
  *     return v_address
  * 
- * cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset):             # <<<<<<<<<<<<<<
+ * cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset) nogil:             # <<<<<<<<<<<<<<
  *     """
  *     Changes the CVirtualAddress address by an offset.
  */
@@ -9657,7 +9658,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_addressing_read_w
  *         CProcess_free(process)
  *         return 1             # <<<<<<<<<<<<<<
  * 
- * 
+ *     CVirtualAddress_offset(my_virtual_array, <long long>2*sizeof(int))
  */
     __pyx_r = 1;
     goto __pyx_L0;
@@ -9671,25 +9672,128 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_addressing_read_w
  */
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":153
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":151
+ *         return 1
  * 
+ *     CVirtualAddress_offset(my_virtual_array, <long long>2*sizeof(int))             # <<<<<<<<<<<<<<
+ * 
+ *     if CVirtualAddress_read_int32(my_virtual_array, &read_int):
+ */
+  __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_offset(__pyx_v_my_virtual_array, (((PY_LONG_LONG)2) * (sizeof(int)))); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 151, __pyx_L1_error)
+
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":153
+ *     CVirtualAddress_offset(my_virtual_array, <long long>2*sizeof(int))
+ * 
+ *     if CVirtualAddress_read_int32(my_virtual_array, &read_int):             # <<<<<<<<<<<<<<
+ *         CVirtualAddress_free(my_virtual_array)
+ *         CProcess_free(process)
+ */
+  __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_read_int32(__pyx_v_my_virtual_array, (&__pyx_v_read_int)); if (unlikely(__pyx_t_4 == ((int)-1) && __Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 153, __pyx_L1_error)
+  if (__pyx_t_4) {
+
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":154
+ * 
+ *     if CVirtualAddress_read_int32(my_virtual_array, &read_int):
+ *         CVirtualAddress_free(my_virtual_array)             # <<<<<<<<<<<<<<
+ *         CProcess_free(process)
+ *         return 1
+ */
+    __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_free(__pyx_v_my_virtual_array); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 154, __pyx_L1_error)
+
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":155
+ *     if CVirtualAddress_read_int32(my_virtual_array, &read_int):
+ *         CVirtualAddress_free(my_virtual_array)
+ *         CProcess_free(process)             # <<<<<<<<<<<<<<
+ *         return 1
+ * 
+ */
+    __pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_free(__pyx_v_process); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 155, __pyx_L1_error)
+
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":156
+ *         CVirtualAddress_free(my_virtual_array)
+ *         CProcess_free(process)
+ *         return 1             # <<<<<<<<<<<<<<
+ * 
+ *     if read_int != 100:
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":153
+ *     CVirtualAddress_offset(my_virtual_array, <long long>2*sizeof(int))
+ * 
+ *     if CVirtualAddress_read_int32(my_virtual_array, &read_int):             # <<<<<<<<<<<<<<
+ *         CVirtualAddress_free(my_virtual_array)
+ *         CProcess_free(process)
+ */
+  }
+
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":158
+ *         return 1
+ * 
+ *     if read_int != 100:             # <<<<<<<<<<<<<<
+ *         CVirtualAddress_free(my_virtual_array)
+ *         CProcess_free(process)
+ */
+  __pyx_t_4 = (__pyx_v_read_int != 0x64);
+  if (__pyx_t_4) {
+
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":159
+ * 
+ *     if read_int != 100:
+ *         CVirtualAddress_free(my_virtual_array)             # <<<<<<<<<<<<<<
+ *         CProcess_free(process)
+ *         return 1
+ */
+    __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_free(__pyx_v_my_virtual_array); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 159, __pyx_L1_error)
+
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":160
+ *     if read_int != 100:
+ *         CVirtualAddress_free(my_virtual_array)
+ *         CProcess_free(process)             # <<<<<<<<<<<<<<
+ *         return 1
+ * 
+ */
+    __pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_free(__pyx_v_process); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 160, __pyx_L1_error)
+
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":161
+ *         CVirtualAddress_free(my_virtual_array)
+ *         CProcess_free(process)
+ *         return 1             # <<<<<<<<<<<<<<
+ * 
+ *     CVirtualAddress_free(my_virtual_array)
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":158
+ *         return 1
+ * 
+ *     if read_int != 100:             # <<<<<<<<<<<<<<
+ *         CVirtualAddress_free(my_virtual_array)
+ *         CProcess_free(process)
+ */
+  }
+
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":163
+ *         return 1
  * 
  *     CVirtualAddress_free(my_virtual_array)             # <<<<<<<<<<<<<<
  *     CProcess_free(process)
  * 
  */
-  __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_free(__pyx_v_my_virtual_array); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_f_20VirtualMemoryToolkit_6memory_17memory_structures_CVirtualAddress_free(__pyx_v_my_virtual_array); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 163, __pyx_L1_error)
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":154
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":164
  * 
  *     CVirtualAddress_free(my_virtual_array)
  *     CProcess_free(process)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_free(__pyx_v_process); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 154, __pyx_L1_error)
+  __pyx_f_20VirtualMemoryToolkit_7process_7process_CProcess_free(__pyx_v_process); if (unlikely(__Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 164, __pyx_L1_error)
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":157
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":167
  * 
  * 
  *     return 0             # <<<<<<<<<<<<<<
@@ -9721,7 +9825,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_addressing_read_w
   return __pyx_r;
 }
 
-/* "VirtualMemoryToolkit/tests/test_memory.pyx":162
+/* "VirtualMemoryToolkit/tests/test_memory.pyx":172
  * 
  * 
  * cpdef int run():             # <<<<<<<<<<<<<<
@@ -9750,25 +9854,25 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("run", 1);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":163
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":173
  * 
  * cpdef int run():
  *     print("\n Running Memory Tests ")             # <<<<<<<<<<<<<<
  * 
  *     notepad_process = create_notepad_instance()
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":165
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":175
  *     print("\n Running Memory Tests ")
  * 
  *     notepad_process = create_notepad_instance()             # <<<<<<<<<<<<<<
  * 
  *     # Add a slight delay to ensure Notepad has time to open
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_create_notepad_instance); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 165, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_create_notepad_instance); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -9788,23 +9892,23 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __pyx_v_notepad_process = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":168
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":178
  * 
  *     # Add a slight delay to ensure Notepad has time to open
  *     time.sleep(1)             # <<<<<<<<<<<<<<
  * 
  *     cdef int error_count = 0
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 168, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 178, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_sleep); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 168, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_sleep); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 178, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -9825,13 +9929,13 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_int_1};
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_4, 1+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 168, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":170
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":180
  *     time.sleep(1)
  * 
  *     cdef int error_count = 0             # <<<<<<<<<<<<<<
@@ -9840,7 +9944,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
   __pyx_v_error_count = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":171
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":181
  * 
  *     cdef int error_count = 0
  *     cdef CAppHandle* notepad_apphandle = <CAppHandle*>0             # <<<<<<<<<<<<<<
@@ -9849,7 +9953,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
   __pyx_v_notepad_apphandle = ((CAppHandle *)0);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":172
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":182
  *     cdef int error_count = 0
  *     cdef CAppHandle* notepad_apphandle = <CAppHandle*>0
  *     cdef CMemoryManager* notepad_memory_manager = <CMemoryManager*>0             # <<<<<<<<<<<<<<
@@ -9858,33 +9962,33 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
   __pyx_v_notepad_memory_manager = ((CMemoryManager *)0);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":175
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":185
  * 
  * 
  *     print("     - get_handle_to_notepad     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     notepad_apphandle = get_handle_to_notepad()
  *     if not notepad_apphandle:
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 175, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 175, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__3, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 175, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 185, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 185, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__3, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 185, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":176
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":186
  * 
  *     print("     - get_handle_to_notepad     ... ", end="", flush=True)
  *     notepad_apphandle = get_handle_to_notepad()             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle:
  *         print("FAILED")
  */
-  __pyx_t_5 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_get_handle_to_notepad(); if (unlikely(__pyx_t_5 == ((CAppHandle *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_5 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_get_handle_to_notepad(); if (unlikely(__pyx_t_5 == ((CAppHandle *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
   __pyx_v_notepad_apphandle = __pyx_t_5;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":177
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":187
  *     print("     - get_handle_to_notepad     ... ", end="", flush=True)
  *     notepad_apphandle = get_handle_to_notepad()
  *     if not notepad_apphandle:             # <<<<<<<<<<<<<<
@@ -9894,18 +9998,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_t_6 = (!(__pyx_v_notepad_apphandle != 0));
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":178
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":188
  *     notepad_apphandle = get_handle_to_notepad()
  *     if not notepad_apphandle:
  *         print("FAILED")             # <<<<<<<<<<<<<<
  *         error_count += 1
  *     else:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 178, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 188, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":179
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":189
  *     if not notepad_apphandle:
  *         print("FAILED")
  *         error_count += 1             # <<<<<<<<<<<<<<
@@ -9914,7 +10018,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
     __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":177
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":187
  *     print("     - get_handle_to_notepad     ... ", end="", flush=True)
  *     notepad_apphandle = get_handle_to_notepad()
  *     if not notepad_apphandle:             # <<<<<<<<<<<<<<
@@ -9924,7 +10028,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     goto __pyx_L3;
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":181
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":191
  *         error_count += 1
  *     else:
  *         print("PASSED")             # <<<<<<<<<<<<<<
@@ -9932,29 +10036,29 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  * 
  */
   /*else*/ {
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 181, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 191, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
   __pyx_L3:;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":184
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":194
  * 
  * 
  *     print("     - create_notepad_memory_manager ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if notepad_apphandle:
  *         notepad_memory_manager = create_notepad_memory_manager(notepad_apphandle)
  */
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 184, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 184, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__7, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 194, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 194, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__7, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":185
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":195
  * 
  *     print("     - create_notepad_memory_manager ... ", end="", flush=True)
  *     if notepad_apphandle:             # <<<<<<<<<<<<<<
@@ -9964,17 +10068,17 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_t_6 = (__pyx_v_notepad_apphandle != 0);
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":186
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":196
  *     print("     - create_notepad_memory_manager ... ", end="", flush=True)
  *     if notepad_apphandle:
  *         notepad_memory_manager = create_notepad_memory_manager(notepad_apphandle)             # <<<<<<<<<<<<<<
  *         if not notepad_memory_manager:
  *             print("FAILED")
  */
-    __pyx_t_7 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_create_notepad_memory_manager(__pyx_v_notepad_apphandle); if (unlikely(__pyx_t_7 == ((CMemoryManager *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
+    __pyx_t_7 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_create_notepad_memory_manager(__pyx_v_notepad_apphandle); if (unlikely(__pyx_t_7 == ((CMemoryManager *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 196, __pyx_L1_error)
     __pyx_v_notepad_memory_manager = __pyx_t_7;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":187
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":197
  *     if notepad_apphandle:
  *         notepad_memory_manager = create_notepad_memory_manager(notepad_apphandle)
  *         if not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -9984,18 +10088,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     __pyx_t_6 = (!(__pyx_v_notepad_memory_manager != 0));
     if (__pyx_t_6) {
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":188
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":198
  *         notepad_memory_manager = create_notepad_memory_manager(notepad_apphandle)
  *         if not notepad_memory_manager:
  *             print("FAILED")             # <<<<<<<<<<<<<<
  *             error_count += 1
  *         else:
  */
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 198, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":189
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":199
  *         if not notepad_memory_manager:
  *             print("FAILED")
  *             error_count += 1             # <<<<<<<<<<<<<<
@@ -10004,7 +10108,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
       __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":187
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":197
  *     if notepad_apphandle:
  *         notepad_memory_manager = create_notepad_memory_manager(notepad_apphandle)
  *         if not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10014,7 +10118,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
       goto __pyx_L5;
     }
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":191
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":201
  *             error_count += 1
  *         else:
  *             print("PASSED")             # <<<<<<<<<<<<<<
@@ -10022,13 +10126,13 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  *         print("FAILED")
  */
     /*else*/ {
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 191, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     }
     __pyx_L5:;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":185
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":195
  * 
  *     print("     - create_notepad_memory_manager ... ", end="", flush=True)
  *     if notepad_apphandle:             # <<<<<<<<<<<<<<
@@ -10038,7 +10142,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     goto __pyx_L4;
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":193
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":203
  *             print("PASSED")
  *     else:
  *         print("FAILED")             # <<<<<<<<<<<<<<
@@ -10046,11 +10150,11 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  * 
  */
   /*else*/ {
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 203, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":194
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":204
  *     else:
  *         print("FAILED")
  *         error_count += 1             # <<<<<<<<<<<<<<
@@ -10061,23 +10165,23 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   }
   __pyx_L4:;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":196
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":206
  *         error_count += 1
  * 
  *     print("     - allocate_memory_region     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 206, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 196, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 196, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__8, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 196, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 206, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__8, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 206, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":197
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":207
  * 
  *     print("     - allocate_memory_region     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10095,18 +10199,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":198
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":208
  *     print("     - allocate_memory_region     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")             # <<<<<<<<<<<<<<
  *         error_count += 1
  *     else:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 198, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":199
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":209
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  *         error_count += 1             # <<<<<<<<<<<<<<
@@ -10115,7 +10219,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
     __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":197
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":207
  * 
  *     print("     - allocate_memory_region     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10125,7 +10229,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     goto __pyx_L6;
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":201
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":211
  *         error_count += 1
  *     else:
  *         if allocate_memory_region(notepad_memory_manager):             # <<<<<<<<<<<<<<
@@ -10133,22 +10237,22 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  *             error_count += 1
  */
   /*else*/ {
-    __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_allocate_memory_region(__pyx_v_notepad_memory_manager); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 201, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_allocate_memory_region(__pyx_v_notepad_memory_manager); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 211, __pyx_L1_error)
     __pyx_t_6 = (__pyx_t_4 != 0);
     if (__pyx_t_6) {
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":202
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":212
  *     else:
  *         if allocate_memory_region(notepad_memory_manager):
  *             print("FAILED")             # <<<<<<<<<<<<<<
  *             error_count += 1
  *         else:
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 202, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 212, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":203
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":213
  *         if allocate_memory_region(notepad_memory_manager):
  *             print("FAILED")
  *             error_count += 1             # <<<<<<<<<<<<<<
@@ -10157,7 +10261,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
       __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":201
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":211
  *         error_count += 1
  *     else:
  *         if allocate_memory_region(notepad_memory_manager):             # <<<<<<<<<<<<<<
@@ -10167,7 +10271,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
       goto __pyx_L9;
     }
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":205
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":215
  *             error_count += 1
  *         else:
  *             print("PASSED")             # <<<<<<<<<<<<<<
@@ -10175,7 +10279,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  *     print("     - free_memory_region     ... ", end="", flush=True)
  */
     /*else*/ {
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 205, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 215, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
@@ -10183,23 +10287,23 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   }
   __pyx_L6:;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":207
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":217
  *             print("PASSED")
  * 
  *     print("     - free_memory_region     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__9, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 217, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 217, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__9, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":208
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":218
  * 
  *     print("     - free_memory_region     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10217,18 +10321,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_L11_bool_binop_done:;
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":209
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":219
  *     print("     - free_memory_region     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")             # <<<<<<<<<<<<<<
  *         error_count += 1
  *     else:
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 209, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 219, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":210
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":220
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  *         error_count += 1             # <<<<<<<<<<<<<<
@@ -10237,7 +10341,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
     __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":208
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":218
  * 
  *     print("     - free_memory_region     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10247,7 +10351,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     goto __pyx_L10;
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":212
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":222
  *         error_count += 1
  *     else:
  *         if CMemoryManager_virtual_free_all(notepad_memory_manager):             # <<<<<<<<<<<<<<
@@ -10255,21 +10359,21 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  *             error_count += 1
  */
   /*else*/ {
-    __pyx_t_6 = __pyx_f_20VirtualMemoryToolkit_6memory_14memory_manager_CMemoryManager_virtual_free_all(__pyx_v_notepad_memory_manager); if (unlikely(__pyx_t_6 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 212, __pyx_L1_error)
+    __pyx_t_6 = __pyx_f_20VirtualMemoryToolkit_6memory_14memory_manager_CMemoryManager_virtual_free_all(__pyx_v_notepad_memory_manager); if (unlikely(__pyx_t_6 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 222, __pyx_L1_error)
     if (__pyx_t_6) {
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":213
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":223
  *     else:
  *         if CMemoryManager_virtual_free_all(notepad_memory_manager):
  *             print("FAILED")             # <<<<<<<<<<<<<<
  *             error_count += 1
  *         if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
  */
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 213, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 223, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":214
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":224
  *         if CMemoryManager_virtual_free_all(notepad_memory_manager):
  *             print("FAILED")
  *             error_count += 1             # <<<<<<<<<<<<<<
@@ -10278,7 +10382,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
       __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":212
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":222
  *         error_count += 1
  *     else:
  *         if CMemoryManager_virtual_free_all(notepad_memory_manager):             # <<<<<<<<<<<<<<
@@ -10287,7 +10391,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
     }
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":215
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":225
  *             print("FAILED")
  *             error_count += 1
  *         if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:             # <<<<<<<<<<<<<<
@@ -10305,18 +10409,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     __pyx_L15_bool_binop_done:;
     if (__pyx_t_6) {
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":216
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":226
  *             error_count += 1
  *         if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
  *             print("FAILED")             # <<<<<<<<<<<<<<
  *             error_count += 1
  *         else:
  */
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 216, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 226, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":217
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":227
  *         if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
  *             print("FAILED")
  *             error_count += 1             # <<<<<<<<<<<<<<
@@ -10325,7 +10429,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
       __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":215
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":225
  *             print("FAILED")
  *             error_count += 1
  *         if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:             # <<<<<<<<<<<<<<
@@ -10335,7 +10439,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
       goto __pyx_L14;
     }
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":219
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":229
  *             error_count += 1
  *         else:
  *             print("PASSED")             # <<<<<<<<<<<<<<
@@ -10343,7 +10447,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  * 
  */
     /*else*/ {
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 219, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 229, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     }
@@ -10351,23 +10455,23 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   }
   __pyx_L10:;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":222
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":232
  * 
  * 
  *     print("     - allocate_memory_regions     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 222, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 232, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 222, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 222, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__10, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 222, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 232, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 232, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__10, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 232, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":223
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":233
  * 
  *     print("     - allocate_memory_regions     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10385,18 +10489,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_L18_bool_binop_done:;
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":224
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":234
  *     print("     - allocate_memory_regions     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")             # <<<<<<<<<<<<<<
  *         error_count += 1
  *     else:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 224, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 234, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":225
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":235
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  *         error_count += 1             # <<<<<<<<<<<<<<
@@ -10405,7 +10509,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
     __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":223
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":233
  * 
  *     print("     - allocate_memory_regions     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10415,7 +10519,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     goto __pyx_L17;
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":227
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":237
  *         error_count += 1
  *     else:
  *         if allocate_memory_regions(notepad_memory_manager):             # <<<<<<<<<<<<<<
@@ -10423,22 +10527,22 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  *             error_count += 1
  */
   /*else*/ {
-    __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_allocate_memory_regions(__pyx_v_notepad_memory_manager); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_allocate_memory_regions(__pyx_v_notepad_memory_manager); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 237, __pyx_L1_error)
     __pyx_t_6 = (__pyx_t_4 != 0);
     if (__pyx_t_6) {
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":228
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":238
  *     else:
  *         if allocate_memory_regions(notepad_memory_manager):
  *             print("FAILED")             # <<<<<<<<<<<<<<
  *             error_count += 1
  *         else:
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 228, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 238, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":229
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":239
  *         if allocate_memory_regions(notepad_memory_manager):
  *             print("FAILED")
  *             error_count += 1             # <<<<<<<<<<<<<<
@@ -10447,7 +10551,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
       __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":227
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":237
  *         error_count += 1
  *     else:
  *         if allocate_memory_regions(notepad_memory_manager):             # <<<<<<<<<<<<<<
@@ -10457,7 +10561,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
       goto __pyx_L20;
     }
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":231
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":241
  *             error_count += 1
  *         else:
  *             print("PASSED")             # <<<<<<<<<<<<<<
@@ -10465,7 +10569,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  *     print("     - free_memory_regions     ... ", end="", flush=True)
  */
     /*else*/ {
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 231, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 241, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
@@ -10473,23 +10577,23 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   }
   __pyx_L17:;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":233
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":243
  *             print("PASSED")
  * 
  *     print("     - free_memory_regions     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 233, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 233, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__11, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 233, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 243, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 243, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__11, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":234
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":244
  * 
  *     print("     - free_memory_regions     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10507,18 +10611,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_L22_bool_binop_done:;
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":235
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":245
  *     print("     - free_memory_regions     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")             # <<<<<<<<<<<<<<
  *         error_count += 1
  *     else:
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 235, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 245, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":236
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":246
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  *         error_count += 1             # <<<<<<<<<<<<<<
@@ -10527,7 +10631,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
     __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":234
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":244
  * 
  *     print("     - free_memory_regions     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10537,7 +10641,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     goto __pyx_L21;
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":238
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":248
  *         error_count += 1
  *     else:
  *         if CMemoryManager_virtual_free_all(notepad_memory_manager):             # <<<<<<<<<<<<<<
@@ -10545,21 +10649,21 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  *             error_count += 1
  */
   /*else*/ {
-    __pyx_t_6 = __pyx_f_20VirtualMemoryToolkit_6memory_14memory_manager_CMemoryManager_virtual_free_all(__pyx_v_notepad_memory_manager); if (unlikely(__pyx_t_6 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 238, __pyx_L1_error)
+    __pyx_t_6 = __pyx_f_20VirtualMemoryToolkit_6memory_14memory_manager_CMemoryManager_virtual_free_all(__pyx_v_notepad_memory_manager); if (unlikely(__pyx_t_6 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 248, __pyx_L1_error)
     if (__pyx_t_6) {
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":239
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":249
  *     else:
  *         if CMemoryManager_virtual_free_all(notepad_memory_manager):
  *             print("FAILED")             # <<<<<<<<<<<<<<
  *             error_count += 1
  *         if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
  */
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 239, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 249, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":240
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":250
  *         if CMemoryManager_virtual_free_all(notepad_memory_manager):
  *             print("FAILED")
  *             error_count += 1             # <<<<<<<<<<<<<<
@@ -10568,7 +10672,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
       __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":238
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":248
  *         error_count += 1
  *     else:
  *         if CMemoryManager_virtual_free_all(notepad_memory_manager):             # <<<<<<<<<<<<<<
@@ -10577,7 +10681,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
     }
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":241
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":251
  *             print("FAILED")
  *             error_count += 1
  *         if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:             # <<<<<<<<<<<<<<
@@ -10595,18 +10699,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     __pyx_L26_bool_binop_done:;
     if (__pyx_t_6) {
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":242
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":252
  *             error_count += 1
  *         if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
  *             print("FAILED")             # <<<<<<<<<<<<<<
  *             error_count += 1
  *         else:
  */
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 252, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":243
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":253
  *         if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
  *             print("FAILED")
  *             error_count += 1             # <<<<<<<<<<<<<<
@@ -10615,7 +10719,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
       __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":241
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":251
  *             print("FAILED")
  *             error_count += 1
  *         if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:             # <<<<<<<<<<<<<<
@@ -10625,7 +10729,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
       goto __pyx_L25;
     }
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":245
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":255
  *             error_count += 1
  *         else:
  *             print("PASSED")             # <<<<<<<<<<<<<<
@@ -10633,7 +10737,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  * 
  */
     /*else*/ {
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 245, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 255, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     }
@@ -10641,23 +10745,23 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   }
   __pyx_L21:;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":248
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":258
  * 
  * 
  *     print("     - module_extraction     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 248, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 248, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__12, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 248, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 258, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 258, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__12, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":249
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":259
  * 
  *     print("     - module_extraction     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10675,18 +10779,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_L29_bool_binop_done:;
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":250
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":260
  *     print("     - module_extraction     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")             # <<<<<<<<<<<<<<
  *         error_count += 1
  *     else:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 250, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 260, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":251
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":261
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  *         error_count += 1             # <<<<<<<<<<<<<<
@@ -10695,7 +10799,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
     __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":249
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":259
  * 
  *     print("     - module_extraction     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10705,7 +10809,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     goto __pyx_L28;
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":253
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":263
  *         error_count += 1
  *     else:
  *         if extract_modules(notepad_apphandle):             # <<<<<<<<<<<<<<
@@ -10713,22 +10817,22 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  *             error_count += 1
  */
   /*else*/ {
-    __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_extract_modules(__pyx_v_notepad_apphandle); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 253, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_extract_modules(__pyx_v_notepad_apphandle); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 263, __pyx_L1_error)
     __pyx_t_6 = (__pyx_t_4 != 0);
     if (__pyx_t_6) {
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":254
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":264
  *     else:
  *         if extract_modules(notepad_apphandle):
  *             print("FAILED")             # <<<<<<<<<<<<<<
  *             error_count += 1
  *         else:
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 254, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 264, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":255
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":265
  *         if extract_modules(notepad_apphandle):
  *             print("FAILED")
  *             error_count += 1             # <<<<<<<<<<<<<<
@@ -10737,7 +10841,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
       __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":253
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":263
  *         error_count += 1
  *     else:
  *         if extract_modules(notepad_apphandle):             # <<<<<<<<<<<<<<
@@ -10747,7 +10851,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
       goto __pyx_L31;
     }
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":257
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":267
  *             error_count += 1
  *         else:
  *             print("PASSED")             # <<<<<<<<<<<<<<
@@ -10755,7 +10859,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  * 
  */
     /*else*/ {
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 257, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 267, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
@@ -10763,23 +10867,23 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   }
   __pyx_L28:;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":261
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":271
  * 
  * 
  *     print("     - addressing_read_write     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 261, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 271, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 261, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 261, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__13, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 261, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 271, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 271, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__13, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 271, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":262
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":272
  * 
  *     print("     - addressing_read_write     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10797,18 +10901,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_L33_bool_binop_done:;
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":263
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":273
  *     print("     - addressing_read_write     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")             # <<<<<<<<<<<<<<
  *         error_count += 1
  *     else:
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 263, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 273, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":264
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":274
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  *         error_count += 1             # <<<<<<<<<<<<<<
@@ -10817,7 +10921,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
     __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":262
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":272
  * 
  *     print("     - addressing_read_write     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10827,7 +10931,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     goto __pyx_L32;
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":266
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":276
  *         error_count += 1
  *     else:
  *         if addressing_read_write(notepad_apphandle):             # <<<<<<<<<<<<<<
@@ -10835,22 +10939,22 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  *             error_count += 1
  */
   /*else*/ {
-    __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_addressing_read_write(__pyx_v_notepad_apphandle); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 266, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_addressing_read_write(__pyx_v_notepad_apphandle); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 276, __pyx_L1_error)
     __pyx_t_6 = (__pyx_t_4 != 0);
     if (__pyx_t_6) {
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":267
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":277
  *     else:
  *         if addressing_read_write(notepad_apphandle):
  *             print("FAILED")             # <<<<<<<<<<<<<<
  *             error_count += 1
  *         else:
  */
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 267, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 277, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":268
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":278
  *         if addressing_read_write(notepad_apphandle):
  *             print("FAILED")
  *             error_count += 1             # <<<<<<<<<<<<<<
@@ -10859,7 +10963,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
       __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":266
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":276
  *         error_count += 1
  *     else:
  *         if addressing_read_write(notepad_apphandle):             # <<<<<<<<<<<<<<
@@ -10869,7 +10973,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
       goto __pyx_L35;
     }
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":270
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":280
  *             error_count += 1
  *         else:
  *             print("PASSED")             # <<<<<<<<<<<<<<
@@ -10877,7 +10981,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  * 
  */
     /*else*/ {
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     }
@@ -10885,23 +10989,23 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   }
   __pyx_L32:;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":273
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":283
  * 
  * 
  *     print("     - addressing_read_write_offset     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 273, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 283, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 273, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 273, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__14, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 273, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_end, __pyx_kp_s__4) < 0) __PYX_ERR(0, 283, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_flush, Py_True) < 0) __PYX_ERR(0, 283, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__14, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 283, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":274
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":284
  * 
  *     print("     - addressing_read_write_offset     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10919,18 +11023,18 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_L37_bool_binop_done:;
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":275
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":285
  *     print("     - addressing_read_write_offset     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")             # <<<<<<<<<<<<<<
  *         error_count += 1
  *     else:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 275, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 285, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":276
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":286
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  *         error_count += 1             # <<<<<<<<<<<<<<
@@ -10939,7 +11043,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
     __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":274
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":284
  * 
  *     print("     - addressing_read_write_offset     ... ", end="", flush=True)
  *     if not notepad_apphandle or not notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -10949,7 +11053,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     goto __pyx_L36;
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":278
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":288
  *         error_count += 1
  *     else:
  *         if addressing_read_write_offset(notepad_apphandle):             # <<<<<<<<<<<<<<
@@ -10957,22 +11061,22 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  *             error_count += 1
  */
   /*else*/ {
-    __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_addressing_read_write_offset(__pyx_v_notepad_apphandle); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 278, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_addressing_read_write_offset(__pyx_v_notepad_apphandle); if (unlikely(__pyx_t_4 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 288, __pyx_L1_error)
     __pyx_t_6 = (__pyx_t_4 != 0);
     if (__pyx_t_6) {
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":279
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":289
  *     else:
  *         if addressing_read_write_offset(notepad_apphandle):
  *             print("FAILED")             # <<<<<<<<<<<<<<
  *             error_count += 1
  *         else:
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 279, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 289, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":280
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":290
  *         if addressing_read_write_offset(notepad_apphandle):
  *             print("FAILED")
  *             error_count += 1             # <<<<<<<<<<<<<<
@@ -10981,7 +11085,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
       __pyx_v_error_count = (__pyx_v_error_count + 1);
 
-      /* "VirtualMemoryToolkit/tests/test_memory.pyx":278
+      /* "VirtualMemoryToolkit/tests/test_memory.pyx":288
  *         error_count += 1
  *     else:
  *         if addressing_read_write_offset(notepad_apphandle):             # <<<<<<<<<<<<<<
@@ -10991,7 +11095,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
       goto __pyx_L39;
     }
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":282
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":292
  *             error_count += 1
  *         else:
  *             print("PASSED")             # <<<<<<<<<<<<<<
@@ -10999,7 +11103,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  * 
  */
     /*else*/ {
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 282, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 292, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
@@ -11007,7 +11111,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   }
   __pyx_L36:;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":289
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":299
  * 
  * 
  *     if notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -11017,16 +11121,16 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_t_6 = (__pyx_v_notepad_memory_manager != 0);
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":290
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":300
  * 
  *     if notepad_memory_manager:
  *         CMemoryManager_free(notepad_memory_manager)             # <<<<<<<<<<<<<<
  * 
  *     if notepad_apphandle:
  */
-    __pyx_t_6 = __pyx_f_20VirtualMemoryToolkit_6memory_14memory_manager_CMemoryManager_free(__pyx_v_notepad_memory_manager); if (unlikely(__pyx_t_6 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 290, __pyx_L1_error)
+    __pyx_t_6 = __pyx_f_20VirtualMemoryToolkit_6memory_14memory_manager_CMemoryManager_free(__pyx_v_notepad_memory_manager); if (unlikely(__pyx_t_6 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 300, __pyx_L1_error)
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":289
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":299
  * 
  * 
  *     if notepad_memory_manager:             # <<<<<<<<<<<<<<
@@ -11035,7 +11139,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":292
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":302
  *         CMemoryManager_free(notepad_memory_manager)
  * 
  *     if notepad_apphandle:             # <<<<<<<<<<<<<<
@@ -11045,16 +11149,16 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_t_6 = (__pyx_v_notepad_apphandle != 0);
   if (__pyx_t_6) {
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":293
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":303
  * 
  *     if notepad_apphandle:
  *         CAppHandle_free(notepad_apphandle)             # <<<<<<<<<<<<<<
  * 
  *     notepad_process.terminate()
  */
-    __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHandle_free(__pyx_v_notepad_apphandle); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 293, __pyx_L1_error)
+    __pyx_f_20VirtualMemoryToolkit_7handles_6handle_CAppHandle_free(__pyx_v_notepad_apphandle); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 303, __pyx_L1_error)
 
-    /* "VirtualMemoryToolkit/tests/test_memory.pyx":292
+    /* "VirtualMemoryToolkit/tests/test_memory.pyx":302
  *         CMemoryManager_free(notepad_memory_manager)
  * 
  *     if notepad_apphandle:             # <<<<<<<<<<<<<<
@@ -11063,13 +11167,13 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
  */
   }
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":295
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":305
  *         CAppHandle_free(notepad_apphandle)
  * 
  *     notepad_process.terminate()             # <<<<<<<<<<<<<<
  *     return error_count
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_notepad_process, __pyx_n_s_terminate); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 295, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_notepad_process, __pyx_n_s_terminate); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 305, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = NULL;
   __pyx_t_4 = 0;
@@ -11089,13 +11193,13 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
     PyObject *__pyx_callargs[2] = {__pyx_t_2, NULL};
     __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 295, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 305, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":296
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":306
  * 
  *     notepad_process.terminate()
  *     return error_count             # <<<<<<<<<<<<<<
@@ -11103,7 +11207,7 @@ static int __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(CYTHON_UNUSED
   __pyx_r = __pyx_v_error_count;
   goto __pyx_L0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":162
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":172
  * 
  * 
  * cpdef int run():             # <<<<<<<<<<<<<<
@@ -11150,8 +11254,8 @@ static PyObject *__pyx_pf_20VirtualMemoryToolkit_5tests_11test_memory_2run(CYTHO
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("run", 1);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(0); if (unlikely(__pyx_t_1 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 162, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 162, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_20VirtualMemoryToolkit_5tests_11test_memory_run(0); if (unlikely(__pyx_t_1 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
@@ -11231,7 +11335,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
 }
 /* #### Code section: cached_builtins ### */
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 163, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 173, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 78, __pyx_L1_error)
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(4, 82, __pyx_L1_error)
   return 0;
@@ -11255,135 +11359,135 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":163
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":173
  * 
  * cpdef int run():
  *     print("\n Running Memory Tests ")             # <<<<<<<<<<<<<<
  * 
  *     notepad_process = create_notepad_instance()
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_Running_Memory_Tests); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 163, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_Running_Memory_Tests); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":175
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":185
  * 
  * 
  *     print("     - get_handle_to_notepad     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     notepad_apphandle = get_handle_to_notepad()
  *     if not notepad_apphandle:
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_get_handle_to_notepad); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 175, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_get_handle_to_notepad); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 185, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":178
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":188
  *     notepad_apphandle = get_handle_to_notepad()
  *     if not notepad_apphandle:
  *         print("FAILED")             # <<<<<<<<<<<<<<
  *         error_count += 1
  *     else:
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_n_s_FAILED); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 178, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_n_s_FAILED); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 188, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":181
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":191
  *         error_count += 1
  *     else:
  *         print("PASSED")             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_n_s_PASSED); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_n_s_PASSED); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 191, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":184
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":194
  * 
  * 
  *     print("     - create_notepad_memory_manager ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if notepad_apphandle:
  *         notepad_memory_manager = create_notepad_memory_manager(notepad_apphandle)
  */
-  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_s_create_notepad_memory_manager); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_s_create_notepad_memory_manager); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":196
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":206
  *         error_count += 1
  * 
  *     print("     - allocate_memory_region     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_allocate_memory_region); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_allocate_memory_region); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 206, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":207
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":217
  *             print("PASSED")
  * 
  *     print("     - free_memory_region     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_free_memory_region); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_free_memory_region); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":222
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":232
  * 
  * 
  *     print("     - allocate_memory_regions     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_s_allocate_memory_regions); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 222, __pyx_L1_error)
+  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_s_allocate_memory_regions); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 232, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":233
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":243
  *             print("PASSED")
  * 
  *     print("     - free_memory_regions     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_s_free_memory_regions); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 233, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_s_free_memory_regions); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":248
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":258
  * 
  * 
  *     print("     - module_extraction     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_s_module_extraction); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_s_module_extraction); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__12);
   __Pyx_GIVEREF(__pyx_tuple__12);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":261
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":271
  * 
  * 
  *     print("     - addressing_read_write     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_s_addressing_read_write); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 261, __pyx_L1_error)
+  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_s_addressing_read_write); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 271, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__13);
   __Pyx_GIVEREF(__pyx_tuple__13);
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":273
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":283
  * 
  * 
  *     print("     - addressing_read_write_offset     ... ", end="", flush=True)             # <<<<<<<<<<<<<<
  *     if not notepad_apphandle or not notepad_memory_manager:
  *         print("FAILED")
  */
-  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_kp_s_addressing_read_write_offset); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 273, __pyx_L1_error)
+  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_kp_s_addressing_read_write_offset); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 283, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_GIVEREF(__pyx_tuple__14);
 
@@ -11399,14 +11503,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__16);
   __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_VirtualMemoryToolkit_tests_test, __pyx_n_s_create_notepad_instance, 12, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) __PYX_ERR(0, 12, __pyx_L1_error)
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":162
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":172
  * 
  * 
  * cpdef int run():             # <<<<<<<<<<<<<<
  *     print("\n Running Memory Tests ")
  * 
  */
-  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_VirtualMemoryToolkit_tests_test, __pyx_n_s_run, 162, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 162, __pyx_L1_error)
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_VirtualMemoryToolkit_tests_test, __pyx_n_s_run, 172, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -11807,16 +11911,16 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_create_notepad_instance, __pyx_t_2) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "VirtualMemoryToolkit/tests/test_memory.pyx":162
+  /* "VirtualMemoryToolkit/tests/test_memory.pyx":172
  * 
  * 
  * cpdef int run():             # <<<<<<<<<<<<<<
  *     print("\n Running Memory Tests ")
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_20VirtualMemoryToolkit_5tests_11test_memory_3run, 0, __pyx_n_s_run, NULL, __pyx_n_s_VirtualMemoryToolkit_tests_test_2, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 162, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_20VirtualMemoryToolkit_5tests_11test_memory_3run, 0, __pyx_n_s_run, NULL, __pyx_n_s_VirtualMemoryToolkit_tests_test_2, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_run, __pyx_t_2) < 0) __PYX_ERR(0, 162, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_run, __pyx_t_2) < 0) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "VirtualMemoryToolkit/tests/test_memory.pyx":1
