@@ -214,7 +214,7 @@ cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long l
         offset (long long): Offset to be added to the address.
     
     """
-    virtual_address[0].address = virtual_address[0].address + offset
+    virtual_address[0].address = <void*>((<unsigned long long>virtual_address[0].address) + offset)
     return
 
 cdef inline bint CVirtualAddress_read_float32(const CVirtualAddress* virtual_address, float* out_float32) nogil:
@@ -444,7 +444,7 @@ cdef inline bint CVirtualAddress_write_int8(const CVirtualAddress* virtual_addre
 
     Parameters:
         virtual_address (const CVirtualAddress*): The virtual address where the 8-bit integer value will be written.
-        write_int1 (const unsigned char): The 8-bit integer value to write.
+        write_int1 (const char): The 8-bit integer value to write.
 
     Returns:
         BYTE: 0 if the write operation is successful, 1 if it fails.
@@ -480,13 +480,13 @@ cdef inline bint CVirtualAddress_write_int8_offset(const CVirtualAddress* virtua
     )
     return bytes_written != 1
 
-cdef inline bint CVirtualAddress_read_int16(const CVirtualAddress* virtual_address, unsigned short* out_int16) nogil:
+cdef inline bint CVirtualAddress_read_int16(const CVirtualAddress* virtual_address, short* out_int16) nogil:
     """
     Reads a 16-bit integer from the given virtual address and stores it in out_int16.
 
     Parameters:
         virtual_address (const CVirtualAddress*): The virtual address to read from.
-        out_int16 (unsigned short*): Pointer to store the read 16-bit integer value.
+        out_int16 (short*): Pointer to store the read 16-bit integer value.
 
     Returns:
         BYTE: 0 on success, 1 on failure.
@@ -525,13 +525,13 @@ cdef inline bint CVirtualAddress_read_int16_offset(const CVirtualAddress* virtua
     
     return bytes_read != 2
 
-cdef inline bint CVirtualAddress_write_int16(const CVirtualAddress* virtual_address, const unsigned short write_int16) nogil:
+cdef inline bint CVirtualAddress_write_int16(const CVirtualAddress* virtual_address, const short write_int16) nogil:
     """
     Writes an 16-bit integer to the address specified by the CVirtualAddress structure.
 
     Parameters:
         virtual_address (const CVirtualAddress*): The virtual address where the 16-bit integer value will be written.
-        write_int16 (const unsigned short): The 16-bit integer value to write.
+        write_int16 (const short): The 16-bit integer value to write.
 
     Returns:
         BYTE: 0 if the write operation is successful, 1 if it fails.
@@ -567,13 +567,13 @@ cdef inline bint CVirtualAddress_write_int16_offset(const CVirtualAddress* virtu
     )
     return bytes_written != 2
 
-cdef inline bint CVirtualAddress_read_int32(const CVirtualAddress* virtual_address, unsigned int* out_int32) nogil:
+cdef inline bint CVirtualAddress_read_int32(const CVirtualAddress* virtual_address, int* out_int32) nogil:
     """
     Reads a 32-bit integer from the given virtual address and stores it in out_int32.
 
     Parameters:
         virtual_address (const CVirtualAddress*): The virtual address to read from.
-        out_int32 (unsigned int*): Pointer to store the read 32-bit integer value.
+        out_int32 (int*): Pointer to store the read 32-bit integer value.
 
     Returns:
         BYTE: 0 on success, 1 on failure.
@@ -612,13 +612,13 @@ cdef inline bint CVirtualAddress_read_int32_offset(const CVirtualAddress* virtua
     
     return bytes_read != 4
 
-cdef inline bint CVirtualAddress_write_int32(const CVirtualAddress* virtual_address, const unsigned int write_int32) nogil:
+cdef inline bint CVirtualAddress_write_int32(const CVirtualAddress* virtual_address, const int write_int32) nogil:
     """
     Writes an 32-bit integer to the address specified by the CVirtualAddress structure.
 
     Parameters:
         virtual_address (const CVirtualAddress*): The virtual address where the 32-bit integer value will be written.
-        write_int32 (const unsigned int): The 32-bit integer value to write.
+        write_int32 (const int): The 32-bit integer value to write.
 
     Returns:
         BYTE: 0 if the write operation is successful, 1 if it fails.
@@ -654,13 +654,13 @@ cdef inline bint CVirtualAddress_write_int32_offset(const CVirtualAddress* virtu
     )
     return bytes_written != 4
 
-cdef inline bint CVirtualAddress_read_int64(const CVirtualAddress* virtual_address, unsigned long long* out_int64) nogil:
+cdef inline bint CVirtualAddress_read_int64(const CVirtualAddress* virtual_address, long long* out_int64) nogil:
     """
     Reads a 64-bit integer from the given virtual address and stores it in out_int64.
 
     Parameters:
         virtual_address (const CVirtualAddress*): The virtual address to read from.
-        out_int64 (unsigned long long*): Pointer to store the read 64-bit integer value.
+        out_int64 (long long*): Pointer to store the read 64-bit integer value.
 
     Returns:
         BYTE: 0 on success, 1 on failure.
@@ -698,13 +698,13 @@ cdef inline bint CVirtualAddress_read_int64_offset(const CVirtualAddress* virtua
     
     return bytes_read != 8
 
-cdef inline bint CVirtualAddress_write_int64(const CVirtualAddress* virtual_address, const unsigned long long write_int64) nogil:
+cdef inline bint CVirtualAddress_write_int64(const CVirtualAddress* virtual_address, const long long write_int64) nogil:
     """
     Writes an 64-bit integer to the address specified by the CVirtualAddress structure.
 
     Parameters:
         virtual_address (const CVirtualAddress*): The virtual address where the 64-bit integer value will be written.
-        write_int64 (const unsigned long long): The 64-bit integer value to write.
+        write_int64 (const long long): The 64-bit integer value to write.
 
     Returns:
         BYTE: 0 if the write operation is successful, 1 if it fails.

@@ -23,5 +23,6 @@ def main() -> None:
     else:
         print(f" ** Failed {failed_memory_tests} Memory tests **")
         
+    input("Press ENTER to continue...")    
 if __name__ == "__main__":
     main()
