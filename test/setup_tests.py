@@ -8,19 +8,20 @@ include_libs = [
 ]
 
 # Specify the base directory where your Cython modules are located
-base_dir = os.path.dirname(os.path.abspath(__file__))
-virtual_memory_toolkit_dir = os.path.join(base_dir, "VirtualMemoryToolkit")
+file_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.abspath(os.path.join(file_dir, os.pardir))
+virtual_memory_toolkit_dir = os.path.join(root_dir, "VirtualMemoryToolkit")
 
 include_dirs = [
-    base_dir,
+    root_dir,
     virtual_memory_toolkit_dir,
 ]
 
 
 handles_ext = Extension(
-    "VirtualMemoryToolkit.tests.test_handles",
+    "Tests.test_handles",
     [
-        "VirtualMemoryToolkit/tests/test_handles.pyx"
+        "test_handles.pyx"
     ],
     language="c++",
     libraries=include_libs,
@@ -28,9 +29,9 @@ handles_ext = Extension(
 )
 
 process_ext = Extension(
-    "VirtualMemoryToolkit.tests.test_process",
+    "Tests.test_process",
     [
-        "VirtualMemoryToolkit/tests/test_process.pyx"
+        "test_process.pyx"
     ],
     language="c++",
     libraries=include_libs,
@@ -39,9 +40,9 @@ process_ext = Extension(
 
 
 memory_ext = Extension(
-    "VirtualMemoryToolkit.tests.test_memory",
+    "Tests.test_memory",
     [
-        "VirtualMemoryToolkit/tests/test_memory.pyx"
+        "test_memory.pyx"
     ],
     language="c++",
     libraries=include_libs,
@@ -49,7 +50,7 @@ memory_ext = Extension(
 )
 # Setup script
 setup(
-    name='VirtualMemoryToolkit',
+    name='Tests',
     ext_modules=cythonize(
         [   
             handles_ext,
