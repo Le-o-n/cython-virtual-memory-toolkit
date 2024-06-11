@@ -1,4 +1,4 @@
-from VirtualMemoryToolkit.tests import test_process, test_handles, test_memory # type: ignore
+import test_process, test_handles, test_memory # type: ignore
 
 def main() -> None:
     

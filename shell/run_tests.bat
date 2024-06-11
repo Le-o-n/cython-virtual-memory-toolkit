@@ -2,9 +2,9 @@
 setlocal enabledelayedexpansion
 
 set PYTHON_EXECUTABLE=python
-set SETUP="./test/setup_tests.py"
+set RUN_PATH=./test/run_tests.py
 
 cd /D "%~dp0"
 cd ..
 
-%PYTHON_EXECUTABLE% %SETUP% build_ext --inplace --force
+python %RUN_PATH%
