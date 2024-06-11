@@ -4,7 +4,7 @@ setlocal enabledelayedexpansion
 set PYTHON_EXECUTABLE=python
 
 cd /D "%~dp0"
-cd ../tests/
+cd ../test/
 
 rem Delete all .cpp files
 for %%f in (*.cpp) do (

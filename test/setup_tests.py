@@ -7,21 +7,21 @@ include_libs = [
     "kernel32",
 ]
 
-# Specify the base directory where your Cython modules are located
-file_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.abspath(os.path.join(file_dir, os.pardir))
+test_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
 virtual_memory_toolkit_dir = os.path.join(root_dir, "VirtualMemoryToolkit")
 
+
 include_dirs = [
+    test_dir,
     root_dir,
-    virtual_memory_toolkit_dir,
+    virtual_memory_toolkit_dir
 ]
 
-
 handles_ext = Extension(
-    "Tests.test_handles",
+    "test.test_handles",
     [
-        "test_handles.pyx"
+        "test/test_handles.pyx"
     ],
     language="c++",
     libraries=include_libs,
@@ -29,35 +29,33 @@ handles_ext = Extension(
 )
 
 process_ext = Extension(
-    "Tests.test_process",
+    "test.test_process",
     [
-        "test_process.pyx"
+        "test/test_process.pyx"
     ],
     language="c++",
     libraries=include_libs,
     include_dirs=include_dirs
 )
-
 
 memory_ext = Extension(
-    "Tests.test_memory",
+    "test.test_memory",
     [
-        "test_memory.pyx"
+        "test/test_memory.pyx"
     ],
     language="c++",
     libraries=include_libs,
     include_dirs=include_dirs
 )
+
 # Setup script
 setup(
     name='Tests',
     ext_modules=cythonize(
-        [   
+        [
             handles_ext,
             process_ext,
             memory_ext
-            
-            
         ]
     ),
     include_dirs=include_dirs,
