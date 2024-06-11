@@ -24,9 +24,8 @@ h_files = [
     os.path.join(file_dir, 'windows/windows_types.h')
 ]
 
-
 setup(
-    package_dir={"VirtualMemoryToolkit": "VirtualMemoryToolkit"},
+    package_dir={"VirtualMemoryToolkit": file_dir},
     package_data={
         'VirtualMemoryToolkit': pxd_files + h_files
     },

@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 set PYTHON_EXECUTABLE=python
-set SETUP="./VirtualMemoryToolkit/setup.py"
+set SETUP="./src/setup.py"
 
 cd /D "%~dp0"
 cd ..
