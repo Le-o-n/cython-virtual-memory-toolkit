@@ -1,4 +1,8 @@
 @echo off
+
+cd /D "%~dp0"
+cd ..
+
 set PYTHON=python
 set REQUIREMENTS="./requirements.txt"
 
