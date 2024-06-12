@@ -15,7 +15,6 @@ virtual_memory_toolkit_dir = os.path.join(src_dir, "virtual_memory_toolkit")
 
 include_dirs = [
     test_dir,
-    root_dir,
     src_dir,
     virtual_memory_toolkit_dir
 ]
