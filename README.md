@@ -52,6 +52,16 @@ For a variety of sample projects using this package, refer to the ./examples/ fo
 ### CAppHandle
 This is a generic handle that wraps around both a maximum privilage process handle (HANDLE) and a window handle (HWND), this struct abstracts the need to micromanage these handles.
 
+#### Definition
+```c
+typedef struct{
+    HANDLE process_handle;
+    HWND window_handle;
+    DWORD pid;
+    char* window_title;
+} CAppHandle;
+```
+
 #### Initialising the CAppHandle
 ```cython
 from virtual_memory_toolkit.handles.handle cimport CAppHandle
