@@ -8,4 +8,4 @@ cd /D "%~dp0"
 
 call shell\\build_sdist.bat
 call shell\\install_build_globally.bat
-
+call shell\\cleanup_sdist_build.bat

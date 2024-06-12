@@ -26,6 +26,4 @@ for /d %%i in (*.egg-info) do (
     rmdir /S /Q "%%i"
 )
 
-REM Run the other batch files
-call shell\build_sdist.bat
-call install_build_globally.bat
+
