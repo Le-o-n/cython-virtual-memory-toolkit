@@ -1,6 +1,6 @@
 from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
 from virtual_memory_toolkit.memory.memory_manager cimport CMemoryManager, CMemoryManager_free, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_virtual_free_address, CMemoryManager_virtual_free, CMemoryManager_virtual_free_all
-from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_write_int1, CVirtualAddress_read_int1, CVirtualAddress_free
+from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_write_int8, CVirtualAddress_read_int8, CVirtualAddress_free
 
 from libc.string cimport strdup
 from libc.stdlib cimport free
@@ -31,10 +31,10 @@ cpdef int main():
     cdef CVirtualAddress* int1 = CMemoryManager_virtual_alloc(mem_manager, <size_t>10*sizeof(char))
     cdef CVirtualAddress* int32_array = CMemoryManager_virtual_alloc(mem_manager, <size_t>10*sizeof(int))
 
-    CVirtualAddress_write_int1(int1, <const unsigned char>100)
+    CVirtualAddress_write_int8(int1, <const unsigned char>100)
     
     cdef unsigned char read_int1
-    CVirtualAddress_read_int1(int1, &read_int1)
+    CVirtualAddress_read_int8(int1, &read_int1)
 
     CMemoryManager_virtual_free_address(mem_manager, int32)
     CMemoryManager_virtual_free_all(mem_manager) 
