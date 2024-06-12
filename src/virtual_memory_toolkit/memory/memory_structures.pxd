@@ -1,12 +1,12 @@
-from libc.stdlib cimport malloc, free, calloc 
-from libc.string cimport memcpy, memcmp, strstr, strdup
-from VirtualMemoryToolkit.handles.handle cimport CAppHandle
-from VirtualMemoryToolkit.windows.windows_types cimport BYTE, SIZE_T, HANDLE, LPCVOID, LPVOID, PBYTE
-from VirtualMemoryToolkit.windows.windows_defs cimport PrivilagedSearchMemoryBytes, PrivilagedMemoryRead, PrivilagedMemoryWrite
-from VirtualMemoryToolkit.process.process cimport CProcess
-from VirtualMemoryToolkit.windows.windows_defs cimport MAX_MODULES, MODULEENTRY32
+from libc.stdlib cimport malloc, free
+from libc.string cimport strstr, strdup
+from virtual_memory_toolkit.handles.handle cimport CAppHandle
+from virtual_memory_toolkit.windows.windows_types cimport SIZE_T, HANDLE, LPCVOID, LPVOID, PBYTE
+from virtual_memory_toolkit.windows.windows_defs cimport PrivilagedSearchMemoryBytes, PrivilagedMemoryRead, PrivilagedMemoryWrite
+from virtual_memory_toolkit.process.process cimport CProcess
+from virtual_memory_toolkit.windows.windows_defs cimport MAX_MODULES, MODULEENTRY32
 
-cdef extern from "VirtualMemoryToolkit/memory/memory_structures.h":
+cdef extern from "virtual_memory_toolkit/memory/memory_structures.h":
     ctypedef struct CModule:
         CAppHandle* app_handle
         char* name

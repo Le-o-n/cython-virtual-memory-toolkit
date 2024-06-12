@@ -1,12 +1,12 @@
-from VirtualMemoryToolkit.windows.windows_types cimport BYTE, HANDLE, LPVOID, SIZE_T
-from VirtualMemoryToolkit.windows.windows_defs cimport VirtualAllocEx, VirtualFreeEx, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE, MEM_RELEASE
-from VirtualMemoryToolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_init
+from virtual_memory_toolkit.windows.windows_types cimport BYTE, HANDLE, LPVOID, SIZE_T
+from virtual_memory_toolkit.windows.windows_defs cimport VirtualAllocEx, VirtualFreeEx, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE, MEM_RELEASE
+from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_init
 
-from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_free
+from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_free
 from libc.stdlib cimport malloc, free, calloc 
 from libc.string cimport memcpy, memcmp, strstr
 
-cdef extern from "VirtualMemoryToolkit/memory/memory_manager.h":
+cdef extern from "virtual_memory_toolkit/memory/memory_manager.h":
 
     ctypedef struct CMemoryRegionNode:
         void* address

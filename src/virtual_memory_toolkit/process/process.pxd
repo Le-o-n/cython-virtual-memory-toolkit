@@ -1,19 +1,19 @@
 from libc.stdlib cimport malloc, free
 
-from VirtualMemoryToolkit.handles.handle cimport CAppHandle
+from virtual_memory_toolkit.handles.handle cimport CAppHandle
 
-from VirtualMemoryToolkit.windows.windows_types cimport MODULEENTRY32
-from VirtualMemoryToolkit.windows.windows_types cimport HANDLE, DWORD
+from virtual_memory_toolkit.windows.windows_types cimport MODULEENTRY32
+from virtual_memory_toolkit.windows.windows_types cimport HANDLE, DWORD
 
-from VirtualMemoryToolkit.windows.windows_defs cimport GetProcessImageFileNameA
-from VirtualMemoryToolkit.windows.windows_defs cimport CollectAllModuleInformation
-from VirtualMemoryToolkit.windows.windows_defs cimport CreateToolhelp32Snapshot
+from virtual_memory_toolkit.windows.windows_defs cimport GetProcessImageFileNameA
+from virtual_memory_toolkit.windows.windows_defs cimport CollectAllModuleInformation
+from virtual_memory_toolkit.windows.windows_defs cimport CreateToolhelp32Snapshot
 
-from VirtualMemoryToolkit.windows.windows_defs cimport TH32CS_SNAPMODULE
-from VirtualMemoryToolkit.windows.windows_defs cimport TH32CS_SNAPMODULE32
-from VirtualMemoryToolkit.windows.windows_defs cimport MAX_PATH, INVALID_HANDLE_VALUE
+from virtual_memory_toolkit.windows.windows_defs cimport TH32CS_SNAPMODULE
+from virtual_memory_toolkit.windows.windows_defs cimport TH32CS_SNAPMODULE32
+from virtual_memory_toolkit.windows.windows_defs cimport MAX_PATH, INVALID_HANDLE_VALUE
 
-cdef extern from "VirtualMemoryToolkit/process/process.h":
+cdef extern from "virtual_memory_toolkit/process/process.h":
     ctypedef struct CProcess:
         CAppHandle* app_handle
         MODULEENTRY32* loaded_modules

@@ -1,3 +1,3 @@
 @echo off
 
-python -m pip uninstall VirtualMemoryToolkit
+python -m pip uninstall virtual_memory_toolkit

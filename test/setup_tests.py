@@ -9,12 +9,13 @@ include_libs = [
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
-virtual_memory_toolkit_dir = os.path.join(root_dir, "VirtualMemoryToolkit")
+src_dir = os.path.join(root_dir, "src")
+virtual_memory_toolkit_dir = os.path.join(src_dir, "virtual_memory_toolkit")
 
 
 include_dirs = [
     test_dir,
-    root_dir,
+    src_dir,
     virtual_memory_toolkit_dir
 ]
 

@@ -1,6 +1,6 @@
-from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
-from VirtualMemoryToolkit.memory.memory_structures cimport CModule, CModule_free, CModule_from_process
-from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_init, CProcess_free
+from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
+from virtual_memory_toolkit.memory.memory_structures cimport CModule, CModule_free, CModule_from_process
+from virtual_memory_toolkit.process.process cimport CProcess, CProcess_init, CProcess_free
 
 
 from libc.string cimport strdup

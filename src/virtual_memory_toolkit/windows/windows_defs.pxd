@@ -63,7 +63,7 @@ cdef extern from "tlhelp32.h":
     BOOL Module32First(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme) nogil
     BOOL Module32Next(HANDLE hSnapshot, LPMODULEENTRY32 out_lpme) nogil
 
-cdef extern from "VirtualMemoryToolkit/windows/windows_defs.h":
+cdef extern from "virtual_memory_toolkit/windows/windows_defs.h":
     cdef SIZE_T MAX_MODULES
 
 
