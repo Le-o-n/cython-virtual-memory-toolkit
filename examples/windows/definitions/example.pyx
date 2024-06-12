@@ -1,5 +1,5 @@
-from VirtualMemoryToolkit.windows.windows_defs cimport FindWindowA, GetLastError, GetWindowThreadProcessId
-from VirtualMemoryToolkit.windows.windows_types cimport HWND, LPCSTR, DWORD
+from virtual_memory_toolkit.windows.windows_defs cimport FindWindowA, GetLastError, GetWindowThreadProcessId
+from virtual_memory_toolkit.windows.windows_types cimport HWND, LPCSTR, DWORD
 
 
 cpdef int main():

@@ -1,6 +1,6 @@
-from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
-from VirtualMemoryToolkit.memory.memory_manager cimport CMemoryManager, CMemoryManager_free, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_virtual_free, CMemoryManager_virtual_free_all
-from VirtualMemoryToolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_write_float32, CVirtualAddress_read_float32, CVirtualAddress_free
+from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
+from virtual_memory_toolkit.memory.memory_manager cimport CMemoryManager, CMemoryManager_free, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_virtual_free, CMemoryManager_virtual_free_all
+from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_write_float32, CVirtualAddress_read_float32, CVirtualAddress_free
 
 from libc.string cimport strdup
 from libc.stdlib cimport free

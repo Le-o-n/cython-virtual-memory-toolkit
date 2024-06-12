@@ -1,4 +1,4 @@
-from VirtualMemoryToolkit.windows.windows_types cimport LPCSTR, BYTE, LPSTR
+from virtual_memory_toolkit.windows.windows_types cimport LPCSTR, BYTE, LPSTR
 
 cpdef int main():
     cdef char[10] temp_string = b"some_text"

@@ -1,5 +1,5 @@
-from VirtualMemoryToolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
-from VirtualMemoryToolkit.process.process cimport CProcess, CProcess_init, CProcess_free
+from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
+from virtual_memory_toolkit.process.process cimport CProcess, CProcess_init, CProcess_free
 
 
 import subprocess
