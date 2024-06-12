@@ -116,6 +116,82 @@ cpdef int main():
 ```
 
 ### CVirtualAddress
+This struct allows the persistant definition of a virtual address using various initialisations:
+
+#### Initialisation via static address 
+```cython
+from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
+from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_free
+
+cdef int main():
+  cdef void* address = 100000
+  cdef CAppHandle* app_handle = CAppHandle_from_title_substring("Notepad")
+  cdef CVirtualAddress* address = CVirtualAddress_init(app_handle, address)
+
+  ...
+
+  CVirtualAddress_free(address)
+  CAppHandle_free(app_handle)
+  return 0
+
+```
+
+#### Initialisation via dynamic address 
+```cython
+from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
+from virtual_memory_toolkit.memory.memory_structures cimport CModule, CModule_from_process, CModule_free
+from virtual_memory_toolkit.process.process cimport CProcess, CProcess_init, CProcess_free
+from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_from_dynamic, CVirtualAddress_free
+
+cdef int main():
+  cdef CAppHandle* app_handle = CAppHandle_from_title_substring("Notepad")
+  cdef CProcess* process = CProcess_init(app_handle)
+  cdef CModule* module = CModule_from_process(process, <const char*>"User32")
+  cdef void* offset = 100
+  cdef CVirtualAddress* address = CVirtualAddress_from_dynamic(app_handle, module, offset)
+
+  ...
+
+  CVirtualAddress_free(address)
+  CModule_free(module)
+  CProcess_free(process)
+  CAppHandle_free(app_handle)
+  return 0
+
+```
+
+#### Initialisation via Array-Of-Byte scan 
+```cython
+from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
+from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_from_dynamic, CVirtualAddress_free
+from libc.stdlib cimport malloc, free 
+
+cdef int main():
+
+  cdef CAppHandle* app_handle = CAppHandle_from_title_substring("Notepad")
+
+  py_array_of_bytes = [0x10, 0x30, ...]
+  cdef unsigned char[10] array_of_bytes
+
+  for i, b in enumerate(py_array_of_bytes):
+    array_of_bytes[i] = <unsigned char>b
+      
+  cdef CVirtualAddress* address = CVirtualAddress_from_aob(
+      app_handle,
+      <const void*>0,
+      <const void*>500000,
+      <unsigned char*>&array_of_bytes,
+      <size_t>10
+  )
+
+  ...
+
+  CVirtualAddress_free(address)
+  CAppHandle_free(app_handle)
+  return 0
+
+```
+
 
 ### CMemoryManager
 
