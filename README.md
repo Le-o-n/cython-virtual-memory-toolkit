@@ -1,7 +1,16 @@
 # Cython Virtual Memory Toolkit
-
 The Cython Virtual Memory Toolkit is designed to provide Cython header files (`*.pxd`) for various functionalities, enabling Cython to interact with the virtual memory of a target process. This toolkit includes features for reading, writing, allocating, and freeing virtual memory, along with Windows API bindings and custom functions for memory management.
 
+# Table of Contents
+- [Introduction](#introduction)
+- [Features](#features)
+- [Installation](#installation)
+- [Requirements](#requirements)
+- [Examples](#examples)
+- [License](#license)
+
+# Introduction
+This project serves as a means for Cython projects to manipulate virtual memory of a target process, this can be useful for many reasons, the primary drive was for this project to be helpful when creating video game mods but this is one of many use-cases. 
 # Features
 
 - **Reading Memory**: Supports array of bytes, int8, int16, int32, int64, float32, and float64.
