@@ -10,7 +10,10 @@ The Cython Virtual Memory Toolkit is designed to provide Cython header files (`*
 - [License](#license)
 
 # Introduction
-This project serves as a means for Cython projects to manipulate virtual memory of a target process, this can be useful for many reasons, the primary drive was for this project to be helpful when creating video game mods but this is one of many use-cases. 
+This project aims to provide Cython projects with the ability to manipulate the virtual memory of a target process through wrappers around the Windows API. This capability can be useful for various purposes, particularly for deploying video game mods.
+
+Why use Cython instead of Python? Python's reliance on the Global Interpreter Lock (GIL) and PyObject structs, while offering flexibility, introduces significant overhead. One such overhead involves casting between PyObjects and native C types, as a PyObject cannot be directly passed to Windows API functions. While the ctypes module could be used to create Python definitions for Windows API functions, a more efficient approach is to use Cython. Cython allows for direct calls to Windows API functions with minimal overhead, native C types, compiled code, static typing, and the ability to include or exclude the GIL as needed.
+
 # Features
 
 - **Reading Memory**: Supports array of bytes, int8, int16, int32, int64, float32, and float64.
