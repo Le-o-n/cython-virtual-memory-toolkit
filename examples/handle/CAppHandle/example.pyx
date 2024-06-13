@@ -1,4 +1,4 @@
-from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free, CAppHandle_new
+from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
 from libc.string cimport strdup
 from libc.stdlib cimport free
 

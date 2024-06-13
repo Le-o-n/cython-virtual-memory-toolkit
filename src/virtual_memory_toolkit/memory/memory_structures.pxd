@@ -178,7 +178,7 @@ cdef inline CVirtualAddress* CVirtualAddress_from_aob(CAppHandle* app_handle, co
 
     return v_address
 
-cdef inline CVirtualAddress* CVirtualAddress_from_static(CAppHandle* app_handle, CModule* module, void* offset) nogil:
+cdef inline CVirtualAddress* CVirtualAddress_from_dynamic(CAppHandle* app_handle, CModule* module, void* offset) nogil:
     """
     Creates a CVirtualAddress from a static offset within a module.
 
