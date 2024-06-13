@@ -288,11 +288,24 @@ To have this `CMemoryManager` struct initialised, we can simply call the `CMemor
 
 ```cython
 from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
-from virtual_memory_toolkit.memory.memory_manager cimport CMemoryManager, CMemoryManager_free, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_virtual_free_address, CMemoryManager_virtual_free, CMemoryManager_virtual_free_all
-from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_write_int32, CVirtualAddress_write_int32_offset, CVirtualAddress_read_int32, CVirtualAddress_read_int32_offset, CVirtualAddress_free
+from virtual_memory_toolkit.memory.memory_manager cimport CMemoryManager, CMemoryManager_free, CMemoryManager_init
 
-from libc.string cimport strdup
-from libc.stdlib cimport free
+cpdef int main():
+    cdef CAppHandle* app_handle = get_handle()
+    cdef CMemoryManager* mem_manager = CMemoryManager_init(app_handle)
+
+    ...
+
+    CMemoryManager_free(mem_manager)
+    CAppHandle_free(app_handle)
+    return 0
+
+```
+### Managing Virtual Memory
+```cython
+from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
+from virtual_memory_toolkit.memory.memory_manager cimport CMemoryManager, CMemoryManager_free, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_virtual_free_address, CMemoryManager_virtual_free_all
+from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_write_int32, CVirtualAddress_write_int32_offset, CVirtualAddress_read_int32, CVirtualAddress_read_int32_offset, CVirtualAddress_free
 
 cpdef int main():
     cdef CAppHandle* app_handle = get_handle()
@@ -301,17 +314,19 @@ cpdef int main():
     cdef CVirtualAddress* int32_array = CMemoryManager_virtual_alloc(mem_manager, <size_t>10*sizeof(int))
 
     CVirtualAddress_write_int32(int32_array, 0)
-    CVirtualAddress_write_int32_offset(int32_array, 1, 1*sizeof(int))
-    CVirtualAddress_write_int32_offset(int32_array, 2, 2*sizeof(int))
+    CVirtualAddress_write_int32_offset(int32_array, 101, 1*sizeof(int))
+    CVirtualAddress_write_int32_offset(int32_array, 102, 2*sizeof(int))
 
-    CMemoryManager_virtual_free_address(mem_manager, int32_array)
-    CMemoryManager_virtual_free_all(mem_manager) 
+    cdef int read_int32 = 0
+    CVirtualAddress_read_int32_offset(int32_array, &read_int32, 2*sizeof(int)) # read_int32 = 102
 
-    CMemoryManager_free(mem_manager)
+    CMemoryManager_virtual_free_address(mem_manager, int32_array) # frees array
+
+    CMemoryManager_virtual_free_all(mem_manager) # isn't needed here but just as an example
+    CMemoryManager_free(mem_manager) 
     CAppHandle_free(app_handle)
     return 0
 
 ```
-
 # License
 
