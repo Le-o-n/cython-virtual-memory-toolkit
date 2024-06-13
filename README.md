@@ -8,6 +8,7 @@ The Cython Virtual Memory Toolkit is designed to provide Cython header files (`*
 - [Requirements](#requirements)
 - [Examples](#examples)
 - [License](#license)
+- [Credits](#credits)
 
 # Introduction
 This project aims to provide Cython projects with the ability to manipulate the virtual memory of a target process through wrappers around the Windows API. This capability can be useful for various purposes, particularly for deploying video game mods.
@@ -342,4 +343,11 @@ cpdef int main():
 
 ```
 # License
+
+`cython-virtual-memory-toolkit` is released under the [MIT License](LICENSE).
+
+# Credits
+
+- [Leon Bass](https://github.com/Le-o-n)
+
 
