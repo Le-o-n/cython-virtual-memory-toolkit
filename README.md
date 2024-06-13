@@ -34,30 +34,36 @@ This section will outline the different ways of installing this package, there a
 To install via pip:
 
 ```bash
-pip install cython-virtual-memory-toolkit
+pip install virtual-memory-toolkit
 ```
 
 ## Installing from the repo
 
-To install from source, you can use the provided `install.bat` script:
+To install from source, you can use the provided `install.bat` script in the GitHub repo:
 
 ```bash
+git clone https://github.com/Le-o-n/cython-virtual-memory-toolkit
+cd ./cython-virtual-memory-toolkit
 install.bat
 ```
 
-Alternatively, you can build the source using `setup.py`:
+Alternatively, you can build the source using `setup.py` and then install the package created in the `./dist/` folder.
 
 ```bash
+git clone https://github.com/Le-o-n/cython-virtual-memory-toolkit
+cd ./cython-virtual-memory-toolkit
 python setup.py sdist
-```
-
-Then install the package created in the `./dist/` folder:
-
-```bash
 python -m pip install ./dist/*.tar.gz
 ```
 ## Copy files into your project
 A final way of including this package in your project simply involves just copying and pasting the `./src/virtual_memory_toolkit/` folder into your project and making sure that you include this directory when compiling your Cython code.
+
+```bash
+git clone https://github.com/Le-o-n/cython-virtual-memory-toolkit
+cd ./cython-virtual-memory-toolkit
+```
+Then, manually copy the files from `./src/virtual_memory_toolkit/` into your project's destination folder.
+
 
 # Requirements
 - Cython
@@ -315,7 +321,7 @@ cpdef int main():
 
 ```
 ### Managing Virtual Memory
-Using this `CMemoryManager`, 
+Using this `CMemoryManager`, we can manipulate the memory that has been allocated for us.
 ```cython
 from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
 from virtual_memory_toolkit.memory.memory_manager cimport CMemoryManager, CMemoryManager_free, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_virtual_free_address, CMemoryManager_virtual_free_all
@@ -344,7 +350,7 @@ cpdef int main():
 ```
 # License
 
-`cython-virtual-memory-toolkit` is released under the [MIT License](LICENSE).
+`cython-virtual-memory-toolkit` is released under the [MIT License](https://github.com/Le-o-n/cython-virtual-memory-toolkit/blob/main/LICENSE).
 
 # Credits
 
