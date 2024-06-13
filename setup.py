@@ -28,7 +28,17 @@ h_files = [
 ]
 
 os.chdir(root_dir)
+
+long_description = ""
+with open(os.path.join(root_dir, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+    
 setup(
+    name="virtual-memory-toolkit",
+    version="1.0.0",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    description="Virtual memory manipulation using Cython.",
     package_dir={"virtual_memory_toolkit": virtual_memory_toolkit_dir},
     package_data={
         'virtual_memory_toolkit': pxd_files + h_files
