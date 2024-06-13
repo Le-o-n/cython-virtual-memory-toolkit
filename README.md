@@ -302,6 +302,7 @@ cpdef int main():
 
 ```
 ### Managing Virtual Memory
+Using this `CMemoryManager`, 
 ```cython
 from virtual_memory_toolkit.handles.handle cimport CAppHandle, CAppHandle_from_title_substring, CAppHandle_free
 from virtual_memory_toolkit.memory.memory_manager cimport CMemoryManager, CMemoryManager_free, CMemoryManager_init, CMemoryManager_virtual_alloc, CMemoryManager_virtual_free_address, CMemoryManager_virtual_free_all
