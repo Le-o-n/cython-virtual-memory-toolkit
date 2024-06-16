@@ -45,7 +45,7 @@ cpdef int run():
 
     
     
-    print("     - get_handle_to_notepad  ... ", end="", flush=True)
+    print("     - get_handle_to_notepad  ... ")
     
     if get_handle_to_notepad():
         print("FAILED")

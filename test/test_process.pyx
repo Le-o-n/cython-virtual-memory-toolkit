@@ -54,7 +54,7 @@ cpdef int run():
     cdef CProcess* notepad_cprocess = <CProcess*>0
 
     
-    print("     - get_handle_to_notepad     ... ", end="", flush=True)
+    print("     - get_handle_to_notepad     ... ")
     notepad_apphandle = get_handle_to_notepad()
     if not notepad_apphandle:
         print("FAILED")
@@ -63,7 +63,7 @@ cpdef int run():
         print("PASSED")
 
 
-    print("     - create_notepad_cprocess   ... ", end="", flush=True)
+    print("     - create_notepad_cprocess   ... ")
     if notepad_apphandle:
         notepad_cprocess = create_notepad_cprocess(notepad_apphandle)
         if not notepad_cprocess:
