@@ -170,7 +170,7 @@ cdef int aob_scan(CAppHandle* app_handle):
     cdef CProcess* notepad_process = CProcess_init(app_handle)
     cdef CModule* notepad_module = CModule_from_process(notepad_process, <const char*>"notepad.exe")
 
-    cdef unsigned long long start_address = <unsigned long long>notepad_module[0].base_address
+    cdef unsigned long long start_address = 0 #<unsigned long long>notepad_module[0].base_address
     cdef unsigned long long end_address = <unsigned long long>start_address + <unsigned long long>notepad_module[0].size
 
     cdef unsigned char[6] c_bytes
