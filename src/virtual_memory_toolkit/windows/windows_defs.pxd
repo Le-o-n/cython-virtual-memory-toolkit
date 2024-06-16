@@ -233,11 +233,9 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_addre
     cdef SIZE_T region_end
     cdef SIZE_T search_end
     cdef SIZE_T current_address
-    cdef BYTE* read_bytes_buffer = <BYTE*>calloc(pattern_size, sizeof(BYTE))
+    cdef BYTE* read_bytes_buffer 
 
-    if not read_bytes_buffer:
-        return 1  # Memory allocation failed
-
+    
     while address < <SIZE_T>end_address:
         if VirtualQueryEx(process, <LPCVOID>address, &mbi, sizeof(mbi)) == 0:
             break  # Failed to query memory information
@@ -247,20 +245,25 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_addre
             search_end = min(<SIZE_T>end_address, region_end) - pattern_size + 1
             current_address = address
 
-            while current_address < search_end:
-                if PrivilagedMemoryRead(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, pattern_size) != pattern_size:
-                    break  # Failed to read memory at current address
+            read_bytes_buffer = <BYTE*>malloc(mbi.RegionSize * sizeof(BYTE))
 
-                if memcmp(<const void*>pattern, <const void*>read_bytes_buffer, pattern_size) == 0:
+            if PrivilagedMemoryRead(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, mbi.RegionSize) != mbi.RegionSize:
+                break
+
+            
+            for i in range(mbi.RegionSize - pattern_size):
+                if memcmp(<const void*>pattern, <const void*>read_bytes_buffer[i], pattern_size) == 0:
                     free(read_bytes_buffer)
                     out_found_address[0] = <LPVOID>current_address
                     return 0  # Pattern found
 
-                current_address += 1
+            
             address = region_end
         else:
             # If region is not committed, skip to the end of the region
             address = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
+
+        free(read_bytes_buffer)
 
     free(read_bytes_buffer)
     return 1  # Pattern not found or error occurred
