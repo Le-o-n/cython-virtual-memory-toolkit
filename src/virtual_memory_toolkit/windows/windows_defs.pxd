@@ -252,7 +252,7 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_addre
 
             
             for i in range(mbi.RegionSize - pattern_size):
-                if memcmp(<const void*>pattern, <const void*>read_bytes_buffer[i], pattern_size) == 0:
+                if memcmp(<const void*>pattern, <const void*>&read_bytes_buffer[i], pattern_size) == 0:
                     free(read_bytes_buffer)
                     out_found_address[0] = <LPVOID>current_address
                     return 0  # Pattern found
