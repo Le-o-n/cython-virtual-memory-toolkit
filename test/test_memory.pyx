@@ -175,7 +175,7 @@ cdef int aob_scan(CAppHandle* app_handle):
 
     cdef unsigned char[6] c_bytes
 
-    py_bytes = [0x48, 0x83, 0xec, 0x28, 0xe8, 0x27]
+    py_bytes = [0x38, 0xA2, 0x70, 0xA2, 0xA0, 0xA2, 0xB8, 0xA2, 0xC8, 0xA3, 0xF0, 0xA3, 0x18, 0xA4]
 
     for i, b in enumerate(py_bytes):
         c_bytes[i] = <unsigned char>b 
@@ -330,7 +330,7 @@ cpdef int run():
         else:
             print("PASSED")
     
-
+    
 
     if notepad_memory_manager:
         CMemoryManager_free(notepad_memory_manager)

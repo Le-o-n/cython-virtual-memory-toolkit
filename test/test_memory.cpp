@@ -1496,12 +1496,16 @@ static PyObject *__pyx_pf_4test_11test_memory_create_notepad_instance(CYTHON_UNU
 static PyObject *__pyx_pf_4test_11test_memory_2run(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
-static PyObject *__pyx_int_39;
-static PyObject *__pyx_int_40;
-static PyObject *__pyx_int_72;
-static PyObject *__pyx_int_131;
-static PyObject *__pyx_int_232;
-static PyObject *__pyx_int_236;
+static PyObject *__pyx_int_24;
+static PyObject *__pyx_int_56;
+static PyObject *__pyx_int_112;
+static PyObject *__pyx_int_160;
+static PyObject *__pyx_int_162;
+static PyObject *__pyx_int_163;
+static PyObject *__pyx_int_164;
+static PyObject *__pyx_int_184;
+static PyObject *__pyx_int_200;
+static PyObject *__pyx_int_240;
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__2;
 static PyObject *__pyx_codeobj__3;
@@ -2900,35 +2904,59 @@ static int __pyx_f_4test_11test_memory_aob_scan(CAppHandle *__pyx_v_app_handle) 
   /* "test/test_memory.pyx":178
  *     cdef unsigned char[6] c_bytes
  * 
- *     py_bytes = [0x48, 0x83, 0xec, 0x28, 0xe8, 0x27]             # <<<<<<<<<<<<<<
+ *     py_bytes = [0x38, 0xA2, 0x70, 0xA2, 0xA0, 0xA2, 0xB8, 0xA2, 0xC8, 0xA3, 0xF0, 0xA3, 0x18, 0xA4]             # <<<<<<<<<<<<<<
  * 
  *     for i, b in enumerate(py_bytes):
  */
-  __pyx_t_1 = PyList_New(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(14); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_int_72);
-  __Pyx_GIVEREF(__pyx_int_72);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_int_72);
-  __Pyx_INCREF(__pyx_int_131);
-  __Pyx_GIVEREF(__pyx_int_131);
-  PyList_SET_ITEM(__pyx_t_1, 1, __pyx_int_131);
-  __Pyx_INCREF(__pyx_int_236);
-  __Pyx_GIVEREF(__pyx_int_236);
-  PyList_SET_ITEM(__pyx_t_1, 2, __pyx_int_236);
-  __Pyx_INCREF(__pyx_int_40);
-  __Pyx_GIVEREF(__pyx_int_40);
-  PyList_SET_ITEM(__pyx_t_1, 3, __pyx_int_40);
-  __Pyx_INCREF(__pyx_int_232);
-  __Pyx_GIVEREF(__pyx_int_232);
-  PyList_SET_ITEM(__pyx_t_1, 4, __pyx_int_232);
-  __Pyx_INCREF(__pyx_int_39);
-  __Pyx_GIVEREF(__pyx_int_39);
-  PyList_SET_ITEM(__pyx_t_1, 5, __pyx_int_39);
+  __Pyx_INCREF(__pyx_int_56);
+  __Pyx_GIVEREF(__pyx_int_56);
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_int_56);
+  __Pyx_INCREF(__pyx_int_162);
+  __Pyx_GIVEREF(__pyx_int_162);
+  PyList_SET_ITEM(__pyx_t_1, 1, __pyx_int_162);
+  __Pyx_INCREF(__pyx_int_112);
+  __Pyx_GIVEREF(__pyx_int_112);
+  PyList_SET_ITEM(__pyx_t_1, 2, __pyx_int_112);
+  __Pyx_INCREF(__pyx_int_162);
+  __Pyx_GIVEREF(__pyx_int_162);
+  PyList_SET_ITEM(__pyx_t_1, 3, __pyx_int_162);
+  __Pyx_INCREF(__pyx_int_160);
+  __Pyx_GIVEREF(__pyx_int_160);
+  PyList_SET_ITEM(__pyx_t_1, 4, __pyx_int_160);
+  __Pyx_INCREF(__pyx_int_162);
+  __Pyx_GIVEREF(__pyx_int_162);
+  PyList_SET_ITEM(__pyx_t_1, 5, __pyx_int_162);
+  __Pyx_INCREF(__pyx_int_184);
+  __Pyx_GIVEREF(__pyx_int_184);
+  PyList_SET_ITEM(__pyx_t_1, 6, __pyx_int_184);
+  __Pyx_INCREF(__pyx_int_162);
+  __Pyx_GIVEREF(__pyx_int_162);
+  PyList_SET_ITEM(__pyx_t_1, 7, __pyx_int_162);
+  __Pyx_INCREF(__pyx_int_200);
+  __Pyx_GIVEREF(__pyx_int_200);
+  PyList_SET_ITEM(__pyx_t_1, 8, __pyx_int_200);
+  __Pyx_INCREF(__pyx_int_163);
+  __Pyx_GIVEREF(__pyx_int_163);
+  PyList_SET_ITEM(__pyx_t_1, 9, __pyx_int_163);
+  __Pyx_INCREF(__pyx_int_240);
+  __Pyx_GIVEREF(__pyx_int_240);
+  PyList_SET_ITEM(__pyx_t_1, 10, __pyx_int_240);
+  __Pyx_INCREF(__pyx_int_163);
+  __Pyx_GIVEREF(__pyx_int_163);
+  PyList_SET_ITEM(__pyx_t_1, 11, __pyx_int_163);
+  __Pyx_INCREF(__pyx_int_24);
+  __Pyx_GIVEREF(__pyx_int_24);
+  PyList_SET_ITEM(__pyx_t_1, 12, __pyx_int_24);
+  __Pyx_INCREF(__pyx_int_164);
+  __Pyx_GIVEREF(__pyx_int_164);
+  PyList_SET_ITEM(__pyx_t_1, 13, __pyx_int_164);
   __pyx_v_py_bytes = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "test/test_memory.pyx":180
- *     py_bytes = [0x48, 0x83, 0xec, 0x28, 0xe8, 0x27]
+ *     py_bytes = [0x38, 0xA2, 0x70, 0xA2, 0xA0, 0xA2, 0xB8, 0xA2, 0xC8, 0xA3, 0xF0, 0xA3, 0x18, 0xA4]
  * 
  *     for i, b in enumerate(py_bytes):             # <<<<<<<<<<<<<<
  *         c_bytes[i] = <unsigned char>b
@@ -2967,7 +2995,7 @@ static int __pyx_f_4test_11test_memory_aob_scan(CAppHandle *__pyx_v_app_handle) 
     (__pyx_v_c_bytes[__pyx_t_6]) = ((unsigned char)__pyx_t_5);
 
     /* "test/test_memory.pyx":180
- *     py_bytes = [0x48, 0x83, 0xec, 0x28, 0xe8, 0x27]
+ *     py_bytes = [0x38, 0xA2, 0x70, 0xA2, 0xA0, 0xA2, 0xB8, 0xA2, 0xC8, 0xA3, 0xF0, 0xA3, 0x18, 0xA4]
  * 
  *     for i, b in enumerate(py_bytes):             # <<<<<<<<<<<<<<
  *         c_bytes[i] = <unsigned char>b
@@ -9922,12 +9950,16 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_39 = PyInt_FromLong(39); if (unlikely(!__pyx_int_39)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_40 = PyInt_FromLong(40); if (unlikely(!__pyx_int_40)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_72 = PyInt_FromLong(72); if (unlikely(!__pyx_int_72)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_131 = PyInt_FromLong(131); if (unlikely(!__pyx_int_131)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_232 = PyInt_FromLong(232); if (unlikely(!__pyx_int_232)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_236 = PyInt_FromLong(236); if (unlikely(!__pyx_int_236)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_24 = PyInt_FromLong(24); if (unlikely(!__pyx_int_24)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_56 = PyInt_FromLong(56); if (unlikely(!__pyx_int_56)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_112 = PyInt_FromLong(112); if (unlikely(!__pyx_int_112)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_160 = PyInt_FromLong(160); if (unlikely(!__pyx_int_160)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_162 = PyInt_FromLong(162); if (unlikely(!__pyx_int_162)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_163 = PyInt_FromLong(163); if (unlikely(!__pyx_int_163)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_164 = PyInt_FromLong(164); if (unlikely(!__pyx_int_164)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_184 = PyInt_FromLong(184); if (unlikely(!__pyx_int_184)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_200 = PyInt_FromLong(200); if (unlikely(!__pyx_int_200)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_240 = PyInt_FromLong(240); if (unlikely(!__pyx_int_240)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
