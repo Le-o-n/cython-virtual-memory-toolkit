@@ -213,7 +213,57 @@ cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPCVOID base_add
 
     return written_bytes
 
-cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_address, LPCVOID end_address, PBYTE pattern, SIZE_T pattern_size, LPVOID* out_found_address) nogil:
+
+
+cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(
+    HANDLE process, 
+    LPCVOID start_address, 
+    LPCVOID end_address,
+    unsigned long long *out_found_regions
+) nogil:
+    cdef list regions_list = []
+    cdef MEMORY_BASIC_INFORMATION mbi
+    cdef unsigned long information_buffer_size
+    cdef LPCVOID current_address = start_address
+    cdef unsigned long long total_regions = 0
+    cdef MEMORY_BASIC_INFORMATION *regions = NULL
+
+    while current_address < end_address:
+        information_buffer_size = VirtualQueryEx(process, current_address, &mbi, sizeof(mbi))
+        if information_buffer_size == 0:
+            break
+        
+        regions_list.append(mbi)
+        
+        current_address = <LPCVOID>(<unsigned long long>mbi.BaseAddress + mbi.RegionSize)
+
+    total_regions = len(regions_list)
+    if total_regions == 0:
+        return NULL
+    
+    regions = <MEMORY_BASIC_INFORMATION*>malloc(total_regions * sizeof(MEMORY_BASIC_INFORMATION))
+    if regions == NULL:
+        return NULL
+    
+    # Copy from Python list to C array
+    for i in range(total_regions):
+        regions[i] = <MEMORY_BASIC_INFORMATION>regions_list[i]
+
+    if out_found_regions != NULL:
+        out_found_regions[0] = total_regions
+
+    return regions
+
+
+
+cdef inline BOOL PrivilagedSearchMemoryBytes(
+    HANDLE process, 
+    LPCVOID start_address, 
+    LPCVOID end_address, 
+    PBYTE pattern, 
+    SIZE_T pattern_size, 
+    LPVOID* out_found_address
+) nogil:
     """
     Searches for a byte pattern within a specified memory range.
 
@@ -226,7 +276,7 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_addre
         out_found_address (LPVOID*): Pointer to store the found address if the pattern is found.
 
     Returns:
-        BOOL: True (0) if the pattern is found, False (1) if it is not found or an error occurs.
+        BOOL: 0 if the pattern is found, 1 if it is not found or an error occurs.
     """
     cdef MEMORY_BASIC_INFORMATION mbi
     cdef SIZE_T address = <SIZE_T>start_address
