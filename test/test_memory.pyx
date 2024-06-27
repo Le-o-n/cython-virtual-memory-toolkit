@@ -4,7 +4,10 @@ from virtual_memory_toolkit.process.process cimport CProcess, CProcess_init, CPr
 from virtual_memory_toolkit.memory.memory_structures cimport CModule, CModule_from_process, CModule_free
 from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress, CVirtualAddress_free, CVirtualAddress_from_dynamic, CVirtualAddress_init, CVirtualAddress_read_int8,CVirtualAddress_write_int8 
 from virtual_memory_toolkit.memory.memory_structures cimport CVirtualAddress_read_int32 , CVirtualAddress_from_aob, CVirtualAddress_read_int32_offset, CVirtualAddress_write_int32, CVirtualAddress_write_int32_offset, CVirtualAddress_offset
+from virtual_memory_toolkit.windows.windows_defs cimport GetMemoryRegionsInRange
+from virtual_memory_toolkit.windows.windows_types cimport LPCVOID, MEMORY_BASIC_INFORMATION
 
+from libc.stdlib cimport free
 
 import subprocess
 import time
@@ -170,30 +173,51 @@ cdef int aob_scan(CAppHandle* app_handle):
     cdef CProcess* notepad_process = CProcess_init(app_handle)
     cdef CModule* notepad_module = CModule_from_process(notepad_process, <const char*>"notepad.exe")
 
-    cdef unsigned long long start_address = <unsigned long long>notepad_module[0].base_address
-    cdef unsigned long long end_address = <unsigned long long>start_address + <unsigned long long>notepad_module[0].size
 
-    cdef unsigned char[6] c_bytes
+    cdef unsigned long long regions
+    cdef MEMORY_BASIC_INFORMATION* mem_info_array = GetMemoryRegionsInRange(
+        app_handle[0].process_handle, 
+        <LPCVOID>notepad_module[0].base_address, 
+        <LPCVOID>(<unsigned long long>notepad_module[0].base_address + 4000*5), 
+        &regions
+    )
 
-    py_bytes = [0x38, 0xA2, 0x70, 0xA2, 0xA0, 0xA2, 0xB8, 0xA2, 0xC8, 0xA3, 0xF0, 0xA3, 0x18, 0xA4]
+    if not mem_info_array:
+        return 1
 
-    for i, b in enumerate(py_bytes):
-        c_bytes[i] = <unsigned char>b 
+    cdef MEMORY_BASIC_INFORMATION mem_info
 
-    cdef CVirtualAddress* found_address = CVirtualAddress_from_aob(app_handle, <const void*>start_address, <const void*>end_address,<unsigned char*> &c_bytes, 6)
-    
-    if found_address:
-        print("Found at " + hex(<unsigned long long>found_address[0].address))
-    else:
-        print("Could not find address ")
+    print(regions)
+    for i in range(regions):
+        mem_info = mem_info_array[i]
 
-    cdef int valid = (found_address == NULL)
+        print(hex(<unsigned long long>mem_info.BaseAddress))
 
-    CVirtualAddress_free(found_address)
+    #cdef unsigned long long start_address = <unsigned long long>notepad_module[0].base_address
+    #cdef unsigned long long end_address = <unsigned long long>start_address + <unsigned long long>notepad_module[0].size
+#
+    #cdef unsigned char[6] c_bytes
+#
+    #py_bytes = [0x38, 0xA2, 0x70, 0xA2, 0xA0, 0xA2, 0xB8, 0xA2, 0xC8, 0xA3, 0xF0, 0xA3, 0x18, 0xA4]
+#
+    #for i, b in enumerate(py_bytes):
+    #    c_bytes[i] = <unsigned char>b 
+#
+    #cdef CVirtualAddress* found_address = CVirtualAddress_from_aob(app_handle, <const void*>start_address, <const void*>end_address,<unsigned char*> &c_bytes, 6)
+    #
+    #if found_address:
+    #    print("Found at " + hex(<unsigned long long>found_address[0].address))
+    #else:
+    #    print("Could not find address ")
+#
+    #cdef int valid = (found_address == NULL)
+
+    free(mem_info_array)
     CModule_free(notepad_module)
     CProcess_free(notepad_process)
     
-    return valid
+    #return valid
+    return 0
 
 
 cpdef int run():

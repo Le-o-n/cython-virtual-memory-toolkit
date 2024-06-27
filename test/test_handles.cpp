@@ -2479,7 +2479,7 @@ static CYTHON_INLINE SIZE_T __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  * 
  *     return written_bytes             # <<<<<<<<<<<<<<
  * 
- * cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_address, LPCVOID end_address, PBYTE pattern, SIZE_T pattern_size, LPVOID* out_found_address) nogil:
+ * 
  */
   __pyx_r = __pyx_v_written_bytes;
   goto __pyx_L0;
@@ -2497,12 +2497,372 @@ static CYTHON_INLINE SIZE_T __pyx_f_22virtual_memory_toolkit_7windows_12windows_
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/windows/windows_defs.pxd":216
- *     return written_bytes
+/* "virtual_memory_toolkit/windows/windows_defs.pxd":217
  * 
- * cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_address, LPCVOID end_address, PBYTE pattern, SIZE_T pattern_size, LPVOID* out_found_address) nogil:             # <<<<<<<<<<<<<<
- *     """
- *     Searches for a byte pattern within a specified memory range.
+ * 
+ * cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(             # <<<<<<<<<<<<<<
+ *     HANDLE process,
+ *     LPCVOID start_address,
+ */
+
+static CYTHON_INLINE MEMORY_BASIC_INFORMATION *__pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_GetMemoryRegionsInRange(HANDLE __pyx_v_process, LPCVOID __pyx_v_start_address, LPCVOID __pyx_v_end_address, unsigned PY_LONG_LONG *__pyx_v_out_found_regions) {
+  MEMORY_BASIC_INFORMATION __pyx_v_mbi;
+  LPCVOID __pyx_v_current_address;
+  unsigned PY_LONG_LONG __pyx_v_total_regions;
+  MEMORY_BASIC_INFORMATION *__pyx_v_regions;
+  MEMORY_BASIC_INFORMATION *__pyx_v_temp_regions;
+  unsigned PY_LONG_LONG __pyx_v_regions_capacity;
+  MEMORY_BASIC_INFORMATION *__pyx_r;
+  int __pyx_t_1;
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":225
+ *     cdef MEMORY_BASIC_INFORMATION mbi
+ *     cdef unsigned long information_buffer_size
+ *     cdef LPCVOID current_address = start_address             # <<<<<<<<<<<<<<
+ *     cdef unsigned long long total_regions = 0
+ *     cdef MEMORY_BASIC_INFORMATION *regions = NULL
+ */
+  __pyx_v_current_address = __pyx_v_start_address;
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":226
+ *     cdef unsigned long information_buffer_size
+ *     cdef LPCVOID current_address = start_address
+ *     cdef unsigned long long total_regions = 0             # <<<<<<<<<<<<<<
+ *     cdef MEMORY_BASIC_INFORMATION *regions = NULL
+ *     cdef MEMORY_BASIC_INFORMATION *temp_regions = NULL
+ */
+  __pyx_v_total_regions = 0;
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":227
+ *     cdef LPCVOID current_address = start_address
+ *     cdef unsigned long long total_regions = 0
+ *     cdef MEMORY_BASIC_INFORMATION *regions = NULL             # <<<<<<<<<<<<<<
+ *     cdef MEMORY_BASIC_INFORMATION *temp_regions = NULL
+ *     cdef unsigned long long regions_capacity = 128  # Initial capacity for regions array
+ */
+  __pyx_v_regions = NULL;
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":228
+ *     cdef unsigned long long total_regions = 0
+ *     cdef MEMORY_BASIC_INFORMATION *regions = NULL
+ *     cdef MEMORY_BASIC_INFORMATION *temp_regions = NULL             # <<<<<<<<<<<<<<
+ *     cdef unsigned long long regions_capacity = 128  # Initial capacity for regions array
+ *     cdef unsigned long long i
+ */
+  __pyx_v_temp_regions = NULL;
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":229
+ *     cdef MEMORY_BASIC_INFORMATION *regions = NULL
+ *     cdef MEMORY_BASIC_INFORMATION *temp_regions = NULL
+ *     cdef unsigned long long regions_capacity = 128  # Initial capacity for regions array             # <<<<<<<<<<<<<<
+ *     cdef unsigned long long i
+ * 
+ */
+  __pyx_v_regions_capacity = 0x80;
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":232
+ *     cdef unsigned long long i
+ * 
+ *     regions = <MEMORY_BASIC_INFORMATION*>malloc(regions_capacity * sizeof(MEMORY_BASIC_INFORMATION))             # <<<<<<<<<<<<<<
+ *     if regions == NULL:
+ *         return NULL
+ */
+  __pyx_v_regions = ((MEMORY_BASIC_INFORMATION *)malloc((__pyx_v_regions_capacity * (sizeof(MEMORY_BASIC_INFORMATION)))));
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":233
+ * 
+ *     regions = <MEMORY_BASIC_INFORMATION*>malloc(regions_capacity * sizeof(MEMORY_BASIC_INFORMATION))
+ *     if regions == NULL:             # <<<<<<<<<<<<<<
+ *         return NULL
+ * 
+ */
+  __pyx_t_1 = ((__pyx_v_regions == NULL) != 0);
+  if (__pyx_t_1) {
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":234
+ *     regions = <MEMORY_BASIC_INFORMATION*>malloc(regions_capacity * sizeof(MEMORY_BASIC_INFORMATION))
+ *     if regions == NULL:
+ *         return NULL             # <<<<<<<<<<<<<<
+ * 
+ *     while current_address < end_address:
+ */
+    __pyx_r = NULL;
+    goto __pyx_L0;
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":233
+ * 
+ *     regions = <MEMORY_BASIC_INFORMATION*>malloc(regions_capacity * sizeof(MEMORY_BASIC_INFORMATION))
+ *     if regions == NULL:             # <<<<<<<<<<<<<<
+ *         return NULL
+ * 
+ */
+  }
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":236
+ *         return NULL
+ * 
+ *     while current_address < end_address:             # <<<<<<<<<<<<<<
+ * 
+ *         if VirtualQueryEx(process, current_address, &mbi, sizeof(mbi)) == 0:
+ */
+  while (1) {
+    __pyx_t_1 = ((__pyx_v_current_address < __pyx_v_end_address) != 0);
+    if (!__pyx_t_1) break;
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":238
+ *     while current_address < end_address:
+ * 
+ *         if VirtualQueryEx(process, current_address, &mbi, sizeof(mbi)) == 0:             # <<<<<<<<<<<<<<
+ *             current_address = <LPCVOID>(<unsigned long long>current_address + 10)
+ *             continue
+ */
+    __pyx_t_1 = ((VirtualQueryEx(__pyx_v_process, __pyx_v_current_address, (&__pyx_v_mbi), (sizeof(__pyx_v_mbi))) == 0) != 0);
+    if (__pyx_t_1) {
+
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":239
+ * 
+ *         if VirtualQueryEx(process, current_address, &mbi, sizeof(mbi)) == 0:
+ *             current_address = <LPCVOID>(<unsigned long long>current_address + 10)             # <<<<<<<<<<<<<<
+ *             continue
+ * 
+ */
+      __pyx_v_current_address = ((LPCVOID)(((unsigned PY_LONG_LONG)__pyx_v_current_address) + 10));
+
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":240
+ *         if VirtualQueryEx(process, current_address, &mbi, sizeof(mbi)) == 0:
+ *             current_address = <LPCVOID>(<unsigned long long>current_address + 10)
+ *             continue             # <<<<<<<<<<<<<<
+ * 
+ *         if total_regions >= regions_capacity:
+ */
+      goto __pyx_L4_continue;
+
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":238
+ *     while current_address < end_address:
+ * 
+ *         if VirtualQueryEx(process, current_address, &mbi, sizeof(mbi)) == 0:             # <<<<<<<<<<<<<<
+ *             current_address = <LPCVOID>(<unsigned long long>current_address + 10)
+ *             continue
+ */
+    }
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":242
+ *             continue
+ * 
+ *         if total_regions >= regions_capacity:             # <<<<<<<<<<<<<<
+ *             regions_capacity *= 2
+ *             temp_regions = <MEMORY_BASIC_INFORMATION*>realloc(
+ */
+    __pyx_t_1 = ((__pyx_v_total_regions >= __pyx_v_regions_capacity) != 0);
+    if (__pyx_t_1) {
+
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":243
+ * 
+ *         if total_regions >= regions_capacity:
+ *             regions_capacity *= 2             # <<<<<<<<<<<<<<
+ *             temp_regions = <MEMORY_BASIC_INFORMATION*>realloc(
+ *                 regions,
+ */
+      __pyx_v_regions_capacity = (__pyx_v_regions_capacity * 2);
+
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":244
+ *         if total_regions >= regions_capacity:
+ *             regions_capacity *= 2
+ *             temp_regions = <MEMORY_BASIC_INFORMATION*>realloc(             # <<<<<<<<<<<<<<
+ *                 regions,
+ *                 regions_capacity * sizeof(MEMORY_BASIC_INFORMATION)
+ */
+      __pyx_v_temp_regions = ((MEMORY_BASIC_INFORMATION *)realloc(__pyx_v_regions, (__pyx_v_regions_capacity * (sizeof(MEMORY_BASIC_INFORMATION)))));
+
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":248
+ *                 regions_capacity * sizeof(MEMORY_BASIC_INFORMATION)
+ *             )
+ *             if temp_regions == NULL:             # <<<<<<<<<<<<<<
+ *                 free(regions)
+ *                 return NULL
+ */
+      __pyx_t_1 = ((__pyx_v_temp_regions == NULL) != 0);
+      if (__pyx_t_1) {
+
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":249
+ *             )
+ *             if temp_regions == NULL:
+ *                 free(regions)             # <<<<<<<<<<<<<<
+ *                 return NULL
+ *             regions = temp_regions
+ */
+        free(__pyx_v_regions);
+
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":250
+ *             if temp_regions == NULL:
+ *                 free(regions)
+ *                 return NULL             # <<<<<<<<<<<<<<
+ *             regions = temp_regions
+ * 
+ */
+        __pyx_r = NULL;
+        goto __pyx_L0;
+
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":248
+ *                 regions_capacity * sizeof(MEMORY_BASIC_INFORMATION)
+ *             )
+ *             if temp_regions == NULL:             # <<<<<<<<<<<<<<
+ *                 free(regions)
+ *                 return NULL
+ */
+      }
+
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":251
+ *                 free(regions)
+ *                 return NULL
+ *             regions = temp_regions             # <<<<<<<<<<<<<<
+ * 
+ *         regions[total_regions] = mbi
+ */
+      __pyx_v_regions = __pyx_v_temp_regions;
+
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":242
+ *             continue
+ * 
+ *         if total_regions >= regions_capacity:             # <<<<<<<<<<<<<<
+ *             regions_capacity *= 2
+ *             temp_regions = <MEMORY_BASIC_INFORMATION*>realloc(
+ */
+    }
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":253
+ *             regions = temp_regions
+ * 
+ *         regions[total_regions] = mbi             # <<<<<<<<<<<<<<
+ *         total_regions += 1
+ * 
+ */
+    (__pyx_v_regions[__pyx_v_total_regions]) = __pyx_v_mbi;
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":254
+ * 
+ *         regions[total_regions] = mbi
+ *         total_regions += 1             # <<<<<<<<<<<<<<
+ * 
+ *         current_address = <LPCVOID>(<unsigned long long>mbi.BaseAddress + mbi.RegionSize)
+ */
+    __pyx_v_total_regions = (__pyx_v_total_regions + 1);
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":256
+ *         total_regions += 1
+ * 
+ *         current_address = <LPCVOID>(<unsigned long long>mbi.BaseAddress + mbi.RegionSize)             # <<<<<<<<<<<<<<
+ * 
+ *     if total_regions == 0:
+ */
+    __pyx_v_current_address = ((LPCVOID)(((unsigned PY_LONG_LONG)__pyx_v_mbi.BaseAddress) + __pyx_v_mbi.RegionSize));
+    __pyx_L4_continue:;
+  }
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":258
+ *         current_address = <LPCVOID>(<unsigned long long>mbi.BaseAddress + mbi.RegionSize)
+ * 
+ *     if total_regions == 0:             # <<<<<<<<<<<<<<
+ *         free(regions)
+ *         out_found_regions[0]=0
+ */
+  __pyx_t_1 = ((__pyx_v_total_regions == 0) != 0);
+  if (__pyx_t_1) {
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":259
+ * 
+ *     if total_regions == 0:
+ *         free(regions)             # <<<<<<<<<<<<<<
+ *         out_found_regions[0]=0
+ *         return NULL
+ */
+    free(__pyx_v_regions);
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":260
+ *     if total_regions == 0:
+ *         free(regions)
+ *         out_found_regions[0]=0             # <<<<<<<<<<<<<<
+ *         return NULL
+ * 
+ */
+    (__pyx_v_out_found_regions[0]) = 0;
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":261
+ *         free(regions)
+ *         out_found_regions[0]=0
+ *         return NULL             # <<<<<<<<<<<<<<
+ * 
+ *     if out_found_regions != NULL:
+ */
+    __pyx_r = NULL;
+    goto __pyx_L0;
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":258
+ *         current_address = <LPCVOID>(<unsigned long long>mbi.BaseAddress + mbi.RegionSize)
+ * 
+ *     if total_regions == 0:             # <<<<<<<<<<<<<<
+ *         free(regions)
+ *         out_found_regions[0]=0
+ */
+  }
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":263
+ *         return NULL
+ * 
+ *     if out_found_regions != NULL:             # <<<<<<<<<<<<<<
+ *         out_found_regions[0] = total_regions
+ * 
+ */
+  __pyx_t_1 = ((__pyx_v_out_found_regions != NULL) != 0);
+  if (__pyx_t_1) {
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":264
+ * 
+ *     if out_found_regions != NULL:
+ *         out_found_regions[0] = total_regions             # <<<<<<<<<<<<<<
+ * 
+ *     return regions
+ */
+    (__pyx_v_out_found_regions[0]) = __pyx_v_total_regions;
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":263
+ *         return NULL
+ * 
+ *     if out_found_regions != NULL:             # <<<<<<<<<<<<<<
+ *         out_found_regions[0] = total_regions
+ * 
+ */
+  }
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":266
+ *         out_found_regions[0] = total_regions
+ * 
+ *     return regions             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = __pyx_v_regions;
+  goto __pyx_L0;
+
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":217
+ * 
+ * 
+ * cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(             # <<<<<<<<<<<<<<
+ *     HANDLE process,
+ *     LPCVOID start_address,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "virtual_memory_toolkit/windows/windows_defs.pxd":271
+ * 
+ * 
+ * cdef inline BOOL PrivilagedSearchMemoryBytes(             # <<<<<<<<<<<<<<
+ *     HANDLE process,
+ *     LPCVOID start_address,
  */
 
 static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedSearchMemoryBytes(HANDLE __pyx_v_process, LPCVOID __pyx_v_start_address, LPCVOID __pyx_v_end_address, PBYTE __pyx_v_pattern, SIZE_T __pyx_v_pattern_size, LPVOID *__pyx_v_out_found_address) {
@@ -2518,7 +2878,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   SIZE_T __pyx_t_3;
   SIZE_T __pyx_t_4;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":232
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":294
  *     """
  *     cdef MEMORY_BASIC_INFORMATION mbi
  *     cdef SIZE_T address = <SIZE_T>start_address             # <<<<<<<<<<<<<<
@@ -2527,7 +2887,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_address = ((SIZE_T)__pyx_v_start_address);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":236
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":298
  *     cdef SIZE_T search_end
  *     cdef SIZE_T current_address
  *     cdef BYTE* read_bytes_buffer = <BYTE*>calloc(pattern_size, sizeof(BYTE))             # <<<<<<<<<<<<<<
@@ -2536,7 +2896,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_read_bytes_buffer = ((BYTE *)calloc(__pyx_v_pattern_size, (sizeof(BYTE))));
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":238
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":300
  *     cdef BYTE* read_bytes_buffer = <BYTE*>calloc(pattern_size, sizeof(BYTE))
  * 
  *     if not read_bytes_buffer:             # <<<<<<<<<<<<<<
@@ -2546,7 +2906,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   __pyx_t_1 = ((!(__pyx_v_read_bytes_buffer != 0)) != 0);
   if (__pyx_t_1) {
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":239
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":301
  * 
  *     if not read_bytes_buffer:
  *         return 1  # Memory allocation failed             # <<<<<<<<<<<<<<
@@ -2556,7 +2916,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
     __pyx_r = 1;
     goto __pyx_L0;
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":238
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":300
  *     cdef BYTE* read_bytes_buffer = <BYTE*>calloc(pattern_size, sizeof(BYTE))
  * 
  *     if not read_bytes_buffer:             # <<<<<<<<<<<<<<
@@ -2565,7 +2925,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   }
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":241
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":303
  *         return 1  # Memory allocation failed
  * 
  *     while address < <SIZE_T>end_address:             # <<<<<<<<<<<<<<
@@ -2576,7 +2936,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
     __pyx_t_1 = ((__pyx_v_address < ((SIZE_T)__pyx_v_end_address)) != 0);
     if (!__pyx_t_1) break;
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":242
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":304
  * 
  *     while address < <SIZE_T>end_address:
  *         if VirtualQueryEx(process, <LPCVOID>address, &mbi, sizeof(mbi)) == 0:             # <<<<<<<<<<<<<<
@@ -2586,7 +2946,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
     __pyx_t_1 = ((VirtualQueryEx(__pyx_v_process, ((LPCVOID)__pyx_v_address), (&__pyx_v_mbi), (sizeof(__pyx_v_mbi))) == 0) != 0);
     if (__pyx_t_1) {
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":243
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":305
  *     while address < <SIZE_T>end_address:
  *         if VirtualQueryEx(process, <LPCVOID>address, &mbi, sizeof(mbi)) == 0:
  *             break  # Failed to query memory information             # <<<<<<<<<<<<<<
@@ -2595,7 +2955,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       goto __pyx_L5_break;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":242
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":304
  * 
  *     while address < <SIZE_T>end_address:
  *         if VirtualQueryEx(process, <LPCVOID>address, &mbi, sizeof(mbi)) == 0:             # <<<<<<<<<<<<<<
@@ -2604,7 +2964,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
     }
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":245
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":307
  *             break  # Failed to query memory information
  * 
  *         if mbi.State == MEM_COMMIT:             # <<<<<<<<<<<<<<
@@ -2614,7 +2974,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
     __pyx_t_1 = ((__pyx_v_mbi.State == MEM_COMMIT) != 0);
     if (__pyx_t_1) {
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":246
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":308
  * 
  *         if mbi.State == MEM_COMMIT:
  *             region_end = <SIZE_T>mbi.BaseAddress + mbi.RegionSize             # <<<<<<<<<<<<<<
@@ -2623,7 +2983,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_region_end = (((SIZE_T)__pyx_v_mbi.BaseAddress) + __pyx_v_mbi.RegionSize);
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":247
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":309
  *         if mbi.State == MEM_COMMIT:
  *             region_end = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
  *             search_end = min(<SIZE_T>end_address, region_end) - pattern_size + 1             # <<<<<<<<<<<<<<
@@ -2639,7 +2999,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
       }
       __pyx_v_search_end = ((__pyx_t_4 - __pyx_v_pattern_size) + 1);
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":248
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":310
  *             region_end = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
  *             search_end = min(<SIZE_T>end_address, region_end) - pattern_size + 1
  *             current_address = address             # <<<<<<<<<<<<<<
@@ -2648,7 +3008,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_current_address = __pyx_v_address;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":250
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":312
  *             current_address = address
  * 
  *             while current_address < search_end:             # <<<<<<<<<<<<<<
@@ -2659,7 +3019,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
         __pyx_t_1 = ((__pyx_v_current_address < __pyx_v_search_end) != 0);
         if (!__pyx_t_1) break;
 
-        /* "virtual_memory_toolkit/windows/windows_defs.pxd":251
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":313
  * 
  *             while current_address < search_end:
  *                 if PrivilagedMemoryRead(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, pattern_size) != pattern_size:             # <<<<<<<<<<<<<<
@@ -2669,7 +3029,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
         __pyx_t_1 = ((__pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(__pyx_v_process, ((LPCVOID)__pyx_v_current_address), ((LPVOID)__pyx_v_read_bytes_buffer), __pyx_v_pattern_size) != __pyx_v_pattern_size) != 0);
         if (__pyx_t_1) {
 
-          /* "virtual_memory_toolkit/windows/windows_defs.pxd":252
+          /* "virtual_memory_toolkit/windows/windows_defs.pxd":314
  *             while current_address < search_end:
  *                 if PrivilagedMemoryRead(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, pattern_size) != pattern_size:
  *                     break  # Failed to read memory at current address             # <<<<<<<<<<<<<<
@@ -2678,7 +3038,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
           goto __pyx_L9_break;
 
-          /* "virtual_memory_toolkit/windows/windows_defs.pxd":251
+          /* "virtual_memory_toolkit/windows/windows_defs.pxd":313
  * 
  *             while current_address < search_end:
  *                 if PrivilagedMemoryRead(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, pattern_size) != pattern_size:             # <<<<<<<<<<<<<<
@@ -2687,7 +3047,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
         }
 
-        /* "virtual_memory_toolkit/windows/windows_defs.pxd":254
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":316
  *                     break  # Failed to read memory at current address
  * 
  *                 if memcmp(<const void*>pattern, <const void*>read_bytes_buffer, pattern_size) == 0:             # <<<<<<<<<<<<<<
@@ -2697,7 +3057,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
         __pyx_t_1 = ((memcmp(((void const *)__pyx_v_pattern), ((void const *)__pyx_v_read_bytes_buffer), __pyx_v_pattern_size) == 0) != 0);
         if (__pyx_t_1) {
 
-          /* "virtual_memory_toolkit/windows/windows_defs.pxd":255
+          /* "virtual_memory_toolkit/windows/windows_defs.pxd":317
  * 
  *                 if memcmp(<const void*>pattern, <const void*>read_bytes_buffer, pattern_size) == 0:
  *                     free(read_bytes_buffer)             # <<<<<<<<<<<<<<
@@ -2706,7 +3066,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
           free(__pyx_v_read_bytes_buffer);
 
-          /* "virtual_memory_toolkit/windows/windows_defs.pxd":256
+          /* "virtual_memory_toolkit/windows/windows_defs.pxd":318
  *                 if memcmp(<const void*>pattern, <const void*>read_bytes_buffer, pattern_size) == 0:
  *                     free(read_bytes_buffer)
  *                     out_found_address[0] = <LPVOID>current_address             # <<<<<<<<<<<<<<
@@ -2715,7 +3075,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
           (__pyx_v_out_found_address[0]) = ((LPVOID)__pyx_v_current_address);
 
-          /* "virtual_memory_toolkit/windows/windows_defs.pxd":257
+          /* "virtual_memory_toolkit/windows/windows_defs.pxd":319
  *                     free(read_bytes_buffer)
  *                     out_found_address[0] = <LPVOID>current_address
  *                     return 0  # Pattern found             # <<<<<<<<<<<<<<
@@ -2725,7 +3085,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
           __pyx_r = 0;
           goto __pyx_L0;
 
-          /* "virtual_memory_toolkit/windows/windows_defs.pxd":254
+          /* "virtual_memory_toolkit/windows/windows_defs.pxd":316
  *                     break  # Failed to read memory at current address
  * 
  *                 if memcmp(<const void*>pattern, <const void*>read_bytes_buffer, pattern_size) == 0:             # <<<<<<<<<<<<<<
@@ -2734,7 +3094,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
         }
 
-        /* "virtual_memory_toolkit/windows/windows_defs.pxd":259
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":321
  *                     return 0  # Pattern found
  * 
  *                 current_address += 1             # <<<<<<<<<<<<<<
@@ -2745,7 +3105,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
       }
       __pyx_L9_break:;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":260
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":322
  * 
  *                 current_address += 1
  *             address = region_end             # <<<<<<<<<<<<<<
@@ -2754,7 +3114,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_address = __pyx_v_region_end;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":245
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":307
  *             break  # Failed to query memory information
  * 
  *         if mbi.State == MEM_COMMIT:             # <<<<<<<<<<<<<<
@@ -2764,7 +3124,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
       goto __pyx_L7;
     }
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":263
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":325
  *         else:
  *             # If region is not committed, skip to the end of the region
  *             address = <SIZE_T>mbi.BaseAddress + mbi.RegionSize             # <<<<<<<<<<<<<<
@@ -2778,7 +3138,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   }
   __pyx_L5_break:;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":265
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":327
  *             address = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
  * 
  *     free(read_bytes_buffer)             # <<<<<<<<<<<<<<
@@ -2787,7 +3147,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   free(__pyx_v_read_bytes_buffer);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":266
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":328
  * 
  *     free(read_bytes_buffer)
  *     return 1  # Pattern not found or error occurred             # <<<<<<<<<<<<<<
@@ -2797,12 +3157,12 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   __pyx_r = 1;
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":216
- *     return written_bytes
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":271
  * 
- * cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_address, LPCVOID end_address, PBYTE pattern, SIZE_T pattern_size, LPVOID* out_found_address) nogil:             # <<<<<<<<<<<<<<
- *     """
- *     Searches for a byte pattern within a specified memory range.
+ * 
+ * cdef inline BOOL PrivilagedSearchMemoryBytes(             # <<<<<<<<<<<<<<
+ *     HANDLE process,
+ *     LPCVOID start_address,
  */
 
   /* function exit code */
@@ -2810,7 +3170,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/windows/windows_defs.pxd":269
+/* "virtual_memory_toolkit/windows/windows_defs.pxd":331
  * 
  * 
  * cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -2828,7 +3188,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   int __pyx_t_1;
   int __pyx_t_2;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":270
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":332
  * 
  * cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
  *     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam             # <<<<<<<<<<<<<<
@@ -2837,7 +3197,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_data = ((FIND_PROCESS_LPARAM *)__pyx_v_lparam);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":271
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":333
  * cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
  *     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam
  *     cdef int length = GetWindowTextLengthA(hWnd)             # <<<<<<<<<<<<<<
@@ -2846,7 +3206,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_length = GetWindowTextLengthA(__pyx_v_hWnd);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":272
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":334
  *     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam
  *     cdef int length = GetWindowTextLengthA(hWnd)
  *     cdef char* current_window_title = <char*>malloc(sizeof(char) * (length + 1))             # <<<<<<<<<<<<<<
@@ -2855,7 +3215,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_current_window_title = ((char *)malloc(((sizeof(char)) * (__pyx_v_length + 1))));
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":273
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":335
  *     cdef int length = GetWindowTextLengthA(hWnd)
  *     cdef char* current_window_title = <char*>malloc(sizeof(char) * (length + 1))
  *     cdef DWORD target_pid = 0             # <<<<<<<<<<<<<<
@@ -2864,7 +3224,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_target_pid = 0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":274
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":336
  *     cdef char* current_window_title = <char*>malloc(sizeof(char) * (length + 1))
  *     cdef DWORD target_pid = 0
  *     cdef bint found_substring = 0             # <<<<<<<<<<<<<<
@@ -2873,7 +3233,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_found_substring = 0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":276
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":338
  *     cdef bint found_substring = 0
  * 
  *     GetWindowTextA(hWnd, current_window_title, length + 1)             # <<<<<<<<<<<<<<
@@ -2882,7 +3242,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   (void)(GetWindowTextA(__pyx_v_hWnd, __pyx_v_current_window_title, (__pyx_v_length + 1)));
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":278
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":340
  *     GetWindowTextA(hWnd, current_window_title, length + 1)
  * 
  *     if (length != 0 and IsWindowVisible(hWnd)):             # <<<<<<<<<<<<<<
@@ -2900,7 +3260,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":283
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":345
  *             current_window_title,
  *             data.in_window_name_substring
  *         ) != NULL             # <<<<<<<<<<<<<<
@@ -2909,7 +3269,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
     __pyx_v_found_substring = (strstr(__pyx_v_current_window_title, __pyx_v_data->in_window_name_substring) != NULL);
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":285
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":347
  *         ) != NULL
  * 
  *         if found_substring:             # <<<<<<<<<<<<<<
@@ -2919,7 +3279,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
     __pyx_t_1 = (__pyx_v_found_substring != 0);
     if (__pyx_t_1) {
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":286
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":348
  * 
  *         if found_substring:
  *             GetWindowThreadProcessId(hWnd, &target_pid)             # <<<<<<<<<<<<<<
@@ -2928,7 +3288,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       (void)(GetWindowThreadProcessId(__pyx_v_hWnd, (&__pyx_v_target_pid)));
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":287
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":349
  *         if found_substring:
  *             GetWindowThreadProcessId(hWnd, &target_pid)
  *             data.out_pid = target_pid             # <<<<<<<<<<<<<<
@@ -2937,7 +3297,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_data->out_pid = __pyx_v_target_pid;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":288
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":350
  *             GetWindowThreadProcessId(hWnd, &target_pid)
  *             data.out_pid = target_pid
  *             data.out_window_handle = hWnd             # <<<<<<<<<<<<<<
@@ -2946,7 +3306,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_data->out_window_handle = __pyx_v_hWnd;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":289
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":351
  *             data.out_pid = target_pid
  *             data.out_window_handle = hWnd
  *             data.out_all_access_process_handle = OpenProcess(             # <<<<<<<<<<<<<<
@@ -2955,7 +3315,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_data->out_all_access_process_handle = OpenProcess(PROCESS_ALL_ACCESS, 0, __pyx_v_target_pid);
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":294
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":356
  *                 target_pid
  *             )
  *             data.out_full_window_name = current_window_title             # <<<<<<<<<<<<<<
@@ -2964,7 +3324,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_data->out_full_window_name = __pyx_v_current_window_title;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":295
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":357
  *             )
  *             data.out_full_window_name = current_window_title
  *             return False             # <<<<<<<<<<<<<<
@@ -2974,7 +3334,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
       __pyx_r = 0;
       goto __pyx_L0;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":285
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":347
  *         ) != NULL
  * 
  *         if found_substring:             # <<<<<<<<<<<<<<
@@ -2983,7 +3343,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
     }
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":278
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":340
  *     GetWindowTextA(hWnd, current_window_title, length + 1)
  * 
  *     if (length != 0 and IsWindowVisible(hWnd)):             # <<<<<<<<<<<<<<
@@ -2992,7 +3352,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   }
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":297
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":359
  *             return False
  * 
  *     free(current_window_title)             # <<<<<<<<<<<<<<
@@ -3001,7 +3361,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   free(__pyx_v_current_window_title);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":298
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":360
  * 
  *     free(current_window_title)
  *     return True             # <<<<<<<<<<<<<<
@@ -3011,7 +3371,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   __pyx_r = 1;
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":269
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":331
  * 
  * 
  * cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -3024,7 +3384,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/windows/windows_defs.pxd":300
+/* "virtual_memory_toolkit/windows/windows_defs.pxd":362
  *     return True
  * 
  * cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowTitleSubstring(const char* window_name_sub_string) nogil:             # <<<<<<<<<<<<<<
@@ -3036,7 +3396,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
   FIND_PROCESS_LPARAM __pyx_v_data;
   FIND_PROCESS_LPARAM __pyx_r;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":303
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":365
  *     cdef FIND_PROCESS_LPARAM data
  * 
  *     data.in_window_name_substring = window_name_sub_string             # <<<<<<<<<<<<<<
@@ -3045,7 +3405,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
  */
   __pyx_v_data.in_window_name_substring = __pyx_v_window_name_sub_string;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":304
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":366
  * 
  *     data.in_window_name_substring = window_name_sub_string
  *     data.out_all_access_process_handle = <HANDLE>0             # <<<<<<<<<<<<<<
@@ -3054,7 +3414,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
  */
   __pyx_v_data.out_all_access_process_handle = ((HANDLE)0);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":305
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":367
  *     data.in_window_name_substring = window_name_sub_string
  *     data.out_all_access_process_handle = <HANDLE>0
  *     data.out_pid = 0             # <<<<<<<<<<<<<<
@@ -3063,7 +3423,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
  */
   __pyx_v_data.out_pid = 0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":306
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":368
  *     data.out_all_access_process_handle = <HANDLE>0
  *     data.out_pid = 0
  *     data.out_window_handle = <HWND>0             # <<<<<<<<<<<<<<
@@ -3072,7 +3432,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
  */
   __pyx_v_data.out_window_handle = ((HWND)0);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":307
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":369
  *     data.out_pid = 0
  *     data.out_window_handle = <HWND>0
  *     EnumWindows(_FindProcessFromWindowTitleSubstringCallback, <LPARAM>&data)             # <<<<<<<<<<<<<<
@@ -3081,7 +3441,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
  */
   (void)(EnumWindows(__pyx_f_22virtual_memory_toolkit_7windows_12windows_defs__FindProcessFromWindowTitleSubstringCallback, ((LPARAM)(&__pyx_v_data))));
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":309
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":371
  *     EnumWindows(_FindProcessFromWindowTitleSubstringCallback, <LPARAM>&data)
  * 
  *     return data             # <<<<<<<<<<<<<<
@@ -3089,7 +3449,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
   __pyx_r = __pyx_v_data;
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":300
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":362
  *     return True
  * 
  * cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowTitleSubstring(const char* window_name_sub_string) nogil:             # <<<<<<<<<<<<<<

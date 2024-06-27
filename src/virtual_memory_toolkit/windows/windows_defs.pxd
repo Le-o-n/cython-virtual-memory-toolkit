@@ -1,4 +1,4 @@
-from libc.stdlib cimport malloc, free, calloc 
+from libc.stdlib cimport malloc, free, calloc, realloc
 from libc.string cimport memcpy, memcmp, strstr
 
 from .windows_types cimport SIZE_T
@@ -214,45 +214,57 @@ cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPCVOID base_add
     return written_bytes
 
 
-
 cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(
     HANDLE process, 
     LPCVOID start_address, 
     LPCVOID end_address,
     unsigned long long *out_found_regions
 ) nogil:
-    cdef list regions_list = []
     cdef MEMORY_BASIC_INFORMATION mbi
     cdef unsigned long information_buffer_size
     cdef LPCVOID current_address = start_address
     cdef unsigned long long total_regions = 0
     cdef MEMORY_BASIC_INFORMATION *regions = NULL
+    cdef MEMORY_BASIC_INFORMATION *temp_regions = NULL
+    cdef unsigned long long regions_capacity = 128  # Initial capacity for regions array
+    cdef unsigned long long i
 
-    while current_address < end_address:
-        information_buffer_size = VirtualQueryEx(process, current_address, &mbi, sizeof(mbi))
-        if information_buffer_size == 0:
-            break
-        
-        regions_list.append(mbi)
-        
-        current_address = <LPCVOID>(<unsigned long long>mbi.BaseAddress + mbi.RegionSize)
-
-    total_regions = len(regions_list)
-    if total_regions == 0:
-        return NULL
-    
-    regions = <MEMORY_BASIC_INFORMATION*>malloc(total_regions * sizeof(MEMORY_BASIC_INFORMATION))
+    regions = <MEMORY_BASIC_INFORMATION*>malloc(regions_capacity * sizeof(MEMORY_BASIC_INFORMATION))
     if regions == NULL:
         return NULL
-    
-    # Copy from Python list to C array
-    for i in range(total_regions):
-        regions[i] = <MEMORY_BASIC_INFORMATION>regions_list[i]
+
+    while current_address < end_address:
+
+        if VirtualQueryEx(process, current_address, &mbi, sizeof(mbi)) == 0:
+            current_address = <LPCVOID>(<unsigned long long>current_address + 10)
+            continue
+
+        if total_regions >= regions_capacity:
+            regions_capacity *= 2
+            temp_regions = <MEMORY_BASIC_INFORMATION*>realloc(
+                regions, 
+                regions_capacity * sizeof(MEMORY_BASIC_INFORMATION)
+            )
+            if temp_regions == NULL:
+                free(regions)
+                return NULL
+            regions = temp_regions
+        
+        regions[total_regions] = mbi
+        total_regions += 1
+
+        current_address = <LPCVOID>(<unsigned long long>mbi.BaseAddress + mbi.RegionSize)
+
+    if total_regions == 0:
+        free(regions)
+        out_found_regions[0]=0
+        return NULL
 
     if out_found_regions != NULL:
         out_found_regions[0] = total_regions
 
     return regions
+
 
 
 
