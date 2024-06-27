@@ -265,9 +265,6 @@ cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(
 
     return regions
 
-
-
-
 cdef inline BOOL PrivilagedSearchMemoryBytes(
     HANDLE process, 
     LPCVOID start_address, 
@@ -290,43 +287,63 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(
     Returns:
         BOOL: 0 if the pattern is found, 1 if it is not found or an error occurs.
     """
-    cdef MEMORY_BASIC_INFORMATION mbi
+    
     cdef SIZE_T address = <SIZE_T>start_address
     cdef SIZE_T region_end
     cdef SIZE_T search_end
     cdef SIZE_T current_address
-    cdef BYTE* read_bytes_buffer = <BYTE*>calloc(pattern_size, sizeof(BYTE))
+    cdef BYTE* read_bytes_buffer
 
-    if not read_bytes_buffer:
-        return 1  # Memory allocation failed
+    
+    cdef unsigned long long found_regions
+    cdef MEMORY_BASIC_INFORMATION* memory_regions 
+    cdef MEMORY_BASIC_INFORMATION memory_region
+    memory_regions = GetMemoryRegionsInRange(
+        process,
+        start_address,
+        end_address,
+        &found_regions
+    )
 
-    while address < <SIZE_T>end_address:
-        if VirtualQueryEx(process, <LPCVOID>address, &mbi, sizeof(mbi)) == 0:
-            break  # Failed to query memory information
+    with gil:
+        print("regions found = " + str(found_regions))
+    cdef unsigned long long start_region_address
+    cdef unsigned long long end_region_address
+    for i in range(found_regions):
+        memory_region = memory_regions[i]
 
-        if mbi.State == MEM_COMMIT:
-            region_end = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
-            search_end = min(<SIZE_T>end_address, region_end) - pattern_size + 1
-            current_address = address
+        with gil:
+            print("Region @ " + hex(<unsigned long long>memory_region.BaseAddress))
 
-            while current_address < search_end:
-                if PrivilagedMemoryRead(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, pattern_size) != pattern_size:
-                    break  # Failed to read memory at current address
-
-                if memcmp(<const void*>pattern, <const void*>read_bytes_buffer, pattern_size) == 0:
-                    free(read_bytes_buffer)
-                    out_found_address[0] = <LPVOID>current_address
-                    return 0  # Pattern found
-
-                current_address += 1
-            address = region_end
+        if memory_region.State != MEM_COMMIT:
+            continue
+        
+        start_region_address = <unsigned long long>memory_region.BaseAddress
+        end_region_address = <unsigned long long>memory_region.BaseAddress + memory_region.RegionSize
+        
+        read_bytes_buffer = <BYTE*>malloc(memory_region.RegionSize * sizeof(BYTE))
+        
+        if not read_bytes_buffer:
+            return 1  # Memory allocation failed
+        
+        if PrivilagedMemoryRead(process, <LPCVOID>start_region_address, <LPVOID>read_bytes_buffer, memory_region.RegionSize) != memory_region.RegionSize:
+            with gil:
+                print("Failed to read memory at address " + hex(<unsigned long long> current_address))
+            break
         else:
-            # If region is not committed, skip to the end of the region
-            address = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
+            with gil:
+                print("Successfully read region memory")
+        #for i in range(memory_region.RegionSize-pattern_size):
+        #    with gil:
+        #        print("iterating memory region " + hex(<unsigned long long>start_region_address) + " at offset " + str(i))
+        #    if memcmp(<const void*>pattern, <const void*>&read_bytes_buffer[i], pattern_size) == 0:
+        #        free(read_bytes_buffer)
+        #        out_found_address[0] = <LPVOID>current_address
+        #        return 0  # Pattern found
 
-    free(read_bytes_buffer)
+        free(read_bytes_buffer)
+    
     return 1  # Pattern not found or error occurred
-
 
 cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam

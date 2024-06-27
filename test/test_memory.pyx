@@ -169,7 +169,7 @@ cdef int addressing_read_write_offset(CAppHandle* app_handle) nogil:
     
     return 0
 
-cdef int aob_scan(CAppHandle* app_handle):
+cdef int region_enumeration(CAppHandle* app_handle):
     cdef CProcess* notepad_process = CProcess_init(app_handle)
     cdef CModule* notepad_module = CModule_from_process(notepad_process, <const char*>"notepad.exe")
 
@@ -193,26 +193,41 @@ cdef int aob_scan(CAppHandle* app_handle):
 
         print(hex(<unsigned long long>mem_info.BaseAddress))
 
-    #cdef unsigned long long start_address = <unsigned long long>notepad_module[0].base_address
-    #cdef unsigned long long end_address = <unsigned long long>start_address + <unsigned long long>notepad_module[0].size
-#
-    #cdef unsigned char[6] c_bytes
-#
-    #py_bytes = [0x38, 0xA2, 0x70, 0xA2, 0xA0, 0xA2, 0xB8, 0xA2, 0xC8, 0xA3, 0xF0, 0xA3, 0x18, 0xA4]
-#
-    #for i, b in enumerate(py_bytes):
-    #    c_bytes[i] = <unsigned char>b 
-#
-    #cdef CVirtualAddress* found_address = CVirtualAddress_from_aob(app_handle, <const void*>start_address, <const void*>end_address,<unsigned char*> &c_bytes, 6)
-    #
-    #if found_address:
-    #    print("Found at " + hex(<unsigned long long>found_address[0].address))
-    #else:
-    #    print("Could not find address ")
-#
-    #cdef int valid = (found_address == NULL)
 
-    free(mem_info_array)
+
+cdef int aob_scan(CAppHandle* app_handle):
+    
+    cdef CProcess* notepad_process = CProcess_init(app_handle)
+    cdef CModule* notepad_module = CModule_from_process(notepad_process, <const char*>"notepad.exe")
+
+    cdef unsigned long long start_address = <unsigned long long>notepad_module[0].base_address
+    cdef unsigned long long end_address = <unsigned long long>start_address + <unsigned long long>notepad_module[0].size
+
+    cdef unsigned char[6] c_bytes
+
+    py_bytes = [0x38, 0xA2, 0x70, 0xA2, 0xA0, 0xA2, 0xB8, 0xA2, 0xC8, 0xA3, 0xF0, 0xA3, 0x18, 0xA4]
+
+    for i, b in enumerate(py_bytes):
+        c_bytes[i] = <unsigned char>b 
+
+    cdef CVirtualAddress* found_address = CVirtualAddress_from_aob(
+        app_handle, 
+        <const void*>start_address, 
+        <const void*>end_address,
+        <unsigned char*> &c_bytes, 
+        6
+    )
+    
+    if found_address:
+        print("Found at " + hex(<unsigned long long>found_address[0].address))
+    else:
+        print("Could not find address ")
+        CModule_free(notepad_module)
+        CProcess_free(notepad_process)
+        return 1
+
+    cdef int valid = (found_address == NULL)
+
     CModule_free(notepad_module)
     CProcess_free(notepad_process)
     
@@ -349,6 +364,17 @@ cpdef int run():
         error_count += 1
     else:
         if aob_scan(notepad_apphandle):
+            print("FAILED")
+            error_count += 1
+        else:
+            print("PASSED")
+    
+    print("     - region_enumeration          ...")
+    if not notepad_apphandle or not notepad_memory_manager:
+        print("FAILED")
+        error_count += 1
+    else:
+        if region_enumeration(notepad_apphandle):
             print("FAILED")
             error_count += 1
         else:
