@@ -294,7 +294,6 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(
     cdef SIZE_T current_address
     cdef BYTE* read_bytes_buffer
 
-    
     cdef unsigned long long found_regions
     cdef MEMORY_BASIC_INFORMATION* memory_regions 
     cdef MEMORY_BASIC_INFORMATION memory_region
@@ -305,15 +304,12 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(
         &found_regions
     )
 
-    with gil:
-        print("regions found = " + str(found_regions))
+    cdef unsigned long long iter_size
+    cdef PBYTE sub_region
     cdef unsigned long long start_region_address
     cdef unsigned long long end_region_address
     for i in range(found_regions):
         memory_region = memory_regions[i]
-
-        with gil:
-            print("Region @ " + hex(<unsigned long long>memory_region.BaseAddress))
 
         if memory_region.State != MEM_COMMIT:
             continue
@@ -321,25 +317,37 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(
         start_region_address = <unsigned long long>memory_region.BaseAddress
         end_region_address = <unsigned long long>memory_region.BaseAddress + memory_region.RegionSize
         
-        read_bytes_buffer = <BYTE*>malloc(memory_region.RegionSize * sizeof(BYTE))
+        read_bytes_buffer = <BYTE*>malloc(
+            memory_region.RegionSize * sizeof(BYTE)
+        )
         
         if not read_bytes_buffer:
-            return 1  # Memory allocation failed
+            return 1 
         
-        if PrivilagedMemoryRead(process, <LPCVOID>start_region_address, <LPVOID>read_bytes_buffer, memory_region.RegionSize) != memory_region.RegionSize:
-            with gil:
-                print("Failed to read memory at address " + hex(<unsigned long long> current_address))
-            break
-        else:
-            with gil:
-                print("Successfully read region memory")
-        #for i in range(memory_region.RegionSize-pattern_size):
-        #    with gil:
-        #        print("iterating memory region " + hex(<unsigned long long>start_region_address) + " at offset " + str(i))
-        #    if memcmp(<const void*>pattern, <const void*>&read_bytes_buffer[i], pattern_size) == 0:
-        #        free(read_bytes_buffer)
-        #        out_found_address[0] = <LPVOID>current_address
-        #        return 0  # Pattern found
+        if PrivilagedMemoryRead(
+            process,
+            <LPCVOID>start_region_address, 
+            <LPVOID>read_bytes_buffer, 
+            memory_region.RegionSize
+        ) != memory_region.RegionSize:
+            free(read_bytes_buffer)
+            return 1
+        
+        iter_size = memory_region.RegionSize-pattern_size 
+
+        
+        for j in range(iter_size):
+            pass
+            #sub_region = read_bytes_buffer + j
+            #current_address = start_region_address + j
+            #if memcmp(
+            #    <const void*>pattern, 
+            #    <const void*>sub_region, 
+            #    pattern_size
+            #) == 0:
+            #    free(read_bytes_buffer)
+            #    out_found_address[0] = <void*>current_address
+            #    return 0  # Pattern found
 
         free(read_bytes_buffer)
     
