@@ -266,7 +266,7 @@ cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(
 
     return regions
 
-cdef inline LPVOID PrivilagedSearchMemoryBytes(
+cdef inline LPVOID PrivilegedSearchMemoryBytes(
     HANDLE process, 
     LPCVOID start_address, 
     LPCVOID end_address, 
@@ -303,9 +303,10 @@ cdef inline LPVOID PrivilagedSearchMemoryBytes(
     cdef unsigned long long start_region_address
     cdef unsigned long long end_region_address
     cdef BYTE* read_bytes_buffer
+    cdef SIZE_T found_address
     cdef SIZE_T c_i
     cdef SIZE_T c_j
-
+    found_address = 0
     for c_i in range(found_regions):
         
         memory_region = <MEMORY_BASIC_INFORMATION>memory_regions[c_i]
@@ -335,6 +336,7 @@ cdef inline LPVOID PrivilagedSearchMemoryBytes(
         iter_size = memory_region.RegionSize-pattern_size 
 
         for c_j in prange(iter_size, nogil=True):
+            
             if memcmp(
                 <const void*>(<SIZE_T>read_bytes_buffer + c_j),
                 <const void*>pattern,
@@ -342,12 +344,17 @@ cdef inline LPVOID PrivilagedSearchMemoryBytes(
             ) == 0:
                 with gil:
                     print(f"Thread {threadid()}: Got address = {hex(<size_t>(start_region_address + c_j))}")
-
-                return <LPVOID>(start_region_address + c_j)
+                # forced to use this to setup the reduction
+                found_address = 0 
+                # inplace operator forces a reduction (thread-copy replaces original after loop)
+                found_address += start_region_address + c_j 
+                
         
         free(read_bytes_buffer)
-
-    return NULL   # Pattern not found or error occurred
+        
+    with gil:
+        print("Am returning herer")
+    return <LPVOID>found_address   # Pattern not found or error occurred
 
 cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam

@@ -1007,6 +1007,7 @@ static const char *__pyx_filename;
 static const char *__pyx_f[] = {
   "test\\test_memory.pyx",
   "windows_defs.pxd",
+  "memory_structures.pxd",
 };
 /* ForceInitThreads.proto */
 #ifndef __PYX_FORCE_INIT_THREADS
@@ -1300,6 +1301,9 @@ static CYTHON_INLINE PyObject* __Pyx_PyUnicode_From_int(int value, Py_ssize_t wi
 static PyObject* __Pyx_PyUnicode_Join(PyObject* value_tuple, Py_ssize_t value_count, Py_ssize_t result_ulength,
                                       Py_UCS4 max_char);
 
+/* CIntToPyUnicode.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyUnicode_From_size_t(size_t value, Py_ssize_t width, char padding_char, char format_char);
+
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
@@ -1479,8 +1483,10 @@ static const char __pyx_k_subprocess[] = "subprocess";
 static const char __pyx_k_Got_address[] = ": Got address = ";
 static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_notepad_path[] = "notepad_path";
+static const char __pyx_k_FOUND_ADDRESS[] = "FOUND ADDRESS = ";
 static const char __pyx_k_test_test_memory[] = "test.test_memory";
 static const char __pyx_k_module_extraction[] = "     - module_extraction     ... ";
+static const char __pyx_k_Am_returning_herer[] = "Am returning herer";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_free_memory_region[] = "     - free_memory_region     ... ";
 static const char __pyx_k_region_enumeration[] = "     - region_enumeration          ...";
@@ -1497,9 +1503,11 @@ static const char __pyx_k_addressing_read_write_offset[] = "     - addressing_re
 static const char __pyx_k_create_notepad_memory_manager[] = "     - create_notepad_memory_manager ... ";
 static const char __pyx_k_C_Windows_System32_notepad_exe[] = "C:\\Windows\\System32\\notepad.exe";
 static const char __pyx_k_Failed_to_allocate_modules_array[] = "Failed to allocate modules array";
+static PyObject *__pyx_kp_s_Am_returning_herer;
 static PyObject *__pyx_kp_s_C_Windows_System32_notepad_exe;
 static PyObject *__pyx_kp_s_Could_not_find_address;
 static PyObject *__pyx_n_s_FAILED;
+static PyObject *__pyx_kp_u_FOUND_ADDRESS;
 static PyObject *__pyx_kp_s_Failed_to_allocate_modules_array;
 static PyObject *__pyx_kp_s_Found_at;
 static PyObject *__pyx_kp_u_Got_address;
@@ -5860,6 +5868,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
   unsigned PY_LONG_LONG __pyx_v_start_region_address;
   CYTHON_UNUSED unsigned PY_LONG_LONG __pyx_v_end_region_address;
   BYTE *__pyx_v_read_bytes_buffer;
+  SIZE_T __pyx_v_found_address;
   SIZE_T __pyx_v_c_i;
   SIZE_T __pyx_v_c_j;
   LPVOID __pyx_r;
@@ -5904,8 +5913,17 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
     __pyx_v_memory_regions = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_GetMemoryRegionsInRange(__pyx_v_process, __pyx_v_start_address, __pyx_v_end_address, (&__pyx_v_found_regions));
 
     /* "virtual_memory_toolkit/windows/windows_defs.pxd":309
+ *     cdef SIZE_T c_i
  *     cdef SIZE_T c_j
+ *     found_address = 0             # <<<<<<<<<<<<<<
+ *     for c_i in range(found_regions):
  * 
+ */
+    __pyx_v_found_address = 0;
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":310
+ *     cdef SIZE_T c_j
+ *     found_address = 0
  *     for c_i in range(found_regions):             # <<<<<<<<<<<<<<
  * 
  *         memory_region = <MEMORY_BASIC_INFORMATION>memory_regions[c_i]
@@ -5915,7 +5933,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
     for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
       __pyx_v_c_i = __pyx_t_3;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":311
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":312
  *     for c_i in range(found_regions):
  * 
  *         memory_region = <MEMORY_BASIC_INFORMATION>memory_regions[c_i]             # <<<<<<<<<<<<<<
@@ -5924,7 +5942,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
       __pyx_v_memory_region = (__pyx_v_memory_regions[__pyx_v_c_i]);
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":313
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":314
  *         memory_region = <MEMORY_BASIC_INFORMATION>memory_regions[c_i]
  * 
  *         if memory_region.State != MEM_COMMIT:             # <<<<<<<<<<<<<<
@@ -5934,7 +5952,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
       __pyx_t_4 = ((__pyx_v_memory_region.State != MEM_COMMIT) != 0);
       if (__pyx_t_4) {
 
-        /* "virtual_memory_toolkit/windows/windows_defs.pxd":314
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":315
  * 
  *         if memory_region.State != MEM_COMMIT:
  *             continue             # <<<<<<<<<<<<<<
@@ -5943,7 +5961,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
         goto __pyx_L6_continue;
 
-        /* "virtual_memory_toolkit/windows/windows_defs.pxd":313
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":314
  *         memory_region = <MEMORY_BASIC_INFORMATION>memory_regions[c_i]
  * 
  *         if memory_region.State != MEM_COMMIT:             # <<<<<<<<<<<<<<
@@ -5952,7 +5970,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
       }
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":316
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":317
  *             continue
  * 
  *         start_region_address = <unsigned long long>memory_region.BaseAddress             # <<<<<<<<<<<<<<
@@ -5961,7 +5979,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
       __pyx_v_start_region_address = ((unsigned PY_LONG_LONG)__pyx_v_memory_region.BaseAddress);
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":317
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":318
  * 
  *         start_region_address = <unsigned long long>memory_region.BaseAddress
  *         end_region_address = <unsigned long long>memory_region.BaseAddress + memory_region.RegionSize             # <<<<<<<<<<<<<<
@@ -5970,7 +5988,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
       __pyx_v_end_region_address = (((unsigned PY_LONG_LONG)__pyx_v_memory_region.BaseAddress) + __pyx_v_memory_region.RegionSize);
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":319
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":320
  *         end_region_address = <unsigned long long>memory_region.BaseAddress + memory_region.RegionSize
  * 
  *         read_bytes_buffer = <BYTE*>malloc(             # <<<<<<<<<<<<<<
@@ -5979,7 +5997,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
       __pyx_v_read_bytes_buffer = ((BYTE *)malloc((__pyx_v_memory_region.RegionSize * (sizeof(BYTE)))));
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":323
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":324
  *         )
  * 
  *         if not read_bytes_buffer:             # <<<<<<<<<<<<<<
@@ -5989,7 +6007,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
       __pyx_t_4 = ((!(__pyx_v_read_bytes_buffer != 0)) != 0);
       if (__pyx_t_4) {
 
-        /* "virtual_memory_toolkit/windows/windows_defs.pxd":324
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":325
  * 
  *         if not read_bytes_buffer:
  *             return NULL             # <<<<<<<<<<<<<<
@@ -5999,7 +6017,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
         __pyx_r = NULL;
         goto __pyx_L3_return;
 
-        /* "virtual_memory_toolkit/windows/windows_defs.pxd":323
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":324
  *         )
  * 
  *         if not read_bytes_buffer:             # <<<<<<<<<<<<<<
@@ -6008,7 +6026,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
       }
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":331
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":332
  *             <LPVOID>read_bytes_buffer,
  *             memory_region.RegionSize
  *         ) != memory_region.RegionSize:             # <<<<<<<<<<<<<<
@@ -6017,7 +6035,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
       __pyx_t_4 = ((__pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(__pyx_v_process, ((LPCVOID)__pyx_v_start_region_address), ((LPVOID)__pyx_v_read_bytes_buffer), __pyx_v_memory_region.RegionSize) != __pyx_v_memory_region.RegionSize) != 0);
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":326
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":327
  *             return NULL
  * 
  *         if PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -6026,7 +6044,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
       if (__pyx_t_4) {
 
-        /* "virtual_memory_toolkit/windows/windows_defs.pxd":332
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":333
  *             memory_region.RegionSize
  *         ) != memory_region.RegionSize:
  *             free(read_bytes_buffer)             # <<<<<<<<<<<<<<
@@ -6035,7 +6053,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
         free(__pyx_v_read_bytes_buffer);
 
-        /* "virtual_memory_toolkit/windows/windows_defs.pxd":333
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":334
  *         ) != memory_region.RegionSize:
  *             free(read_bytes_buffer)
  *             return NULL             # <<<<<<<<<<<<<<
@@ -6045,7 +6063,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
         __pyx_r = NULL;
         goto __pyx_L3_return;
 
-        /* "virtual_memory_toolkit/windows/windows_defs.pxd":326
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":327
  *             return NULL
  * 
  *         if PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -6054,7 +6072,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
       }
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":335
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":336
  *             return NULL
  * 
  *         iter_size = memory_region.RegionSize-pattern_size             # <<<<<<<<<<<<<<
@@ -6063,12 +6081,12 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
       __pyx_v_iter_size = (__pyx_v_memory_region.RegionSize - __pyx_v_pattern_size);
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":337
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":338
  *         iter_size = memory_region.RegionSize-pattern_size
  * 
  *         for c_j in prange(iter_size, nogil=True):             # <<<<<<<<<<<<<<
+ * 
  *             if memcmp(
- *                 <const void*>(<SIZE_T>read_bytes_buffer + c_j),
  */
       {
           #ifdef WITH_THREAD
@@ -6081,6 +6099,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
             if ((1 == 0)) abort();
             {
                 SIZE_T __pyx_parallel_temp0 = ((SIZE_T)0xbad0bad0);
+                SIZE_T __pyx_parallel_temp1 = ((SIZE_T)0xbad0bad0);
                 const char *__pyx_parallel_filename = NULL; int __pyx_parallel_lineno = 0, __pyx_parallel_clineno = 0;
                 PyObject *__pyx_parallel_exc_type = NULL, *__pyx_parallel_exc_value = NULL, *__pyx_parallel_exc_tb = NULL;
                 int __pyx_parallel_why;
@@ -6095,7 +6114,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
                 if (__pyx_t_7 > 0)
                 {
                     #ifdef _OPENMP
-                    #pragma omp parallel private(__pyx_t_10, __pyx_t_11, __pyx_t_4, __pyx_t_9) firstprivate(__pyx_t_12, __pyx_t_13, __pyx_t_8) private(__pyx_filename, __pyx_lineno, __pyx_clineno) shared(__pyx_parallel_why, __pyx_parallel_exc_type, __pyx_parallel_exc_value, __pyx_parallel_exc_tb)
+                    #pragma omp parallel reduction(+:__pyx_v_found_address) private(__pyx_t_10, __pyx_t_11, __pyx_t_4, __pyx_t_9) firstprivate(__pyx_t_12, __pyx_t_13, __pyx_t_8) private(__pyx_filename, __pyx_lineno, __pyx_clineno) shared(__pyx_parallel_why, __pyx_parallel_exc_type, __pyx_parallel_exc_value, __pyx_parallel_exc_tb)
                     #endif /* _OPENMP */
                     {
                         #ifdef _OPENMP
@@ -6112,7 +6131,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
                             {
                                 __pyx_v_c_j = (SIZE_T)(0 + 1 * __pyx_t_6);
 
-                                /* "virtual_memory_toolkit/windows/windows_defs.pxd":342
+                                /* "virtual_memory_toolkit/windows/windows_defs.pxd":344
  *                 <const void*>pattern,
  *                 pattern_size
  *             ) == 0:             # <<<<<<<<<<<<<<
@@ -6121,21 +6140,21 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  */
                                 __pyx_t_4 = ((memcmp(((void const *)(((SIZE_T)__pyx_v_read_bytes_buffer) + __pyx_v_c_j)), ((void const *)__pyx_v_pattern), __pyx_v_pattern_size) == 0) != 0);
 
-                                /* "virtual_memory_toolkit/windows/windows_defs.pxd":338
- * 
+                                /* "virtual_memory_toolkit/windows/windows_defs.pxd":340
  *         for c_j in prange(iter_size, nogil=True):
+ * 
  *             if memcmp(             # <<<<<<<<<<<<<<
  *                 <const void*>(<SIZE_T>read_bytes_buffer + c_j),
  *                 <const void*>pattern,
  */
                                 if (__pyx_t_4) {
 
-                                  /* "virtual_memory_toolkit/windows/windows_defs.pxd":343
+                                  /* "virtual_memory_toolkit/windows/windows_defs.pxd":345
  *                 pattern_size
  *             ) == 0:
  *                 with gil:             # <<<<<<<<<<<<<<
  *                     print(f"Thread {threadid()}: Got address = {hex(<size_t>(start_region_address + c_j))}")
- * 
+ *                 found_address = 0
  */
                                   {
                                       #ifdef WITH_THREAD
@@ -6143,14 +6162,14 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
                                       #endif
                                       /*try:*/ {
 
-                                        /* "virtual_memory_toolkit/windows/windows_defs.pxd":344
+                                        /* "virtual_memory_toolkit/windows/windows_defs.pxd":346
  *             ) == 0:
  *                 with gil:
  *                     print(f"Thread {threadid()}: Got address = {hex(<size_t>(start_region_address + c_j))}")             # <<<<<<<<<<<<<<
- * 
- *                 return <LPVOID>(start_region_address + c_j)
+ *                 found_address = 0
+ *                 found_address += start_region_address + c_j
  */
-                                        __pyx_t_8 = PyTuple_New(4); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 344, __pyx_L24_error)
+                                        __pyx_t_8 = PyTuple_New(4); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 346, __pyx_L24_error)
                                         __Pyx_GOTREF(__pyx_t_8);
                                         __pyx_t_9 = 0;
                                         __pyx_t_10 = 127;
@@ -6163,7 +6182,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
                                         #else
                                         __pyx_t_11 = 0;
                                         #endif
-                                        __pyx_t_12 = __Pyx_PyUnicode_From_int(__pyx_t_11, 0, ' ', 'd'); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 344, __pyx_L24_error)
+                                        __pyx_t_12 = __Pyx_PyUnicode_From_int(__pyx_t_11, 0, ' ', 'd'); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 346, __pyx_L24_error)
                                         __Pyx_GOTREF(__pyx_t_12);
                                         __pyx_t_9 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_12);
                                         __Pyx_GIVEREF(__pyx_t_12);
@@ -6173,12 +6192,12 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
                                         __pyx_t_9 += 16;
                                         __Pyx_GIVEREF(__pyx_kp_u_Got_address);
                                         PyTuple_SET_ITEM(__pyx_t_8, 2, __pyx_kp_u_Got_address);
-                                        __pyx_t_12 = __Pyx_PyInt_FromSize_t(((size_t)(__pyx_v_start_region_address + __pyx_v_c_j))); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 344, __pyx_L24_error)
+                                        __pyx_t_12 = __Pyx_PyInt_FromSize_t(((size_t)(__pyx_v_start_region_address + __pyx_v_c_j))); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 346, __pyx_L24_error)
                                         __Pyx_GOTREF(__pyx_t_12);
-                                        __pyx_t_13 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 344, __pyx_L24_error)
+                                        __pyx_t_13 = __Pyx_PyObject_CallOneArg(__pyx_builtin_hex, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 346, __pyx_L24_error)
                                         __Pyx_GOTREF(__pyx_t_13);
                                         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-                                        __pyx_t_12 = __Pyx_PyObject_FormatSimple(__pyx_t_13, __pyx_empty_unicode); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 344, __pyx_L24_error)
+                                        __pyx_t_12 = __Pyx_PyObject_FormatSimple(__pyx_t_13, __pyx_empty_unicode); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 346, __pyx_L24_error)
                                         __Pyx_GOTREF(__pyx_t_12);
                                         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
                                         __pyx_t_10 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_12) > __pyx_t_10) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_12) : __pyx_t_10;
@@ -6186,19 +6205,19 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
                                         __Pyx_GIVEREF(__pyx_t_12);
                                         PyTuple_SET_ITEM(__pyx_t_8, 3, __pyx_t_12);
                                         __pyx_t_12 = 0;
-                                        __pyx_t_12 = __Pyx_PyUnicode_Join(__pyx_t_8, 4, __pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 344, __pyx_L24_error)
+                                        __pyx_t_12 = __Pyx_PyUnicode_Join(__pyx_t_8, 4, __pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 346, __pyx_L24_error)
                                         __Pyx_GOTREF(__pyx_t_12);
                                         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-                                        if (__Pyx_PrintOne(0, __pyx_t_12) < 0) __PYX_ERR(1, 344, __pyx_L24_error)
+                                        if (__Pyx_PrintOne(0, __pyx_t_12) < 0) __PYX_ERR(1, 346, __pyx_L24_error)
                                         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
                                       }
 
-                                      /* "virtual_memory_toolkit/windows/windows_defs.pxd":343
+                                      /* "virtual_memory_toolkit/windows/windows_defs.pxd":345
  *                 pattern_size
  *             ) == 0:
  *                 with gil:             # <<<<<<<<<<<<<<
  *                     print(f"Thread {threadid()}: Got address = {hex(<size_t>(start_region_address + c_j))}")
- * 
+ *                 found_address = 0
  */
                                       /*finally:*/ {
                                         /*normal exit:*/{
@@ -6217,28 +6236,33 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
                                       }
                                   }
 
-                                  /* "virtual_memory_toolkit/windows/windows_defs.pxd":346
+                                  /* "virtual_memory_toolkit/windows/windows_defs.pxd":347
+ *                 with gil:
  *                     print(f"Thread {threadid()}: Got address = {hex(<size_t>(start_region_address + c_j))}")
+ *                 found_address = 0             # <<<<<<<<<<<<<<
+ *                 found_address += start_region_address + c_j
  * 
- *                 return <LPVOID>(start_region_address + c_j)             # <<<<<<<<<<<<<<
- * 
- *         free(read_bytes_buffer)
  */
-                                  __pyx_r = ((LPVOID)(__pyx_v_start_region_address + __pyx_v_c_j));
-                                  goto __pyx_L19_return;
+                                  __pyx_v_found_address = 0;
 
-                                  /* "virtual_memory_toolkit/windows/windows_defs.pxd":338
+                                  /* "virtual_memory_toolkit/windows/windows_defs.pxd":348
+ *                     print(f"Thread {threadid()}: Got address = {hex(<size_t>(start_region_address + c_j))}")
+ *                 found_address = 0
+ *                 found_address += start_region_address + c_j             # <<<<<<<<<<<<<<
  * 
+ * 
+ */
+                                  __pyx_v_found_address = (__pyx_v_found_address + (__pyx_v_start_region_address + __pyx_v_c_j));
+
+                                  /* "virtual_memory_toolkit/windows/windows_defs.pxd":340
  *         for c_j in prange(iter_size, nogil=True):
+ * 
  *             if memcmp(             # <<<<<<<<<<<<<<
  *                 <const void*>(<SIZE_T>read_bytes_buffer + c_j),
  *                 <const void*>pattern,
  */
                                 }
                                 goto __pyx_L27;
-                                __pyx_L19_return:;
-                                __pyx_parallel_why = 3;
-                                goto __pyx_L26;
                                 __pyx_L18_error:;
                                 {
                                     #ifdef WITH_THREAD
@@ -6264,6 +6288,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
                                 #endif /* _OPENMP */
                                 {
                                     __pyx_parallel_temp0 = __pyx_v_c_j;
+                                    __pyx_parallel_temp1 = __pyx_v_found_address;
                                 }
                                 __pyx_L27:;
                                 #ifdef _OPENMP
@@ -6300,6 +6325,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
                 }
                 if (__pyx_parallel_why) {
                   __pyx_v_c_j = __pyx_parallel_temp0;
+                  __pyx_v_found_address = __pyx_parallel_temp1;
                   switch (__pyx_parallel_why) {
                         case 4:
                     {
@@ -6325,12 +6351,12 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
             #endif
           }
 
-          /* "virtual_memory_toolkit/windows/windows_defs.pxd":337
+          /* "virtual_memory_toolkit/windows/windows_defs.pxd":338
  *         iter_size = memory_region.RegionSize-pattern_size
  * 
  *         for c_j in prange(iter_size, nogil=True):             # <<<<<<<<<<<<<<
+ * 
  *             if memcmp(
- *                 <const void*>(<SIZE_T>read_bytes_buffer + c_j),
  */
           /*finally:*/ {
             /*normal exit:*/{
@@ -6351,25 +6377,72 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
           }
       }
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":348
- *                 return <LPVOID>(start_region_address + c_j)
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":351
+ * 
  * 
  *         free(read_bytes_buffer)             # <<<<<<<<<<<<<<
  * 
- *     return NULL   # Pattern not found or error occurred
+ *     with gil:
  */
       free(__pyx_v_read_bytes_buffer);
       __pyx_L6_continue:;
     }
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":350
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":353
  *         free(read_bytes_buffer)
  * 
- *     return NULL   # Pattern not found or error occurred             # <<<<<<<<<<<<<<
+ *     with gil:             # <<<<<<<<<<<<<<
+ *         print("Am returning herer")
+ *     return <LPVOID>found_address   # Pattern not found or error occurred
+ */
+    {
+        #ifdef WITH_THREAD
+        PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+        #endif
+        /*try:*/ {
+
+          /* "virtual_memory_toolkit/windows/windows_defs.pxd":354
+ * 
+ *     with gil:
+ *         print("Am returning herer")             # <<<<<<<<<<<<<<
+ *     return <LPVOID>found_address   # Pattern not found or error occurred
+ * 
+ */
+          if (__Pyx_PrintOne(0, __pyx_kp_s_Am_returning_herer) < 0) __PYX_ERR(1, 354, __pyx_L29_error)
+        }
+
+        /* "virtual_memory_toolkit/windows/windows_defs.pxd":353
+ *         free(read_bytes_buffer)
+ * 
+ *     with gil:             # <<<<<<<<<<<<<<
+ *         print("Am returning herer")
+ *     return <LPVOID>found_address   # Pattern not found or error occurred
+ */
+        /*finally:*/ {
+          /*normal exit:*/{
+            #ifdef WITH_THREAD
+            __Pyx_PyGILState_Release(__pyx_gilstate_save);
+            #endif
+            goto __pyx_L30;
+          }
+          __pyx_L29_error: {
+            #ifdef WITH_THREAD
+            __Pyx_PyGILState_Release(__pyx_gilstate_save);
+            #endif
+            goto __pyx_L4_error;
+          }
+          __pyx_L30:;
+        }
+    }
+
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":355
+ *     with gil:
+ *         print("Am returning herer")
+ *     return <LPVOID>found_address   # Pattern not found or error occurred             # <<<<<<<<<<<<<<
  * 
  * cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
  */
-    __pyx_r = NULL;
+    __pyx_r = ((LPVOID)__pyx_v_found_address);
     goto __pyx_L3_return;
   }
 
@@ -6419,8 +6492,8 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/windows/windows_defs.pxd":352
- *     return NULL   # Pattern not found or error occurred
+/* "virtual_memory_toolkit/windows/windows_defs.pxd":357
+ *     return <LPVOID>found_address   # Pattern not found or error occurred
  * 
  * cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:             # <<<<<<<<<<<<<<
  *     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam
@@ -6437,7 +6510,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   int __pyx_t_1;
   int __pyx_t_2;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":353
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":358
  * 
  * cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
  *     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam             # <<<<<<<<<<<<<<
@@ -6446,7 +6519,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_data = ((FIND_PROCESS_LPARAM *)__pyx_v_lparam);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":354
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":359
  * cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
  *     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam
  *     cdef int length = GetWindowTextLengthA(hWnd)             # <<<<<<<<<<<<<<
@@ -6455,7 +6528,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_length = GetWindowTextLengthA(__pyx_v_hWnd);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":355
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":360
  *     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam
  *     cdef int length = GetWindowTextLengthA(hWnd)
  *     cdef char* current_window_title = <char*>malloc(sizeof(char) * (length + 1))             # <<<<<<<<<<<<<<
@@ -6464,7 +6537,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_current_window_title = ((char *)malloc(((sizeof(char)) * (__pyx_v_length + 1))));
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":356
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":361
  *     cdef int length = GetWindowTextLengthA(hWnd)
  *     cdef char* current_window_title = <char*>malloc(sizeof(char) * (length + 1))
  *     cdef DWORD target_pid = 0             # <<<<<<<<<<<<<<
@@ -6473,7 +6546,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_target_pid = 0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":357
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":362
  *     cdef char* current_window_title = <char*>malloc(sizeof(char) * (length + 1))
  *     cdef DWORD target_pid = 0
  *     cdef bint found_substring = 0             # <<<<<<<<<<<<<<
@@ -6482,7 +6555,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   __pyx_v_found_substring = 0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":359
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":364
  *     cdef bint found_substring = 0
  * 
  *     GetWindowTextA(hWnd, current_window_title, length + 1)             # <<<<<<<<<<<<<<
@@ -6491,7 +6564,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   (void)(GetWindowTextA(__pyx_v_hWnd, __pyx_v_current_window_title, (__pyx_v_length + 1)));
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":361
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":366
  *     GetWindowTextA(hWnd, current_window_title, length + 1)
  * 
  *     if (length != 0 and IsWindowVisible(hWnd)):             # <<<<<<<<<<<<<<
@@ -6509,7 +6582,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":366
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":371
  *             current_window_title,
  *             data.in_window_name_substring
  *         ) != NULL             # <<<<<<<<<<<<<<
@@ -6518,7 +6591,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
     __pyx_v_found_substring = (strstr(__pyx_v_current_window_title, __pyx_v_data->in_window_name_substring) != NULL);
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":368
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":373
  *         ) != NULL
  * 
  *         if found_substring:             # <<<<<<<<<<<<<<
@@ -6528,7 +6601,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
     __pyx_t_1 = (__pyx_v_found_substring != 0);
     if (__pyx_t_1) {
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":369
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":374
  * 
  *         if found_substring:
  *             GetWindowThreadProcessId(hWnd, &target_pid)             # <<<<<<<<<<<<<<
@@ -6537,7 +6610,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       (void)(GetWindowThreadProcessId(__pyx_v_hWnd, (&__pyx_v_target_pid)));
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":370
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":375
  *         if found_substring:
  *             GetWindowThreadProcessId(hWnd, &target_pid)
  *             data.out_pid = target_pid             # <<<<<<<<<<<<<<
@@ -6546,7 +6619,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_data->out_pid = __pyx_v_target_pid;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":371
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":376
  *             GetWindowThreadProcessId(hWnd, &target_pid)
  *             data.out_pid = target_pid
  *             data.out_window_handle = hWnd             # <<<<<<<<<<<<<<
@@ -6555,7 +6628,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_data->out_window_handle = __pyx_v_hWnd;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":372
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":377
  *             data.out_pid = target_pid
  *             data.out_window_handle = hWnd
  *             data.out_all_access_process_handle = OpenProcess(             # <<<<<<<<<<<<<<
@@ -6564,7 +6637,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_data->out_all_access_process_handle = OpenProcess(PROCESS_ALL_ACCESS, 0, __pyx_v_target_pid);
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":377
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":382
  *                 target_pid
  *             )
  *             data.out_full_window_name = current_window_title             # <<<<<<<<<<<<<<
@@ -6573,7 +6646,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
       __pyx_v_data->out_full_window_name = __pyx_v_current_window_title;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":378
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":383
  *             )
  *             data.out_full_window_name = current_window_title
  *             return False             # <<<<<<<<<<<<<<
@@ -6583,7 +6656,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
       __pyx_r = 0;
       goto __pyx_L0;
 
-      /* "virtual_memory_toolkit/windows/windows_defs.pxd":368
+      /* "virtual_memory_toolkit/windows/windows_defs.pxd":373
  *         ) != NULL
  * 
  *         if found_substring:             # <<<<<<<<<<<<<<
@@ -6592,7 +6665,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
     }
 
-    /* "virtual_memory_toolkit/windows/windows_defs.pxd":361
+    /* "virtual_memory_toolkit/windows/windows_defs.pxd":366
  *     GetWindowTextA(hWnd, current_window_title, length + 1)
  * 
  *     if (length != 0 and IsWindowVisible(hWnd)):             # <<<<<<<<<<<<<<
@@ -6601,7 +6674,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   }
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":380
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":385
  *             return False
  * 
  *     free(current_window_title)             # <<<<<<<<<<<<<<
@@ -6610,7 +6683,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
  */
   free(__pyx_v_current_window_title);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":381
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":386
  * 
  *     free(current_window_title)
  *     return True             # <<<<<<<<<<<<<<
@@ -6620,8 +6693,8 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   __pyx_r = 1;
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":352
- *     return NULL   # Pattern not found or error occurred
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":357
+ *     return <LPVOID>found_address   # Pattern not found or error occurred
  * 
  * cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:             # <<<<<<<<<<<<<<
  *     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam
@@ -6633,7 +6706,7 @@ static CYTHON_INLINE BOOL __pyx_f_22virtual_memory_toolkit_7windows_12windows_de
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/windows/windows_defs.pxd":383
+/* "virtual_memory_toolkit/windows/windows_defs.pxd":388
  *     return True
  * 
  * cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowTitleSubstring(const char* window_name_sub_string) nogil:             # <<<<<<<<<<<<<<
@@ -6645,7 +6718,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
   FIND_PROCESS_LPARAM __pyx_v_data;
   FIND_PROCESS_LPARAM __pyx_r;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":386
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":391
  *     cdef FIND_PROCESS_LPARAM data
  * 
  *     data.in_window_name_substring = window_name_sub_string             # <<<<<<<<<<<<<<
@@ -6654,7 +6727,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
  */
   __pyx_v_data.in_window_name_substring = __pyx_v_window_name_sub_string;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":387
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":392
  * 
  *     data.in_window_name_substring = window_name_sub_string
  *     data.out_all_access_process_handle = <HANDLE>0             # <<<<<<<<<<<<<<
@@ -6663,7 +6736,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
  */
   __pyx_v_data.out_all_access_process_handle = ((HANDLE)0);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":388
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":393
  *     data.in_window_name_substring = window_name_sub_string
  *     data.out_all_access_process_handle = <HANDLE>0
  *     data.out_pid = 0             # <<<<<<<<<<<<<<
@@ -6672,7 +6745,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
  */
   __pyx_v_data.out_pid = 0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":389
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":394
  *     data.out_all_access_process_handle = <HANDLE>0
  *     data.out_pid = 0
  *     data.out_window_handle = <HWND>0             # <<<<<<<<<<<<<<
@@ -6681,7 +6754,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
  */
   __pyx_v_data.out_window_handle = ((HWND)0);
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":390
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":395
  *     data.out_pid = 0
  *     data.out_window_handle = <HWND>0
  *     EnumWindows(_FindProcessFromWindowTitleSubstringCallback, <LPARAM>&data)             # <<<<<<<<<<<<<<
@@ -6690,7 +6763,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
  */
   (void)(EnumWindows(__pyx_f_22virtual_memory_toolkit_7windows_12windows_defs__FindProcessFromWindowTitleSubstringCallback, ((LPARAM)(&__pyx_v_data))));
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":392
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":397
  *     EnumWindows(_FindProcessFromWindowTitleSubstringCallback, <LPARAM>&data)
  * 
  *     return data             # <<<<<<<<<<<<<<
@@ -6698,7 +6771,7 @@ static CYTHON_INLINE FIND_PROCESS_LPARAM __pyx_f_22virtual_memory_toolkit_7windo
   __pyx_r = __pyx_v_data;
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/windows/windows_defs.pxd":383
+  /* "virtual_memory_toolkit/windows/windows_defs.pxd":388
  *     return True
  * 
  * cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowTitleSubstring(const char* window_name_sub_string) nogil:             # <<<<<<<<<<<<<<
@@ -8197,120 +8270,215 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
   void *__pyx_v_found_address;
   CVirtualAddress *__pyx_v_v_address;
   CVirtualAddress *__pyx_r;
-  int __pyx_t_1;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_3;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  #ifdef WITH_THREAD
+  PyGILState_STATE __pyx_gilstate_save;
+  #endif
+  __Pyx_RefNannySetupContext("CVirtualAddress_from_aob", 1);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":159
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":145
+ * 
+ * cdef inline CVirtualAddress* CVirtualAddress_from_aob(CAppHandle* app_handle, const void* start_address, const void* end_address, unsigned char* array_of_bytes, size_t length_of_aob) nogil:
+ *     """             # <<<<<<<<<<<<<<
+ *     Searches for an array of bytes within a specified memory range and returns a CVirtualAddress.
+ * 
+ */
+  /*try:*/ {
+
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":159
  *         Returns NULL if the search fails or memory allocation fails.
  *     """
  *     cdef void* found_address = NULL             # <<<<<<<<<<<<<<
  * 
  *     found_address = <void*>PrivilagedSearchMemoryBytes(
  */
-  __pyx_v_found_address = NULL;
+    __pyx_v_found_address = NULL;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":161
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":161
  *     cdef void* found_address = NULL
  * 
  *     found_address = <void*>PrivilagedSearchMemoryBytes(             # <<<<<<<<<<<<<<
  *         <HANDLE>app_handle[0].process_handle,
  *         <LPCVOID>start_address,
  */
-  __pyx_v_found_address = ((void *)__pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedSearchMemoryBytes(((HANDLE)(__pyx_v_app_handle[0]).process_handle), ((LPCVOID)__pyx_v_start_address), ((LPCVOID)__pyx_v_end_address), ((PBYTE)__pyx_v_array_of_bytes), ((SIZE_T)__pyx_v_length_of_aob)));
+    __pyx_v_found_address = ((void *)__pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedSearchMemoryBytes(((HANDLE)(__pyx_v_app_handle[0]).process_handle), ((LPCVOID)__pyx_v_start_address), ((LPCVOID)__pyx_v_end_address), ((PBYTE)__pyx_v_array_of_bytes), ((SIZE_T)__pyx_v_length_of_aob)));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":169
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":168
+ *         <SIZE_T>length_of_aob
  *     )
- * 
+ *     with gil:             # <<<<<<<<<<<<<<
+ *         print(f"FOUND ADDRESS = {<size_t>found_address}")
+ *     if not found_address:
+ */
+    {
+        #ifdef WITH_THREAD
+        PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+        #endif
+        /*try:*/ {
+
+          /* "virtual_memory_toolkit/memory/memory_structures.pxd":169
+ *     )
+ *     with gil:
+ *         print(f"FOUND ADDRESS = {<size_t>found_address}")             # <<<<<<<<<<<<<<
+ *     if not found_address:
+ *         return NULL
+ */
+          __pyx_t_1 = __Pyx_PyUnicode_From_size_t(((size_t)__pyx_v_found_address), 0, ' ', 'd'); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 169, __pyx_L7_error)
+          __Pyx_GOTREF(__pyx_t_1);
+          __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_kp_u_FOUND_ADDRESS, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 169, __pyx_L7_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+          if (__Pyx_PrintOne(0, __pyx_t_2) < 0) __PYX_ERR(2, 169, __pyx_L7_error)
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        }
+
+        /* "virtual_memory_toolkit/memory/memory_structures.pxd":168
+ *         <SIZE_T>length_of_aob
+ *     )
+ *     with gil:             # <<<<<<<<<<<<<<
+ *         print(f"FOUND ADDRESS = {<size_t>found_address}")
+ *     if not found_address:
+ */
+        /*finally:*/ {
+          /*normal exit:*/{
+            #ifdef WITH_THREAD
+            __Pyx_PyGILState_Release(__pyx_gilstate_save);
+            #endif
+            goto __pyx_L8;
+          }
+          __pyx_L7_error: {
+            #ifdef WITH_THREAD
+            __Pyx_PyGILState_Release(__pyx_gilstate_save);
+            #endif
+            goto __pyx_L4_error;
+          }
+          __pyx_L8:;
+        }
+    }
+
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":170
+ *     with gil:
+ *         print(f"FOUND ADDRESS = {<size_t>found_address}")
  *     if not found_address:             # <<<<<<<<<<<<<<
  *         return NULL
  * 
  */
-  __pyx_t_1 = ((!(__pyx_v_found_address != 0)) != 0);
-  if (__pyx_t_1) {
+    __pyx_t_3 = ((!(__pyx_v_found_address != 0)) != 0);
+    if (__pyx_t_3) {
 
-    /* "virtual_memory_toolkit/memory/memory_structures.pxd":170
- * 
+      /* "virtual_memory_toolkit/memory/memory_structures.pxd":171
+ *         print(f"FOUND ADDRESS = {<size_t>found_address}")
  *     if not found_address:
  *         return NULL             # <<<<<<<<<<<<<<
  * 
  *     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))
  */
-    __pyx_r = NULL;
-    goto __pyx_L0;
+      __pyx_r = NULL;
+      goto __pyx_L3_return;
 
-    /* "virtual_memory_toolkit/memory/memory_structures.pxd":169
- *     )
- * 
+      /* "virtual_memory_toolkit/memory/memory_structures.pxd":170
+ *     with gil:
+ *         print(f"FOUND ADDRESS = {<size_t>found_address}")
  *     if not found_address:             # <<<<<<<<<<<<<<
  *         return NULL
  * 
  */
-  }
+    }
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":172
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":173
  *         return NULL
  * 
  *     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))             # <<<<<<<<<<<<<<
  *     if not v_address:
  *         return NULL  # Memory allocation failed
  */
-  __pyx_v_v_address = ((CVirtualAddress *)malloc((sizeof(CVirtualAddress))));
+    __pyx_v_v_address = ((CVirtualAddress *)malloc((sizeof(CVirtualAddress))));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":173
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":174
  * 
  *     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))
  *     if not v_address:             # <<<<<<<<<<<<<<
  *         return NULL  # Memory allocation failed
  * 
  */
-  __pyx_t_1 = ((!(__pyx_v_v_address != 0)) != 0);
-  if (__pyx_t_1) {
+    __pyx_t_3 = ((!(__pyx_v_v_address != 0)) != 0);
+    if (__pyx_t_3) {
 
-    /* "virtual_memory_toolkit/memory/memory_structures.pxd":174
+      /* "virtual_memory_toolkit/memory/memory_structures.pxd":175
  *     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))
  *     if not v_address:
  *         return NULL  # Memory allocation failed             # <<<<<<<<<<<<<<
  * 
  *     v_address[0].app_handle = app_handle
  */
-    __pyx_r = NULL;
-    goto __pyx_L0;
+      __pyx_r = NULL;
+      goto __pyx_L3_return;
 
-    /* "virtual_memory_toolkit/memory/memory_structures.pxd":173
+      /* "virtual_memory_toolkit/memory/memory_structures.pxd":174
  * 
  *     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))
  *     if not v_address:             # <<<<<<<<<<<<<<
  *         return NULL  # Memory allocation failed
  * 
  */
-  }
+    }
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":176
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":177
  *         return NULL  # Memory allocation failed
  * 
  *     v_address[0].app_handle = app_handle             # <<<<<<<<<<<<<<
  *     v_address[0].address = found_address
  * 
  */
-  (__pyx_v_v_address[0]).app_handle = __pyx_v_app_handle;
+    (__pyx_v_v_address[0]).app_handle = __pyx_v_app_handle;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":177
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":178
  * 
  *     v_address[0].app_handle = app_handle
  *     v_address[0].address = found_address             # <<<<<<<<<<<<<<
  * 
  *     return v_address
  */
-  (__pyx_v_v_address[0]).address = __pyx_v_found_address;
+    (__pyx_v_v_address[0]).address = __pyx_v_found_address;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":179
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":180
  *     v_address[0].address = found_address
  * 
  *     return v_address             # <<<<<<<<<<<<<<
  * 
  * cdef inline CVirtualAddress* CVirtualAddress_from_dynamic(CAppHandle* app_handle, CModule* module, void* offset) nogil:
  */
-  __pyx_r = __pyx_v_v_address;
-  goto __pyx_L0;
+    __pyx_r = __pyx_v_v_address;
+    goto __pyx_L3_return;
+  }
+
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":145
+ * 
+ * cdef inline CVirtualAddress* CVirtualAddress_from_aob(CAppHandle* app_handle, const void* start_address, const void* end_address, unsigned char* array_of_bytes, size_t length_of_aob) nogil:
+ *     """             # <<<<<<<<<<<<<<
+ *     Searches for an array of bytes within a specified memory range and returns a CVirtualAddress.
+ * 
+ */
+  /*finally:*/ {
+    __pyx_L3_return: {
+      #ifdef WITH_THREAD
+      __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+      #endif
+      goto __pyx_L0;
+    }
+    __pyx_L4_error: {
+      #ifdef WITH_THREAD
+      __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+      #endif
+      goto __pyx_L1_error;
+    }
+  }
 
   /* "virtual_memory_toolkit/memory/memory_structures.pxd":144
  *     return v_address
@@ -8321,11 +8489,21 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
  */
 
   /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_WriteUnraisable("virtual_memory_toolkit.memory.memory_structures.CVirtualAddress_from_aob", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 1);
+  __pyx_r = 0;
   __pyx_L0:;
+  #ifdef WITH_THREAD
+  __Pyx_PyGILState_Release(__pyx_gilstate_save);
+  #endif
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":181
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":182
  *     return v_address
  * 
  * cdef inline CVirtualAddress* CVirtualAddress_from_dynamic(CAppHandle* app_handle, CModule* module, void* offset) nogil:             # <<<<<<<<<<<<<<
@@ -8341,7 +8519,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
   CVirtualAddress *__pyx_r;
   int __pyx_t_1;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":195
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":196
  *     """
  * 
  *     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))             # <<<<<<<<<<<<<<
@@ -8350,7 +8528,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
  */
   __pyx_v_v_address = ((CVirtualAddress *)malloc((sizeof(CVirtualAddress))));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":196
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":197
  * 
  *     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))
  *     if not v_address:             # <<<<<<<<<<<<<<
@@ -8360,7 +8538,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
   __pyx_t_1 = ((!(__pyx_v_v_address != 0)) != 0);
   if (__pyx_t_1) {
 
-    /* "virtual_memory_toolkit/memory/memory_structures.pxd":197
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":198
  *     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))
  *     if not v_address:
  *         return NULL  # Memory allocation failed             # <<<<<<<<<<<<<<
@@ -8370,7 +8548,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "virtual_memory_toolkit/memory/memory_structures.pxd":196
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":197
  * 
  *     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))
  *     if not v_address:             # <<<<<<<<<<<<<<
@@ -8379,7 +8557,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
  */
   }
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":199
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":200
  *         return NULL  # Memory allocation failed
  * 
  *     cdef char* module_base_address = <char*>module[0].base_address             # <<<<<<<<<<<<<<
@@ -8388,7 +8566,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
  */
   __pyx_v_module_base_address = ((char *)(__pyx_v_module[0]).base_address);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":200
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":201
  * 
  *     cdef char* module_base_address = <char*>module[0].base_address
  *     cdef ptrdiff_t module_offset = <ptrdiff_t>offset             # <<<<<<<<<<<<<<
@@ -8397,7 +8575,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
  */
   __pyx_v_module_offset = ((ptrdiff_t)__pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":201
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":202
  *     cdef char* module_base_address = <char*>module[0].base_address
  *     cdef ptrdiff_t module_offset = <ptrdiff_t>offset
  *     cdef char* final_address = module_base_address + module_offset             # <<<<<<<<<<<<<<
@@ -8406,7 +8584,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
  */
   __pyx_v_final_address = (__pyx_v_module_base_address + __pyx_v_module_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":203
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":204
  *     cdef char* final_address = module_base_address + module_offset
  * 
  *     v_address[0].app_handle = app_handle             # <<<<<<<<<<<<<<
@@ -8415,7 +8593,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
  */
   (__pyx_v_v_address[0]).app_handle = __pyx_v_app_handle;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":204
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":205
  * 
  *     v_address[0].app_handle = app_handle
  *     v_address[0].address = <void*>final_address             # <<<<<<<<<<<<<<
@@ -8424,7 +8602,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
  */
   (__pyx_v_v_address[0]).address = ((void *)__pyx_v_final_address);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":206
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":207
  *     v_address[0].address = <void*>final_address
  * 
  *     return v_address             # <<<<<<<<<<<<<<
@@ -8434,7 +8612,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
   __pyx_r = __pyx_v_v_address;
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":181
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":182
  *     return v_address
  * 
  * cdef inline CVirtualAddress* CVirtualAddress_from_dynamic(CAppHandle* app_handle, CModule* module, void* offset) nogil:             # <<<<<<<<<<<<<<
@@ -8447,7 +8625,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":208
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":209
  *     return v_address
  * 
  * cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8457,7 +8635,7 @@ static CYTHON_INLINE CVirtualAddress *__pyx_f_22virtual_memory_toolkit_6memory_1
 
 static CYTHON_INLINE void __pyx_f_22virtual_memory_toolkit_6memory_17memory_structures_CVirtualAddress_offset(CVirtualAddress *__pyx_v_virtual_address, PY_LONG_LONG __pyx_v_offset) {
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":217
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":218
  * 
  *     """
  *     virtual_address[0].address = <void*>((<unsigned long long>virtual_address[0].address) + offset)             # <<<<<<<<<<<<<<
@@ -8466,7 +8644,7 @@ static CYTHON_INLINE void __pyx_f_22virtual_memory_toolkit_6memory_17memory_stru
  */
   (__pyx_v_virtual_address[0]).address = ((void *)(((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":218
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":219
  *     """
  *     virtual_address[0].address = <void*>((<unsigned long long>virtual_address[0].address) + offset)
  *     return             # <<<<<<<<<<<<<<
@@ -8475,7 +8653,7 @@ static CYTHON_INLINE void __pyx_f_22virtual_memory_toolkit_6memory_17memory_stru
  */
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":208
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":209
  *     return v_address
  * 
  * cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8487,7 +8665,7 @@ static CYTHON_INLINE void __pyx_f_22virtual_memory_toolkit_6memory_17memory_stru
   __pyx_L0:;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":220
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":221
  *     return
  * 
  * cdef inline bint CVirtualAddress_read_float32(const CVirtualAddress* virtual_address, float* out_float32) nogil:             # <<<<<<<<<<<<<<
@@ -8499,7 +8677,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":232
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":233
  *     """
  *     # Attempt to read a 32-bit float from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -8508,7 +8686,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPVOID)__pyx_v_out_float32), (sizeof(float)));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":239
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":240
  *     )
  * 
  *     return bytes_read != sizeof(float)             # <<<<<<<<<<<<<<
@@ -8518,7 +8696,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != (sizeof(float)));
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":220
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":221
  *     return
  * 
  * cdef inline bint CVirtualAddress_read_float32(const CVirtualAddress* virtual_address, float* out_float32) nogil:             # <<<<<<<<<<<<<<
@@ -8531,7 +8709,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":241
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":242
  *     return bytes_read != sizeof(float)
  * 
  * cdef inline bint CVirtualAddress_read_float32_offset(const CVirtualAddress* virtual_address, float* out_float32, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8544,7 +8722,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":253
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":254
  *     """
  * 
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -8553,7 +8731,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":256
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":257
  * 
  *     # Attempt to read a 32-bit float from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -8562,7 +8740,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPVOID)__pyx_v_out_float32), (sizeof(float)));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":263
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":264
  *     )
  * 
  *     return bytes_read != sizeof(float)             # <<<<<<<<<<<<<<
@@ -8572,7 +8750,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != (sizeof(float)));
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":241
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":242
  *     return bytes_read != sizeof(float)
  * 
  * cdef inline bint CVirtualAddress_read_float32_offset(const CVirtualAddress* virtual_address, float* out_float32, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8585,7 +8763,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":265
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":266
  *     return bytes_read != sizeof(float)
  * 
  * cdef inline bint CVirtualAddress_write_float32(const CVirtualAddress* virtual_address, const float write_float32) nogil:             # <<<<<<<<<<<<<<
@@ -8598,7 +8776,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   int __pyx_r;
   int __pyx_t_1;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":276
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":277
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -8607,7 +8785,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPCVOID)(&__pyx_v_write_float32)), (sizeof(float)));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":282
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":283
  *         sizeof(float)
  *     )
  *     return 0 if bytes_written == sizeof(float) else 1             # <<<<<<<<<<<<<<
@@ -8622,7 +8800,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":265
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":266
  *     return bytes_read != sizeof(float)
  * 
  * cdef inline bint CVirtualAddress_write_float32(const CVirtualAddress* virtual_address, const float write_float32) nogil:             # <<<<<<<<<<<<<<
@@ -8635,7 +8813,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":284
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":285
  *     return 0 if bytes_written == sizeof(float) else 1
  * 
  * cdef inline bint CVirtualAddress_write_float32_offset(const CVirtualAddress* virtual_address, const float write_float32, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8648,7 +8826,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_written;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":296
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":297
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -8657,7 +8835,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":298
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":299
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset
  * 
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -8666,7 +8844,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPCVOID)(&__pyx_v_write_float32)), 4);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":304
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":305
  *         4
  *     )
  *     return bytes_written != 4             # <<<<<<<<<<<<<<
@@ -8676,7 +8854,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_written != 4);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":284
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":285
  *     return 0 if bytes_written == sizeof(float) else 1
  * 
  * cdef inline bint CVirtualAddress_write_float32_offset(const CVirtualAddress* virtual_address, const float write_float32, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8689,7 +8867,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":306
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":307
  *     return bytes_written != 4
  * 
  * cdef inline bint CVirtualAddress_read_float64(const CVirtualAddress* virtual_address, double* out_float64) nogil:             # <<<<<<<<<<<<<<
@@ -8702,7 +8880,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   int __pyx_r;
   int __pyx_t_1;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":318
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":319
  *     """
  *     # Attempt to read a 64-bit float from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -8711,7 +8889,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPVOID)__pyx_v_out_float64), (sizeof(double)));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":325
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":326
  *     )
  * 
  *     if bytes_read != sizeof(double):             # <<<<<<<<<<<<<<
@@ -8721,7 +8899,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_t_1 = ((__pyx_v_bytes_read != (sizeof(double))) != 0);
   if (__pyx_t_1) {
 
-    /* "virtual_memory_toolkit/memory/memory_structures.pxd":326
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":327
  * 
  *     if bytes_read != sizeof(double):
  *         return 1  # Failed to read the expected number of bytes             # <<<<<<<<<<<<<<
@@ -8731,7 +8909,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
     __pyx_r = 1;
     goto __pyx_L0;
 
-    /* "virtual_memory_toolkit/memory/memory_structures.pxd":325
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":326
  *     )
  * 
  *     if bytes_read != sizeof(double):             # <<<<<<<<<<<<<<
@@ -8740,7 +8918,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   }
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":328
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":329
  *         return 1  # Failed to read the expected number of bytes
  * 
  *     return 0  # Success             # <<<<<<<<<<<<<<
@@ -8750,7 +8928,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":306
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":307
  *     return bytes_written != 4
  * 
  * cdef inline bint CVirtualAddress_read_float64(const CVirtualAddress* virtual_address, double* out_float64) nogil:             # <<<<<<<<<<<<<<
@@ -8763,7 +8941,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":330
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":331
  *     return 0  # Success
  * 
  * cdef inline bint CVirtualAddress_read_float64_offset(const CVirtualAddress* virtual_address, double* out_float64, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8776,7 +8954,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":342
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":343
  *     """
  * 
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -8785,7 +8963,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":345
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":346
  * 
  *     # Attempt to read a 64-bit float from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -8794,7 +8972,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPVOID)__pyx_v_out_float64), 8);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":352
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":353
  *     )
  * 
  *     return bytes_read != 8             # <<<<<<<<<<<<<<
@@ -8804,7 +8982,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != 8);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":330
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":331
  *     return 0  # Success
  * 
  * cdef inline bint CVirtualAddress_read_float64_offset(const CVirtualAddress* virtual_address, double* out_float64, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8817,7 +8995,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":354
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":355
  *     return bytes_read != 8
  * 
  * cdef inline bint CVirtualAddress_write_float64(const CVirtualAddress* virtual_address, const double write_float64) nogil:             # <<<<<<<<<<<<<<
@@ -8830,7 +9008,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   int __pyx_r;
   int __pyx_t_1;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":365
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":366
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -8839,7 +9017,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPCVOID)(&__pyx_v_write_float64)), (sizeof(double)));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":372
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":373
  *     )
  * 
  *     return 0 if bytes_written == sizeof(double) else 1             # <<<<<<<<<<<<<<
@@ -8854,7 +9032,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":354
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":355
  *     return bytes_read != 8
  * 
  * cdef inline bint CVirtualAddress_write_float64(const CVirtualAddress* virtual_address, const double write_float64) nogil:             # <<<<<<<<<<<<<<
@@ -8867,7 +9045,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":374
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":375
  *     return 0 if bytes_written == sizeof(double) else 1
  * 
  * cdef inline bint CVirtualAddress_write_float64_offset(const CVirtualAddress* virtual_address, const double write_float64, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8880,7 +9058,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_written;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":386
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":387
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -8889,7 +9067,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":388
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":389
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset
  * 
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -8898,7 +9076,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPCVOID)(&__pyx_v_write_float64)), 8);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":394
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":395
  *         8
  *     )
  *     return bytes_written != 8             # <<<<<<<<<<<<<<
@@ -8908,7 +9086,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_written != 8);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":374
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":375
  *     return 0 if bytes_written == sizeof(double) else 1
  * 
  * cdef inline bint CVirtualAddress_write_float64_offset(const CVirtualAddress* virtual_address, const double write_float64, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8921,7 +9099,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":396
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":397
  *     return bytes_written != 8
  * 
  * cdef inline bint CVirtualAddress_read_int8(const CVirtualAddress* virtual_address, char* out_int8) nogil:             # <<<<<<<<<<<<<<
@@ -8933,7 +9111,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":408
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":409
  *     """
  *     # Attempt to read an 8-bit integer from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -8942,7 +9120,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPVOID)__pyx_v_out_int8), ((unsigned PY_LONG_LONG)1));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":415
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":416
  *     )
  * 
  *     return bytes_read != 1             # <<<<<<<<<<<<<<
@@ -8952,7 +9130,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != 1);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":396
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":397
  *     return bytes_written != 8
  * 
  * cdef inline bint CVirtualAddress_read_int8(const CVirtualAddress* virtual_address, char* out_int8) nogil:             # <<<<<<<<<<<<<<
@@ -8965,7 +9143,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":417
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":418
  *     return bytes_read != 1
  * 
  * cdef inline bint CVirtualAddress_read_int8_offset(const CVirtualAddress* virtual_address, char* out_int8, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -8978,7 +9156,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":429
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":430
  *     """
  * 
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -8987,7 +9165,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":432
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":433
  * 
  *     # Attempt to read a 8-bit int from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -8996,7 +9174,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPVOID)__pyx_v_out_int8), 1);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":439
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":440
  *     )
  * 
  *     return bytes_read != 1             # <<<<<<<<<<<<<<
@@ -9006,7 +9184,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != 1);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":417
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":418
  *     return bytes_read != 1
  * 
  * cdef inline bint CVirtualAddress_read_int8_offset(const CVirtualAddress* virtual_address, char* out_int8, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9019,7 +9197,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":441
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":442
  *     return bytes_read != 1
  * 
  * cdef inline bint CVirtualAddress_write_int8(const CVirtualAddress* virtual_address, const char write_int8) nogil:             # <<<<<<<<<<<<<<
@@ -9031,7 +9209,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_written;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":452
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":453
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -9040,7 +9218,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPCVOID)(&__pyx_v_write_int8)), ((unsigned PY_LONG_LONG)1));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":459
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":460
  *     )
  * 
  *     return bytes_written != 1             # <<<<<<<<<<<<<<
@@ -9050,7 +9228,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_written != 1);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":441
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":442
  *     return bytes_read != 1
  * 
  * cdef inline bint CVirtualAddress_write_int8(const CVirtualAddress* virtual_address, const char write_int8) nogil:             # <<<<<<<<<<<<<<
@@ -9063,7 +9241,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":461
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":462
  *     return bytes_written != 1
  * 
  * cdef inline bint CVirtualAddress_write_int8_offset(const CVirtualAddress* virtual_address, const char write_int8, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9076,7 +9254,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_written;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":473
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":474
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -9085,7 +9263,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":475
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":476
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset
  * 
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -9094,7 +9272,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPCVOID)(&__pyx_v_write_int8)), 1);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":481
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":482
  *         1
  *     )
  *     return bytes_written != 1             # <<<<<<<<<<<<<<
@@ -9104,7 +9282,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_written != 1);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":461
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":462
  *     return bytes_written != 1
  * 
  * cdef inline bint CVirtualAddress_write_int8_offset(const CVirtualAddress* virtual_address, const char write_int8, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9117,7 +9295,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":483
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":484
  *     return bytes_written != 1
  * 
  * cdef inline bint CVirtualAddress_read_int16(const CVirtualAddress* virtual_address, short* out_int16) nogil:             # <<<<<<<<<<<<<<
@@ -9129,7 +9307,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":495
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":496
  *     """
  *     # Attempt to read an 8-bit integer from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -9138,7 +9316,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPVOID)__pyx_v_out_int16), ((unsigned PY_LONG_LONG)2));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":502
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":503
  *     )
  * 
  *     return bytes_read != 2             # <<<<<<<<<<<<<<
@@ -9148,7 +9326,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != 2);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":483
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":484
  *     return bytes_written != 1
  * 
  * cdef inline bint CVirtualAddress_read_int16(const CVirtualAddress* virtual_address, short* out_int16) nogil:             # <<<<<<<<<<<<<<
@@ -9161,7 +9339,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":504
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":505
  *     return bytes_read != 2
  * 
  * cdef inline bint CVirtualAddress_read_int16_offset(const CVirtualAddress* virtual_address, short* out_int16, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9174,7 +9352,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":516
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":517
  *     """
  * 
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -9183,7 +9361,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":519
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":520
  * 
  *     # Attempt to read a 8-bit int from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -9192,7 +9370,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPVOID)__pyx_v_out_int16), 2);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":526
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":527
  *     )
  * 
  *     return bytes_read != 2             # <<<<<<<<<<<<<<
@@ -9202,7 +9380,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != 2);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":504
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":505
  *     return bytes_read != 2
  * 
  * cdef inline bint CVirtualAddress_read_int16_offset(const CVirtualAddress* virtual_address, short* out_int16, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9215,7 +9393,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":528
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":529
  *     return bytes_read != 2
  * 
  * cdef inline bint CVirtualAddress_write_int16(const CVirtualAddress* virtual_address, const short write_int16) nogil:             # <<<<<<<<<<<<<<
@@ -9227,7 +9405,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_written;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":539
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":540
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -9236,7 +9414,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPCVOID)(&__pyx_v_write_int16)), ((unsigned PY_LONG_LONG)2));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":546
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":547
  *     )
  * 
  *     return bytes_written != 2             # <<<<<<<<<<<<<<
@@ -9246,7 +9424,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_written != 2);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":528
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":529
  *     return bytes_read != 2
  * 
  * cdef inline bint CVirtualAddress_write_int16(const CVirtualAddress* virtual_address, const short write_int16) nogil:             # <<<<<<<<<<<<<<
@@ -9259,7 +9437,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":548
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":549
  *     return bytes_written != 2
  * 
  * cdef inline bint CVirtualAddress_write_int16_offset(const CVirtualAddress* virtual_address, const short write_int16, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9272,7 +9450,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_written;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":560
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":561
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -9281,7 +9459,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":562
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":563
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset
  * 
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -9290,7 +9468,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPCVOID)(&__pyx_v_write_int16)), 2);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":568
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":569
  *         2
  *     )
  *     return bytes_written != 2             # <<<<<<<<<<<<<<
@@ -9300,7 +9478,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_written != 2);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":548
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":549
  *     return bytes_written != 2
  * 
  * cdef inline bint CVirtualAddress_write_int16_offset(const CVirtualAddress* virtual_address, const short write_int16, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9313,7 +9491,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":570
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":571
  *     return bytes_written != 2
  * 
  * cdef inline bint CVirtualAddress_read_int32(const CVirtualAddress* virtual_address, int* out_int32) nogil:             # <<<<<<<<<<<<<<
@@ -9325,7 +9503,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":582
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":583
  *     """
  *     # Attempt to read an 8-bit integer from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -9334,7 +9512,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPVOID)__pyx_v_out_int32), ((unsigned PY_LONG_LONG)4));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":589
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":590
  *     )
  * 
  *     return bytes_read != 4             # <<<<<<<<<<<<<<
@@ -9344,7 +9522,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != 4);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":570
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":571
  *     return bytes_written != 2
  * 
  * cdef inline bint CVirtualAddress_read_int32(const CVirtualAddress* virtual_address, int* out_int32) nogil:             # <<<<<<<<<<<<<<
@@ -9357,7 +9535,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":591
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":592
  *     return bytes_read != 4
  * 
  * cdef inline bint CVirtualAddress_read_int32_offset(const CVirtualAddress* virtual_address, int* out_int32, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9370,7 +9548,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":603
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":604
  *     """
  * 
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -9379,7 +9557,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":606
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":607
  * 
  *     # Attempt to read a 8-bit int from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -9388,7 +9566,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPVOID)__pyx_v_out_int32), 4);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":613
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":614
  *     )
  * 
  *     return bytes_read != 4             # <<<<<<<<<<<<<<
@@ -9398,7 +9576,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != 4);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":591
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":592
  *     return bytes_read != 4
  * 
  * cdef inline bint CVirtualAddress_read_int32_offset(const CVirtualAddress* virtual_address, int* out_int32, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9411,7 +9589,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":615
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":616
  *     return bytes_read != 4
  * 
  * cdef inline bint CVirtualAddress_write_int32(const CVirtualAddress* virtual_address, const int write_int32) nogil:             # <<<<<<<<<<<<<<
@@ -9423,7 +9601,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_written;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":626
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":627
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -9432,7 +9610,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPCVOID)(&__pyx_v_write_int32)), ((unsigned PY_LONG_LONG)4));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":633
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":634
  *     )
  * 
  *     return bytes_written != 4             # <<<<<<<<<<<<<<
@@ -9442,7 +9620,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_written != 4);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":615
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":616
  *     return bytes_read != 4
  * 
  * cdef inline bint CVirtualAddress_write_int32(const CVirtualAddress* virtual_address, const int write_int32) nogil:             # <<<<<<<<<<<<<<
@@ -9455,7 +9633,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":635
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":636
  *     return bytes_written != 4
  * 
  * cdef inline bint CVirtualAddress_write_int32_offset(const CVirtualAddress* virtual_address, const int write_int32, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9468,7 +9646,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_written;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":647
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":648
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -9477,7 +9655,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":649
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":650
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset
  * 
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -9486,7 +9664,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPCVOID)(&__pyx_v_write_int32)), 4);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":655
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":656
  *         4
  *     )
  *     return bytes_written != 4             # <<<<<<<<<<<<<<
@@ -9496,7 +9674,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_written != 4);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":635
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":636
  *     return bytes_written != 4
  * 
  * cdef inline bint CVirtualAddress_write_int32_offset(const CVirtualAddress* virtual_address, const int write_int32, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9509,7 +9687,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":657
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":658
  *     return bytes_written != 4
  * 
  * cdef inline bint CVirtualAddress_read_int64(const CVirtualAddress* virtual_address, long long* out_int64) nogil:             # <<<<<<<<<<<<<<
@@ -9521,7 +9699,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":669
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":670
  *     """
  *     # Attempt to read an 8-bit integer from the specified virtual address
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -9530,7 +9708,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPVOID)__pyx_v_out_int64), ((unsigned PY_LONG_LONG)8));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":676
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":677
  *     )
  * 
  *     return bytes_read != 8             # <<<<<<<<<<<<<<
@@ -9540,7 +9718,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != 8);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":657
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":658
  *     return bytes_written != 4
  * 
  * cdef inline bint CVirtualAddress_read_int64(const CVirtualAddress* virtual_address, long long* out_int64) nogil:             # <<<<<<<<<<<<<<
@@ -9553,7 +9731,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":678
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":679
  *     return bytes_read != 8
  * 
  * cdef inline bint CVirtualAddress_read_int64_offset(const CVirtualAddress* virtual_address, long long* out_int64, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9566,7 +9744,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_read;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":690
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":691
  *     """
  * 
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -9575,7 +9753,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":692
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":693
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset
  * 
  *     cdef SIZE_T bytes_read = PrivilagedMemoryRead(             # <<<<<<<<<<<<<<
@@ -9584,7 +9762,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_read = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryRead(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPVOID)__pyx_v_out_int64), 8);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":699
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":700
  *     )
  * 
  *     return bytes_read != 8             # <<<<<<<<<<<<<<
@@ -9594,7 +9772,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_read != 8);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":678
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":679
  *     return bytes_read != 8
  * 
  * cdef inline bint CVirtualAddress_read_int64_offset(const CVirtualAddress* virtual_address, long long* out_int64, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9607,7 +9785,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":701
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":702
  *     return bytes_read != 8
  * 
  * cdef inline bint CVirtualAddress_write_int64(const CVirtualAddress* virtual_address, const long long write_int64) nogil:             # <<<<<<<<<<<<<<
@@ -9619,7 +9797,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_written;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":712
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":713
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -9628,7 +9806,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)(__pyx_v_virtual_address[0]).address), ((LPCVOID)(&__pyx_v_write_int64)), ((unsigned PY_LONG_LONG)8));
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":719
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":720
  *     )
  * 
  *     return bytes_written != 8             # <<<<<<<<<<<<<<
@@ -9638,7 +9816,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_written != 8);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":701
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":702
  *     return bytes_read != 8
  * 
  * cdef inline bint CVirtualAddress_write_int64(const CVirtualAddress* virtual_address, const long long write_int64) nogil:             # <<<<<<<<<<<<<<
@@ -9651,7 +9829,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":721
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":722
  *     return bytes_written != 8
  * 
  * cdef inline bint CVirtualAddress_write_int64_offset(const CVirtualAddress* virtual_address, const long long write_int64, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9664,7 +9842,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   SIZE_T __pyx_v_bytes_written;
   int __pyx_r;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":733
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":734
  *         BYTE: 0 if the write operation is successful, 1 if it fails.
  *     """
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset             # <<<<<<<<<<<<<<
@@ -9673,7 +9851,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_address = (((unsigned PY_LONG_LONG)(__pyx_v_virtual_address[0]).address) + __pyx_v_offset);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":735
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":736
  *     cdef unsigned long long address = (<unsigned long long>virtual_address[0].address) + offset
  * 
  *     cdef SIZE_T bytes_written = PrivilagedMemoryWrite(             # <<<<<<<<<<<<<<
@@ -9682,7 +9860,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
  */
   __pyx_v_bytes_written = __pyx_f_22virtual_memory_toolkit_7windows_12windows_defs_PrivilagedMemoryWrite(((__pyx_v_virtual_address[0]).app_handle[0]).process_handle, ((LPCVOID)__pyx_v_address), ((LPCVOID)(&__pyx_v_write_int64)), 8);
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":741
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":742
  *         8
  *     )
  *     return bytes_written != 8             # <<<<<<<<<<<<<<
@@ -9692,7 +9870,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   __pyx_r = (__pyx_v_bytes_written != 8);
   goto __pyx_L0;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":721
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":722
  *     return bytes_written != 8
  * 
  * cdef inline bint CVirtualAddress_write_int64_offset(const CVirtualAddress* virtual_address, const long long write_int64, long long offset) nogil:             # <<<<<<<<<<<<<<
@@ -9705,7 +9883,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
   return __pyx_r;
 }
 
-/* "virtual_memory_toolkit/memory/memory_structures.pxd":743
+/* "virtual_memory_toolkit/memory/memory_structures.pxd":744
  *     return bytes_written != 8
  * 
  * cdef inline void CVirtualAddress_free(CVirtualAddress* virtual_address) nogil:             # <<<<<<<<<<<<<<
@@ -9716,7 +9894,7 @@ static CYTHON_INLINE int __pyx_f_22virtual_memory_toolkit_6memory_17memory_struc
 static CYTHON_INLINE void __pyx_f_22virtual_memory_toolkit_6memory_17memory_structures_CVirtualAddress_free(CVirtualAddress *__pyx_v_virtual_address) {
   int __pyx_t_1;
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":750
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":751
  *         It doesn't free the app_handle attribute as this is shared.
  *     """
  *     if virtual_address:             # <<<<<<<<<<<<<<
@@ -9726,7 +9904,7 @@ static CYTHON_INLINE void __pyx_f_22virtual_memory_toolkit_6memory_17memory_stru
   __pyx_t_1 = (__pyx_v_virtual_address != 0);
   if (__pyx_t_1) {
 
-    /* "virtual_memory_toolkit/memory/memory_structures.pxd":751
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":752
  *     """
  *     if virtual_address:
  *         free(virtual_address)             # <<<<<<<<<<<<<<
@@ -9734,7 +9912,7 @@ static CYTHON_INLINE void __pyx_f_22virtual_memory_toolkit_6memory_17memory_stru
  */
     free(__pyx_v_virtual_address);
 
-    /* "virtual_memory_toolkit/memory/memory_structures.pxd":750
+    /* "virtual_memory_toolkit/memory/memory_structures.pxd":751
  *         It doesn't free the app_handle attribute as this is shared.
  *     """
  *     if virtual_address:             # <<<<<<<<<<<<<<
@@ -9743,7 +9921,7 @@ static CYTHON_INLINE void __pyx_f_22virtual_memory_toolkit_6memory_17memory_stru
  */
   }
 
-  /* "virtual_memory_toolkit/memory/memory_structures.pxd":743
+  /* "virtual_memory_toolkit/memory/memory_structures.pxd":744
  *     return bytes_written != 8
  * 
  * cdef inline void CVirtualAddress_free(CVirtualAddress* virtual_address) nogil:             # <<<<<<<<<<<<<<
@@ -10821,9 +10999,11 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_kp_s_Am_returning_herer, __pyx_k_Am_returning_herer, sizeof(__pyx_k_Am_returning_herer), 0, 0, 1, 0},
   {&__pyx_kp_s_C_Windows_System32_notepad_exe, __pyx_k_C_Windows_System32_notepad_exe, sizeof(__pyx_k_C_Windows_System32_notepad_exe), 0, 0, 1, 0},
   {&__pyx_kp_s_Could_not_find_address, __pyx_k_Could_not_find_address, sizeof(__pyx_k_Could_not_find_address), 0, 0, 1, 0},
   {&__pyx_n_s_FAILED, __pyx_k_FAILED, sizeof(__pyx_k_FAILED), 0, 0, 1, 1},
+  {&__pyx_kp_u_FOUND_ADDRESS, __pyx_k_FOUND_ADDRESS, sizeof(__pyx_k_FOUND_ADDRESS), 0, 1, 0, 0},
   {&__pyx_kp_s_Failed_to_allocate_modules_array, __pyx_k_Failed_to_allocate_modules_array, sizeof(__pyx_k_Failed_to_allocate_modules_array), 0, 0, 1, 0},
   {&__pyx_kp_s_Found_at, __pyx_k_Found_at, sizeof(__pyx_k_Found_at), 0, 0, 1, 0},
   {&__pyx_kp_u_Got_address, __pyx_k_Got_address, sizeof(__pyx_k_Got_address), 0, 1, 0, 0},
@@ -12239,6 +12419,81 @@ bad:
     value_count++;
     return PyUnicode_Join(__pyx_empty_unicode, value_tuple);
 #endif
+}
+
+/* CIntToPyUnicode */
+static CYTHON_INLINE PyObject* __Pyx_PyUnicode_From_size_t(size_t value, Py_ssize_t width, char padding_char, char format_char) {
+    char digits[sizeof(size_t)*3+2];
+    char *dpos, *end = digits + sizeof(size_t)*3+2;
+    const char *hex_digits = DIGITS_HEX;
+    Py_ssize_t length, ulength;
+    int prepend_sign, last_one_off;
+    size_t remaining;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const size_t neg_one = (size_t) -1, const_zero = (size_t) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (format_char == 'X') {
+        hex_digits += 16;
+        format_char = 'x';
+    }
+    remaining = value;
+    last_one_off = 0;
+    dpos = end;
+    do {
+        int digit_pos;
+        switch (format_char) {
+        case 'o':
+            digit_pos = abs((int)(remaining % (8*8)));
+            remaining = (size_t) (remaining / (8*8));
+            dpos -= 2;
+            memcpy(dpos, DIGIT_PAIRS_8 + digit_pos * 2, 2);
+            last_one_off = (digit_pos < 8);
+            break;
+        case 'd':
+            digit_pos = abs((int)(remaining % (10*10)));
+            remaining = (size_t) (remaining / (10*10));
+            dpos -= 2;
+            memcpy(dpos, DIGIT_PAIRS_10 + digit_pos * 2, 2);
+            last_one_off = (digit_pos < 10);
+            break;
+        case 'x':
+            *(--dpos) = hex_digits[abs((int)(remaining % 16))];
+            remaining = (size_t) (remaining / 16);
+            break;
+        default:
+            assert(0);
+            break;
+        }
+    } while (unlikely(remaining != 0));
+    if (last_one_off) {
+        assert(*dpos == '0');
+        dpos++;
+    }
+    length = end - dpos;
+    ulength = length;
+    prepend_sign = 0;
+    if (!is_unsigned && value <= neg_one) {
+        if (padding_char == ' ' || width <= length + 1) {
+            *(--dpos) = '-';
+            ++length;
+        } else {
+            prepend_sign = 1;
+        }
+        ++ulength;
+    }
+    if (width > ulength) {
+        ulength = width;
+    }
+    if (ulength == 1) {
+        return PyUnicode_FromOrdinal(*dpos);
+    }
+    return __Pyx_PyUnicode_BuildFromAscii(ulength, dpos, (int) length, prepend_sign, padding_char);
 }
 
 /* Import */

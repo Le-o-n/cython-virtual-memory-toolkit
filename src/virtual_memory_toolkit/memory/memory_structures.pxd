@@ -165,7 +165,8 @@ cdef inline CVirtualAddress* CVirtualAddress_from_aob(CAppHandle* app_handle, co
         <PBYTE>array_of_bytes,
         <SIZE_T>length_of_aob
     )
-    
+    with gil:
+        print(f"FOUND ADDRESS = {<size_t>found_address}")
     if not found_address:
         return NULL
 
