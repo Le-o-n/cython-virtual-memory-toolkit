@@ -1,5 +1,6 @@
-from libc.stdlib cimport malloc, free, calloc 
+from libc.stdlib cimport malloc, free, calloc, realloc
 from libc.string cimport memcpy, memcmp, strstr
+from cython.parallel import prange, parallel, threadid
 
 from .windows_types cimport SIZE_T
 from .windows_types cimport DWORD
@@ -213,7 +214,65 @@ cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPCVOID base_add
 
     return written_bytes
 
-cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_address, LPCVOID end_address, PBYTE pattern, SIZE_T pattern_size, LPVOID* out_found_address) nogil:
+
+cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(
+    HANDLE process, 
+    LPCVOID start_address, 
+    LPCVOID end_address,
+    unsigned long long *out_found_regions
+) nogil:
+    cdef MEMORY_BASIC_INFORMATION mbi
+    cdef unsigned long information_buffer_size
+    cdef LPCVOID current_address = start_address
+    cdef unsigned long long total_regions = 0
+    cdef MEMORY_BASIC_INFORMATION *regions = NULL
+    cdef MEMORY_BASIC_INFORMATION *temp_regions = NULL
+    cdef unsigned long long regions_capacity = 128  # Initial capacity for regions array
+    cdef unsigned long long i
+
+    regions = <MEMORY_BASIC_INFORMATION*>malloc(regions_capacity * sizeof(MEMORY_BASIC_INFORMATION))
+    if regions == NULL:
+        return NULL
+
+    while current_address < end_address:
+
+        if VirtualQueryEx(process, current_address, &mbi, sizeof(mbi)) == 0:
+            current_address = <LPCVOID>(<unsigned long long>current_address + 10)
+            continue
+
+        if total_regions >= regions_capacity:
+            regions_capacity *= 2
+            temp_regions = <MEMORY_BASIC_INFORMATION*>realloc(
+                regions, 
+                regions_capacity * sizeof(MEMORY_BASIC_INFORMATION)
+            )
+            if temp_regions == NULL:
+                free(regions)
+                return NULL
+            regions = temp_regions
+        
+        regions[total_regions] = mbi
+        total_regions += 1
+
+        current_address = <LPCVOID>(<unsigned long long>mbi.BaseAddress + mbi.RegionSize)
+
+    if total_regions == 0:
+        free(regions)
+        out_found_regions[0]=0
+        return NULL
+
+    if out_found_regions != NULL:
+        out_found_regions[0] = total_regions
+
+    return regions
+
+cdef inline LPVOID PrivilegedSearchMemoryBytes(
+    HANDLE process, 
+    LPCVOID start_address, 
+    LPCVOID end_address, 
+    PBYTE pattern, 
+    SIZE_T pattern_size
+) nogil:
     """
     Searches for a byte pattern within a specified memory range.
 
@@ -226,45 +285,72 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(HANDLE process, LPCVOID start_addre
         out_found_address (LPVOID*): Pointer to store the found address if the pattern is found.
 
     Returns:
-        BOOL: True (0) if the pattern is found, False (1) if it is not found or an error occurs.
+        BOOL: 0 if the pattern is found, 1 if it is not found or an error occurs.
     """
-    cdef MEMORY_BASIC_INFORMATION mbi
-    cdef SIZE_T address = <SIZE_T>start_address
-    cdef SIZE_T region_end
-    cdef SIZE_T search_end
-    cdef SIZE_T current_address
-    cdef BYTE* read_bytes_buffer = <BYTE*>calloc(pattern_size, sizeof(BYTE))
 
-    if not read_bytes_buffer:
-        return 1  # Memory allocation failed
+    
+    cdef unsigned long long found_regions
+    cdef MEMORY_BASIC_INFORMATION* memory_regions 
+    cdef MEMORY_BASIC_INFORMATION memory_region
+    memory_regions = GetMemoryRegionsInRange(
+        process,
+        start_address,
+        end_address,
+        &found_regions
+    )
 
-    while address < <SIZE_T>end_address:
-        if VirtualQueryEx(process, <LPCVOID>address, &mbi, sizeof(mbi)) == 0:
-            break  # Failed to query memory information
+    cdef unsigned long long iter_size
+    cdef unsigned long long start_region_address
+    cdef unsigned long long end_region_address
+    cdef BYTE* read_bytes_buffer
+    cdef SIZE_T found_address
+    cdef SIZE_T c_i
+    cdef SIZE_T c_j
+    found_address = 0
+    for c_i in range(found_regions):
+        
+        memory_region = <MEMORY_BASIC_INFORMATION>memory_regions[c_i]
 
-        if mbi.State == MEM_COMMIT:
-            region_end = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
-            search_end = min(<SIZE_T>end_address, region_end) - pattern_size + 1
-            current_address = address
+        if memory_region.State != MEM_COMMIT:
+            continue
+        
+        start_region_address = <unsigned long long>memory_region.BaseAddress
+        end_region_address = <unsigned long long>memory_region.BaseAddress + memory_region.RegionSize
+        
+        read_bytes_buffer = <BYTE*>malloc(
+            memory_region.RegionSize * sizeof(BYTE)
+        )
+        
+        if not read_bytes_buffer:
+            return NULL 
+        
+        if PrivilagedMemoryRead(
+            process,
+            <LPCVOID>start_region_address, 
+            <LPVOID>read_bytes_buffer, 
+            memory_region.RegionSize
+        ) != memory_region.RegionSize:
+            free(read_bytes_buffer)
+            return NULL 
+        
+        iter_size = memory_region.RegionSize-pattern_size 
 
-            while current_address < search_end:
-                if PrivilagedMemoryRead(process, <LPCVOID>current_address, <LPVOID>read_bytes_buffer, pattern_size) != pattern_size:
-                    break  # Failed to read memory at current address
+        for c_j in prange(iter_size, nogil=True):
+            
+            if memcmp(
+                <const void*>(<SIZE_T>read_bytes_buffer + c_j),
+                <const void*>pattern,
+                pattern_size
+            ) == 0:
+                # forced to use this to setup the reduction
+                found_address = 0 
+                # inplace operator forces a reduction (thread-copy replaces original after loop)
+                found_address += start_region_address + c_j 
+                break
+        
+        free(read_bytes_buffer)
 
-                if memcmp(<const void*>pattern, <const void*>read_bytes_buffer, pattern_size) == 0:
-                    free(read_bytes_buffer)
-                    out_found_address[0] = <LPVOID>current_address
-                    return 0  # Pattern found
-
-                current_address += 1
-            address = region_end
-        else:
-            # If region is not committed, skip to the end of the region
-            address = <SIZE_T>mbi.BaseAddress + mbi.RegionSize
-
-    free(read_bytes_buffer)
-    return 1  # Pattern not found or error occurred
-
+    return <LPVOID>found_address   # Pattern not found or error occurred
 
 cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam
