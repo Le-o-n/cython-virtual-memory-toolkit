@@ -1,5 +1,6 @@
 from libc.stdlib cimport malloc, free, calloc, realloc
 from libc.string cimport memcpy, memcmp, strstr
+from cython.parallel import prange, parallel
 
 from .windows_types cimport SIZE_T
 from .windows_types cimport DWORD
@@ -287,14 +288,8 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(
     Returns:
         BOOL: 0 if the pattern is found, 1 if it is not found or an error occurs.
     """
-    
-    cdef SIZE_T address = <SIZE_T>start_address
-    cdef SIZE_T region_end
-    cdef SIZE_T search_end
-    cdef BYTE* byte_ptr
-    cdef SIZE_T current_address
-    cdef BYTE* read_bytes_buffer
 
+    
     cdef unsigned long long found_regions
     cdef MEMORY_BASIC_INFORMATION* memory_regions 
     cdef MEMORY_BASIC_INFORMATION memory_region
@@ -306,52 +301,58 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(
     )
 
     cdef unsigned long long iter_size
-    cdef PBYTE sub_region
     cdef unsigned long long start_region_address
     cdef unsigned long long end_region_address
-    for i in range(found_regions):
-        memory_region = memory_regions[i]
+    cdef BYTE* byte_ptr
+    cdef SIZE_T current_address
+    cdef BYTE* read_bytes_buffer
+    cdef SIZE_T c_i
+    with parallel():
 
-        if memory_region.State != MEM_COMMIT:
-            continue
-        
-        start_region_address = <unsigned long long>memory_region.BaseAddress
-        end_region_address = <unsigned long long>memory_region.BaseAddress + memory_region.RegionSize
-        
-        read_bytes_buffer = <BYTE*>malloc(
-            memory_region.RegionSize * sizeof(BYTE)
-        )
-        
-        if not read_bytes_buffer:
-            return 1 
-        
-        if PrivilagedMemoryRead(
-            process,
-            <LPCVOID>start_region_address, 
-            <LPVOID>read_bytes_buffer, 
-            memory_region.RegionSize
-        ) != memory_region.RegionSize:
-            free(read_bytes_buffer)
-            return 1
-        
-        iter_size = memory_region.RegionSize-pattern_size 
-
-        byte_ptr = read_bytes_buffer
-        current_address = start_region_address
-        while current_address < start_region_address + memory_region.RegionSize - pattern_size:
-            if memcmp(
-                <const void*>byte_ptr,
-                <const void*>pattern,
-                pattern_size
-            ) == 0:
-                free(read_bytes_buffer)
-                out_found_address[0] = <void*>current_address
-                return 0 
+        for c_i in range(found_regions):
             
-            current_address = current_address + 1
-            byte_ptr = byte_ptr + 1
+            memory_region = <MEMORY_BASIC_INFORMATION>memory_regions[c_i]
 
-        free(read_bytes_buffer)
+            if memory_region.State != MEM_COMMIT:
+                continue
+            
+            start_region_address = <unsigned long long>memory_region.BaseAddress
+            end_region_address = <unsigned long long>memory_region.BaseAddress + memory_region.RegionSize
+            
+            read_bytes_buffer = <BYTE*>malloc(
+                memory_region.RegionSize * sizeof(BYTE)
+            )
+            
+            if not read_bytes_buffer:
+                return 1 
+            
+            if PrivilagedMemoryRead(
+                process,
+                <LPCVOID>start_region_address, 
+                <LPVOID>read_bytes_buffer, 
+                memory_region.RegionSize
+            ) != memory_region.RegionSize:
+                free(read_bytes_buffer)
+                return 1
+            
+            iter_size = memory_region.RegionSize-pattern_size 
+
+            byte_ptr = read_bytes_buffer
+            current_address = start_region_address
+            while current_address < start_region_address + memory_region.RegionSize - pattern_size:
+                if memcmp(
+                    <const void*>byte_ptr,
+                    <const void*>pattern,
+                    pattern_size
+                ) == 0:
+                    free(read_bytes_buffer)
+                    out_found_address[0] = <void*>current_address
+                    return 0 
+                
+                current_address = current_address + 1
+                byte_ptr = byte_ptr + 1
+
+            free(read_bytes_buffer)
     
     return 1  # Pattern not found or error occurred
 
