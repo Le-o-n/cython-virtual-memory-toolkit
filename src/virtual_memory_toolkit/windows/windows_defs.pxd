@@ -291,6 +291,7 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(
     cdef SIZE_T address = <SIZE_T>start_address
     cdef SIZE_T region_end
     cdef SIZE_T search_end
+    cdef BYTE* byte_ptr
     cdef SIZE_T current_address
     cdef BYTE* read_bytes_buffer
 
@@ -335,19 +336,20 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(
         
         iter_size = memory_region.RegionSize-pattern_size 
 
-        
-        for j in range(iter_size):
-            pass
-            #sub_region = read_bytes_buffer + j
-            #current_address = start_region_address + j
-            #if memcmp(
-            #    <const void*>pattern, 
-            #    <const void*>sub_region, 
-            #    pattern_size
-            #) == 0:
-            #    free(read_bytes_buffer)
-            #    out_found_address[0] = <void*>current_address
-            #    return 0  # Pattern found
+        byte_ptr = read_bytes_buffer
+        current_address = start_region_address
+        while current_address < start_region_address + memory_region.RegionSize - pattern_size:
+            if memcmp(
+                <const void*>byte_ptr,
+                <const void*>pattern,
+                pattern_size
+            ) == 0:
+                free(read_bytes_buffer)
+                out_found_address[0] = <void*>current_address
+                return 0 
+            
+            current_address = current_address + 1
+            byte_ptr = byte_ptr + 1
 
         free(read_bytes_buffer)
     
