@@ -198,12 +198,21 @@ cdef int region_enumeration(CAppHandle* app_handle):
 cdef int aob_scan(CAppHandle* app_handle):
     
     cdef CProcess* notepad_process = CProcess_init(app_handle)
+    
+    if not notepad_process:
+        return 1
+    
     cdef CModule* notepad_module = CModule_from_process(notepad_process, <const char*>"notepad.exe")
+
+    if not notepad_module:
+        CProcess_free(notepad_process)
+        return 1
+    
 
     cdef unsigned long long start_address = <unsigned long long>notepad_module[0].base_address
     cdef unsigned long long end_address = <unsigned long long>start_address + <unsigned long long>notepad_module[0].size
 
-    cdef unsigned char[6] c_bytes
+    cdef unsigned char[25] c_bytes
 
     py_bytes = [0x38, 0xA2, 0x70, 0xA2, 0xA0, 0xA2, 0xB8, 0xA2, 0xC8, 0xA3, 0xF0, 0xA3, 0x18, 0xA4]
 
@@ -215,20 +224,20 @@ cdef int aob_scan(CAppHandle* app_handle):
         <const void*>start_address, 
         <const void*>end_address,
         <unsigned char*> &c_bytes, 
-        6
+        len(py_bytes)
     )
-    
+
     if found_address:
         print("Found at " + hex(<unsigned long long>found_address[0].address))
     else:
-        print("Could not find address ")
         CModule_free(notepad_module)
         CProcess_free(notepad_process)
         return 1
+    
 
     CModule_free(notepad_module)
     CProcess_free(notepad_process)
-    
+
     #return valid
     return 0
 
@@ -248,137 +257,97 @@ cpdef int run():
     
     print("     - get_handle_to_notepad     ... ")
     notepad_apphandle = get_handle_to_notepad()
+
+
     if not notepad_apphandle:
+        print("FAILED")
+        return 1
+    else:
+        print("PASSED")
+
+
+    print("     - create_notepad_memory_manager ... ")
+    notepad_memory_manager = create_notepad_memory_manager(notepad_apphandle)
+    if not notepad_memory_manager:
+        print("FAILED")
+        error_count += 1
+    else:
+        print("PASSED")
+    
+
+    print("     - allocate_memory_region     ... ")
+    if allocate_memory_region(notepad_memory_manager):
+        print("FAILED")
+        error_count += 1
+    else:
+        print("PASSED")
+
+    print("     - free_memory_region     ... ")
+    if CMemoryManager_virtual_free_all(notepad_memory_manager):
+        print("FAILED")
+        error_count += 1
+    if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
+        print("FAILED")
+        error_count += 1
+    else:
+        print("PASSED")
+         
+    print("     - allocate_memory_regions     ... ")
+    if allocate_memory_regions(notepad_memory_manager):
+        print("FAILED")
+        error_count += 1
+    else:
+        print("PASSED")
+
+    print("     - free_memory_regions     ... ")
+    if CMemoryManager_virtual_free_all(notepad_memory_manager):
+        print("FAILED")
+        error_count += 1
+    if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
+        print("FAILED")
+        error_count += 1
+    else:
+        print("PASSED")
+
+    
+    print("     - module_extraction     ... ")
+    if extract_modules(notepad_apphandle):
+        print("FAILED")
+        error_count += 1
+    else:
+        print("PASSED")
+
+    print("     - addressing_read_write     ... ")
+    if addressing_read_write(notepad_apphandle):
         print("FAILED")
         error_count += 1
     else:
         print("PASSED")
 
 
-    print("     - create_notepad_memory_manager ... ")
-    if notepad_apphandle:
-        notepad_memory_manager = create_notepad_memory_manager(notepad_apphandle)
-        if not notepad_memory_manager:
-            print("FAILED")
-            error_count += 1
-        else:
-            print("PASSED")
-    else:
-        print("FAILED")
-        error_count += 1
-
-    print("     - allocate_memory_region     ... ")
-    if not notepad_apphandle or not notepad_memory_manager:
-        print("FAILED")
-        error_count += 1
-    else:
-        if allocate_memory_region(notepad_memory_manager):
-            print("FAILED")
-            error_count += 1
-        else:
-            print("PASSED")
-
-    print("     - free_memory_region     ... ")
-    if not notepad_apphandle or not notepad_memory_manager:
-        print("FAILED")
-        error_count += 1
-    else:
-        if CMemoryManager_virtual_free_all(notepad_memory_manager):
-            print("FAILED")
-            error_count += 1
-        if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
-            print("FAILED")
-            error_count += 1
-        else:
-            print("PASSED")
-         
-
-    print("     - allocate_memory_regions     ... ")
-    if not notepad_apphandle or not notepad_memory_manager:
-        print("FAILED")
-        error_count += 1
-    else:
-        if allocate_memory_regions(notepad_memory_manager):
-            print("FAILED")
-            error_count += 1
-        else:
-            print("PASSED")
-
-    print("     - free_memory_regions     ... ")
-    if not notepad_apphandle or not notepad_memory_manager:
-        print("FAILED")
-        error_count += 1
-    else:
-        if CMemoryManager_virtual_free_all(notepad_memory_manager):
-            print("FAILED")
-            error_count += 1
-        if notepad_memory_manager[0].memory_regions_head or notepad_memory_manager[0].memory_regions_tail:
-            print("FAILED")
-            error_count += 1
-        else:
-            print("PASSED")
-
-    
-    print("     - module_extraction     ... ")
-    if not notepad_apphandle or not notepad_memory_manager:
-        print("FAILED")
-        error_count += 1
-    else:
-        if extract_modules(notepad_apphandle):
-            print("FAILED")
-            error_count += 1
-        else:
-            print("PASSED")
-
-
-
-    print("     - addressing_read_write     ... ")
-    if not notepad_apphandle or not notepad_memory_manager:
-        print("FAILED")
-        error_count += 1
-    else:
-        if addressing_read_write(notepad_apphandle):
-            print("FAILED")
-            error_count += 1
-        else:
-            print("PASSED")
-
-
     print("     - addressing_read_write_offset     ... ")
-    if not notepad_apphandle or not notepad_memory_manager:
+    
+    if addressing_read_write_offset(notepad_apphandle):
         print("FAILED")
         error_count += 1
     else:
-        if addressing_read_write_offset(notepad_apphandle):
-            print("FAILED")
-            error_count += 1
-        else:
-            print("PASSED")
+        print("PASSED")
 
     
     print("     - aob_scan          ...")
-    if not notepad_apphandle or not notepad_memory_manager:
-        print("FAILED")
-        error_count += 1
-    else:
-        if aob_scan(notepad_apphandle):
+
+    if aob_scan(notepad_apphandle):
             print("FAILED")
             error_count += 1
-        else:
-            print("PASSED")
-    
+    else:
+        print("PASSED")
+
     print("     - region_enumeration          ...")
-    if not notepad_apphandle or not notepad_memory_manager:
+    if region_enumeration(notepad_apphandle):
         print("FAILED")
         error_count += 1
     else:
-        if region_enumeration(notepad_apphandle):
-            print("FAILED")
-            error_count += 1
-        else:
-            print("PASSED")
-    
-    
+        print("PASSED")
 
     if notepad_memory_manager:
         CMemoryManager_free(notepad_memory_manager)

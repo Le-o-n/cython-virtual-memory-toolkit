@@ -141,7 +141,13 @@ cdef inline CVirtualAddress* CVirtualAddress_init(CAppHandle* app_handle, void* 
 
     return v_address
 
-cdef inline CVirtualAddress* CVirtualAddress_from_aob(CAppHandle* app_handle, const void* start_address, const void* end_address, unsigned char* array_of_bytes, size_t length_of_aob) nogil:
+cdef inline CVirtualAddress* CVirtualAddress_from_aob(
+    CAppHandle* app_handle, 
+    const void* start_address, 
+    const void* end_address, 
+    unsigned char* array_of_bytes, 
+    size_t length_of_aob
+) nogil:
     """
     Searches for an array of bytes within a specified memory range and returns a CVirtualAddress.
 

@@ -3090,6 +3090,10 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
           __pyx_t_5 = __pyx_v_iter_size;
           if ((1 == 0)) abort();
           {
+              SIZE_T __pyx_parallel_temp0 = ((SIZE_T)0xbad0bad0);
+              SIZE_T __pyx_parallel_temp1 = ((SIZE_T)0xbad0bad0);
+              int __pyx_parallel_why;
+              __pyx_parallel_why = 0;
               #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
                   #undef likely
                   #undef unlikely
@@ -3100,13 +3104,14 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
               if (__pyx_t_7 > 0)
               {
                   #ifdef _OPENMP
-                  #pragma omp parallel reduction(+:__pyx_v_found_address) private(__pyx_t_4)
+                  #pragma omp parallel reduction(+:__pyx_v_found_address) private(__pyx_t_4) shared(__pyx_parallel_why)
                   #endif /* _OPENMP */
                   {
                       #ifdef _OPENMP
                       #pragma omp for firstprivate(__pyx_v_c_j) lastprivate(__pyx_v_c_j)
                       #endif /* _OPENMP */
                       for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_7; __pyx_t_6++){
+                          if (__pyx_parallel_why < 2)
                           {
                               __pyx_v_c_j = (SIZE_T)(0 + 1 * __pyx_t_6);
 
@@ -3141,10 +3146,19 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  *                 found_address = 0
  *                 # inplace operator forces a reduction (thread-copy replaces original after loop)
  *                 found_address += start_region_address + c_j             # <<<<<<<<<<<<<<
- * 
+ *                 break
  * 
  */
                                 __pyx_v_found_address = (__pyx_v_found_address + (__pyx_v_start_region_address + __pyx_v_c_j));
+
+                                /* "virtual_memory_toolkit/windows/windows_defs.pxd":349
+ *                 # inplace operator forces a reduction (thread-copy replaces original after loop)
+ *                 found_address += start_region_address + c_j
+ *                 break             # <<<<<<<<<<<<<<
+ * 
+ *         free(read_bytes_buffer)
+ */
+                                goto __pyx_L14_break;
 
                                 /* "virtual_memory_toolkit/windows/windows_defs.pxd":340
  *         for c_j in prange(iter_size, nogil=True):
@@ -3154,9 +3168,31 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
  *                 <const void*>pattern,
  */
                               }
+                              goto __pyx_L19;
+                              __pyx_L14_break:;
+                              __pyx_parallel_why = 2;
+                              goto __pyx_L18;
+                              __pyx_L18:;
+                              #ifdef _OPENMP
+                              #pragma omp critical(__pyx_parallel_lastprivates1)
+                              #endif /* _OPENMP */
+                              {
+                                  __pyx_parallel_temp0 = __pyx_v_c_j;
+                                  __pyx_parallel_temp1 = __pyx_v_found_address;
+                              }
+                              __pyx_L19:;
+                              #ifdef _OPENMP
+                              #pragma omp flush(__pyx_parallel_why)
+                              #endif /* _OPENMP */
                           }
                       }
                   }
+              }
+              if (__pyx_parallel_why) {
+                __pyx_v_c_j = __pyx_parallel_temp0;
+                __pyx_v_found_address = __pyx_parallel_temp1;
+                switch (__pyx_parallel_why) {
+                }
               }
           }
           #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
@@ -3187,7 +3223,7 @@ static CYTHON_INLINE LPVOID __pyx_f_22virtual_memory_toolkit_7windows_12windows_
     }
 
     /* "virtual_memory_toolkit/windows/windows_defs.pxd":351
- * 
+ *                 break
  * 
  *         free(read_bytes_buffer)             # <<<<<<<<<<<<<<
  * 

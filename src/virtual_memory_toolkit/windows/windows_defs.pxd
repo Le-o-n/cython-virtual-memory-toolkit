@@ -346,7 +346,7 @@ cdef inline LPVOID PrivilegedSearchMemoryBytes(
                 found_address = 0 
                 # inplace operator forces a reduction (thread-copy replaces original after loop)
                 found_address += start_region_address + c_j 
-                
+                break
         
         free(read_bytes_buffer)
 
