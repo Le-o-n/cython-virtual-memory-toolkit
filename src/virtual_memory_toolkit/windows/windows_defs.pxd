@@ -1,6 +1,6 @@
 from libc.stdlib cimport malloc, free, calloc, realloc
 from libc.string cimport memcpy, memcmp, strstr
-from cython.parallel import prange, parallel
+from cython.parallel import prange, parallel, threadid
 
 from .windows_types cimport SIZE_T
 from .windows_types cimport DWORD
@@ -266,13 +266,12 @@ cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(
 
     return regions
 
-cdef inline BOOL PrivilagedSearchMemoryBytes(
+cdef inline LPVOID PrivilagedSearchMemoryBytes(
     HANDLE process, 
     LPCVOID start_address, 
     LPCVOID end_address, 
     PBYTE pattern, 
-    SIZE_T pattern_size, 
-    LPVOID* out_found_address
+    SIZE_T pattern_size
 ) nogil:
     """
     Searches for a byte pattern within a specified memory range.
@@ -303,58 +302,52 @@ cdef inline BOOL PrivilagedSearchMemoryBytes(
     cdef unsigned long long iter_size
     cdef unsigned long long start_region_address
     cdef unsigned long long end_region_address
-    cdef BYTE* byte_ptr
-    cdef SIZE_T current_address
     cdef BYTE* read_bytes_buffer
     cdef SIZE_T c_i
-    with parallel():
+    cdef SIZE_T c_j
 
-        for c_i in range(found_regions):
-            
-            memory_region = <MEMORY_BASIC_INFORMATION>memory_regions[c_i]
+    for c_i in range(found_regions):
+        
+        memory_region = <MEMORY_BASIC_INFORMATION>memory_regions[c_i]
 
-            if memory_region.State != MEM_COMMIT:
-                continue
-            
-            start_region_address = <unsigned long long>memory_region.BaseAddress
-            end_region_address = <unsigned long long>memory_region.BaseAddress + memory_region.RegionSize
-            
-            read_bytes_buffer = <BYTE*>malloc(
-                memory_region.RegionSize * sizeof(BYTE)
-            )
-            
-            if not read_bytes_buffer:
-                return 1 
-            
-            if PrivilagedMemoryRead(
-                process,
-                <LPCVOID>start_region_address, 
-                <LPVOID>read_bytes_buffer, 
-                memory_region.RegionSize
-            ) != memory_region.RegionSize:
-                free(read_bytes_buffer)
-                return 1
-            
-            iter_size = memory_region.RegionSize-pattern_size 
-
-            byte_ptr = read_bytes_buffer
-            current_address = start_region_address
-            while current_address < start_region_address + memory_region.RegionSize - pattern_size:
-                if memcmp(
-                    <const void*>byte_ptr,
-                    <const void*>pattern,
-                    pattern_size
-                ) == 0:
-                    free(read_bytes_buffer)
-                    out_found_address[0] = <void*>current_address
-                    return 0 
-                
-                current_address = current_address + 1
-                byte_ptr = byte_ptr + 1
-
+        if memory_region.State != MEM_COMMIT:
+            continue
+        
+        start_region_address = <unsigned long long>memory_region.BaseAddress
+        end_region_address = <unsigned long long>memory_region.BaseAddress + memory_region.RegionSize
+        
+        read_bytes_buffer = <BYTE*>malloc(
+            memory_region.RegionSize * sizeof(BYTE)
+        )
+        
+        if not read_bytes_buffer:
+            return NULL 
+        
+        if PrivilagedMemoryRead(
+            process,
+            <LPCVOID>start_region_address, 
+            <LPVOID>read_bytes_buffer, 
+            memory_region.RegionSize
+        ) != memory_region.RegionSize:
             free(read_bytes_buffer)
-    
-    return 1  # Pattern not found or error occurred
+            return NULL 
+        
+        iter_size = memory_region.RegionSize-pattern_size 
+
+        for c_j in prange(iter_size, nogil=True):
+            if memcmp(
+                <const void*>(<SIZE_T>read_bytes_buffer + c_j),
+                <const void*>pattern,
+                pattern_size
+            ) == 0:
+                with gil:
+                    print(f"Thread {threadid()}: Got address = {hex(<size_t>(start_region_address + c_j))}")
+
+                return <LPVOID>(start_region_address + c_j)
+        
+        free(read_bytes_buffer)
+
+    return NULL   # Pattern not found or error occurred
 
 cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam

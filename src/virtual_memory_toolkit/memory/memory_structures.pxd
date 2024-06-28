@@ -158,15 +158,15 @@ cdef inline CVirtualAddress* CVirtualAddress_from_aob(CAppHandle* app_handle, co
     """
     cdef void* found_address = NULL
 
-    if PrivilagedSearchMemoryBytes(
+    found_address = <void*>PrivilagedSearchMemoryBytes(
         <HANDLE>app_handle[0].process_handle, 
         <LPCVOID>start_address,
         <LPCVOID>end_address,
         <PBYTE>array_of_bytes,
-        <SIZE_T>length_of_aob,
-        &found_address
-    ):
-        # Failed to find address
+        <SIZE_T>length_of_aob
+    )
+    
+    if not found_address:
         return NULL
 
     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))
