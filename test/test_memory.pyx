@@ -226,8 +226,6 @@ cdef int aob_scan(CAppHandle* app_handle):
         CProcess_free(notepad_process)
         return 1
 
-    cdef int valid = (found_address == NULL)
-
     CModule_free(notepad_module)
     CProcess_free(notepad_process)
     
@@ -389,4 +387,6 @@ cpdef int run():
         CAppHandle_free(notepad_apphandle)
 
     notepad_process.terminate()
+
+    print("Finished All Tests")
     return error_count

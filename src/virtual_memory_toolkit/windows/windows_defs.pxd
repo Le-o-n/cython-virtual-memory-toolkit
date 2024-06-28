@@ -342,8 +342,6 @@ cdef inline LPVOID PrivilegedSearchMemoryBytes(
                 <const void*>pattern,
                 pattern_size
             ) == 0:
-                with gil:
-                    print(f"Thread {threadid()}: Got address = {hex(<size_t>(start_region_address + c_j))}")
                 # forced to use this to setup the reduction
                 found_address = 0 
                 # inplace operator forces a reduction (thread-copy replaces original after loop)
@@ -351,9 +349,7 @@ cdef inline LPVOID PrivilegedSearchMemoryBytes(
                 
         
         free(read_bytes_buffer)
-        
-    with gil:
-        print("Am returning herer")
+
     return <LPVOID>found_address   # Pattern not found or error occurred
 
 cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
