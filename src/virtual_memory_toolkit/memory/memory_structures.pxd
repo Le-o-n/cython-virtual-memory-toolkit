@@ -2,7 +2,7 @@ from libc.stdlib cimport malloc, free
 from libc.string cimport strstr, strdup
 from virtual_memory_toolkit.handles.handle cimport CAppHandle
 from virtual_memory_toolkit.windows.windows_types cimport SIZE_T, HANDLE, LPCVOID, LPVOID, PBYTE
-from virtual_memory_toolkit.windows.windows_defs cimport PrivilagedSearchMemoryBytes, PrivilagedMemoryRead, PrivilagedMemoryWrite
+from virtual_memory_toolkit.windows.windows_defs cimport PrivilegedSearchMemoryBytes, PrivilagedMemoryRead, PrivilagedMemoryWrite
 from virtual_memory_toolkit.process.process cimport CProcess
 from virtual_memory_toolkit.windows.windows_defs cimport MAX_MODULES, MODULEENTRY32
 
@@ -141,7 +141,13 @@ cdef inline CVirtualAddress* CVirtualAddress_init(CAppHandle* app_handle, void* 
 
     return v_address
 
-cdef inline CVirtualAddress* CVirtualAddress_from_aob(CAppHandle* app_handle, const void* start_address, const void* end_address, unsigned char* array_of_bytes, size_t length_of_aob) nogil:
+cdef inline CVirtualAddress* CVirtualAddress_from_aob(
+    CAppHandle* app_handle, 
+    const void* start_address, 
+    const void* end_address, 
+    unsigned char* array_of_bytes, 
+    size_t length_of_aob
+) nogil:
     """
     Searches for an array of bytes within a specified memory range and returns a CVirtualAddress.
 
@@ -158,15 +164,15 @@ cdef inline CVirtualAddress* CVirtualAddress_from_aob(CAppHandle* app_handle, co
     """
     cdef void* found_address = NULL
 
-    if PrivilagedSearchMemoryBytes(
+    found_address = <void*>PrivilegedSearchMemoryBytes(
         <HANDLE>app_handle[0].process_handle, 
         <LPCVOID>start_address,
         <LPCVOID>end_address,
         <PBYTE>array_of_bytes,
-        <SIZE_T>length_of_aob,
-        &found_address
-    ):
-        # Failed to find address
+        <SIZE_T>length_of_aob
+    )
+
+    if not found_address:
         return NULL
 
     cdef CVirtualAddress* v_address = <CVirtualAddress*>malloc(sizeof(CVirtualAddress))
