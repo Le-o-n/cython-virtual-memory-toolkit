@@ -20,7 +20,7 @@ cdef extern from "virtual_memory_toolkit/handles/handle.h":
         DWORD pid
         char* window_title
 
-cdef inline CAppHandle* CAppHandle_init(void* process_handle, void* window_handle, unsigned int pid, char* window_title) nogil:
+cdef inline CAppHandle* CAppHandle_init(void* process_handle, void* window_handle, unsigned int pid, char* window_title) noexcept nogil:
     """
     Creates a new CAppHandle instance with NULL fields.
 
@@ -46,7 +46,7 @@ cdef inline CAppHandle* CAppHandle_init(void* process_handle, void* window_handl
 
 
 
-cdef inline CAppHandle* CAppHandle_from_title_substring(const char* title_sub_string) nogil:
+cdef inline CAppHandle* CAppHandle_from_title_substring(const char* title_sub_string) noexcept nogil:
     """
     Creates a new CAppHandle instance and populates its fields from a window title substring.
 
@@ -81,7 +81,7 @@ cdef inline CAppHandle* CAppHandle_from_title_substring(const char* title_sub_st
 
 
 
-cdef inline void CAppHandle_free(CAppHandle* app_handle) nogil:
+cdef inline void CAppHandle_free(CAppHandle* app_handle) noexcept nogil:
     """
     Frees the memory allocated for a CAppHandle instance.
 

@@ -18,7 +18,7 @@ cdef extern from "virtual_memory_toolkit/memory/memory_structures.h":
         void* address
 
 
-cdef inline CModule* CModule_init(CAppHandle* app_handle, char* name, void* base_address, size_t size) nogil:
+cdef inline CModule* CModule_init(CAppHandle* app_handle, char* name, void* base_address, size_t size) noexcept nogil:
     """
     Initializes a CModule structure with the given parameters.
 
@@ -43,7 +43,7 @@ cdef inline CModule* CModule_init(CAppHandle* app_handle, char* name, void* base
 
     return module
 
-cdef inline CModule* CModule_from_process(CProcess* process, const char* module_sub_string) nogil:
+cdef inline CModule* CModule_from_process(CProcess* process, const char* module_sub_string) noexcept nogil:
     """
     Create a CModule from a CProcess based on a substring of the module name.
 
@@ -105,7 +105,7 @@ cdef inline CModule* CModule_from_process(CProcess* process, const char* module_
 
     return NULL  # Module not found
 
-cdef inline void CModule_free(CModule* module) nogil:
+cdef inline void CModule_free(CModule* module) noexcept nogil:
     """
     Frees the memory and any attributes for the CModule struct.
 
@@ -120,7 +120,7 @@ cdef inline void CModule_free(CModule* module) nogil:
             free(module[0].name)
         free(module)
 
-cdef inline CVirtualAddress* CVirtualAddress_init(CAppHandle* app_handle, void* address) nogil:
+cdef inline CVirtualAddress* CVirtualAddress_init(CAppHandle* app_handle, void* address) noexcept nogil:
     """
     Initializes a CVirtualAddress structure with the given application handle and address.
 
@@ -147,7 +147,7 @@ cdef inline CVirtualAddress* CVirtualAddress_from_aob(
     const void* end_address, 
     unsigned char* array_of_bytes, 
     size_t length_of_aob
-) nogil:
+) noexcept nogil:
     """
     Searches for an array of bytes within a specified memory range and returns a CVirtualAddress.
 
@@ -184,7 +184,7 @@ cdef inline CVirtualAddress* CVirtualAddress_from_aob(
 
     return v_address
 
-cdef inline CVirtualAddress* CVirtualAddress_from_dynamic(CAppHandle* app_handle, CModule* module, void* offset) nogil:
+cdef inline CVirtualAddress* CVirtualAddress_from_dynamic(CAppHandle* app_handle, CModule* module, void* offset) noexcept nogil:
     """
     Creates a CVirtualAddress from a static offset within a module.
 
@@ -211,7 +211,7 @@ cdef inline CVirtualAddress* CVirtualAddress_from_dynamic(CAppHandle* app_handle
 
     return v_address
 
-cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset) nogil:
+cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long long offset) noexcept nogil:
     """
     Changes the CVirtualAddress address by an offset.
 
@@ -223,7 +223,7 @@ cdef inline void CVirtualAddress_offset(CVirtualAddress* virtual_address, long l
     virtual_address[0].address = <void*>((<unsigned long long>virtual_address[0].address) + offset)
     return
 
-cdef inline bint CVirtualAddress_read_float32(const CVirtualAddress* virtual_address, float* out_float32) nogil:
+cdef inline bint CVirtualAddress_read_float32(const CVirtualAddress* virtual_address, float* out_float32) noexcept nogil:
     """
     Reads a 32-bit float from the given virtual address and stores it in out_float.
 
@@ -244,7 +244,7 @@ cdef inline bint CVirtualAddress_read_float32(const CVirtualAddress* virtual_add
     
     return bytes_read != sizeof(float)
 
-cdef inline bint CVirtualAddress_read_float32_offset(const CVirtualAddress* virtual_address, float* out_float32, long long offset) nogil:
+cdef inline bint CVirtualAddress_read_float32_offset(const CVirtualAddress* virtual_address, float* out_float32, long long offset) noexcept nogil:
     """
     Reads a 32-bit float from the given virtual address + offset and stores it in out_float32.
 
@@ -268,7 +268,7 @@ cdef inline bint CVirtualAddress_read_float32_offset(const CVirtualAddress* virt
     
     return bytes_read != sizeof(float)
 
-cdef inline bint CVirtualAddress_write_float32(const CVirtualAddress* virtual_address, const float write_float32) nogil:
+cdef inline bint CVirtualAddress_write_float32(const CVirtualAddress* virtual_address, const float write_float32) noexcept nogil:
     """
     Writes a 32-bit float value to the address specified by the CVirtualAddress structure.
 
@@ -287,7 +287,7 @@ cdef inline bint CVirtualAddress_write_float32(const CVirtualAddress* virtual_ad
     )
     return 0 if bytes_written == sizeof(float) else 1
 
-cdef inline bint CVirtualAddress_write_float32_offset(const CVirtualAddress* virtual_address, const float write_float32, long long offset) nogil:
+cdef inline bint CVirtualAddress_write_float32_offset(const CVirtualAddress* virtual_address, const float write_float32, long long offset) noexcept nogil:
     """
     Writes a 32-bit float value to the virtual address + offset.
 
@@ -309,7 +309,7 @@ cdef inline bint CVirtualAddress_write_float32_offset(const CVirtualAddress* vir
     )
     return bytes_written != 4
 
-cdef inline bint CVirtualAddress_read_float64(const CVirtualAddress* virtual_address, double* out_float64) nogil:
+cdef inline bint CVirtualAddress_read_float64(const CVirtualAddress* virtual_address, double* out_float64) noexcept nogil:
     """
     Reads a 64-bit float (double) from the given virtual address and stores it in out_double.
 
@@ -333,7 +333,7 @@ cdef inline bint CVirtualAddress_read_float64(const CVirtualAddress* virtual_add
 
     return 0  # Success
 
-cdef inline bint CVirtualAddress_read_float64_offset(const CVirtualAddress* virtual_address, double* out_float64, long long offset) nogil:
+cdef inline bint CVirtualAddress_read_float64_offset(const CVirtualAddress* virtual_address, double* out_float64, long long offset) noexcept nogil:
     """
     Reads a 64-bit float from the given virtual address + offset and stores it in out_float64.
 
@@ -357,7 +357,7 @@ cdef inline bint CVirtualAddress_read_float64_offset(const CVirtualAddress* virt
     
     return bytes_read != 8
 
-cdef inline bint CVirtualAddress_write_float64(const CVirtualAddress* virtual_address, const double write_float64) nogil:
+cdef inline bint CVirtualAddress_write_float64(const CVirtualAddress* virtual_address, const double write_float64) noexcept nogil:
     """
     Writes a 64-bit float (double) to the address specified by the CVirtualAddress structure.
 
@@ -377,7 +377,7 @@ cdef inline bint CVirtualAddress_write_float64(const CVirtualAddress* virtual_ad
     
     return 0 if bytes_written == sizeof(double) else 1
 
-cdef inline bint CVirtualAddress_write_float64_offset(const CVirtualAddress* virtual_address, const double write_float64, long long offset) nogil:
+cdef inline bint CVirtualAddress_write_float64_offset(const CVirtualAddress* virtual_address, const double write_float64, long long offset) noexcept nogil:
     """
     Writes a 64-bit float value to the virtual address + offset.
 
@@ -399,7 +399,7 @@ cdef inline bint CVirtualAddress_write_float64_offset(const CVirtualAddress* vir
     )
     return bytes_written != 8
 
-cdef inline bint CVirtualAddress_read_int8(const CVirtualAddress* virtual_address, char* out_int8) nogil:
+cdef inline bint CVirtualAddress_read_int8(const CVirtualAddress* virtual_address, char* out_int8) noexcept nogil:
     """
     Reads an 8-bit integer from the given virtual address and stores it in out_int8.
 
@@ -420,7 +420,7 @@ cdef inline bint CVirtualAddress_read_int8(const CVirtualAddress* virtual_addres
     
     return bytes_read != 1
 
-cdef inline bint CVirtualAddress_read_int8_offset(const CVirtualAddress* virtual_address, char* out_int8, long long offset) nogil:
+cdef inline bint CVirtualAddress_read_int8_offset(const CVirtualAddress* virtual_address, char* out_int8, long long offset) noexcept nogil:
     """
     Reads an 8-bit int from the given virtual address + offset and stores it in out_int8.
 
@@ -444,7 +444,7 @@ cdef inline bint CVirtualAddress_read_int8_offset(const CVirtualAddress* virtual
     
     return bytes_read != 1
 
-cdef inline bint CVirtualAddress_write_int8(const CVirtualAddress* virtual_address, const char write_int8) nogil:
+cdef inline bint CVirtualAddress_write_int8(const CVirtualAddress* virtual_address, const char write_int8) noexcept nogil:
     """
     Writes an 8-bit integer to the address specified by the CVirtualAddress structure.
 
@@ -464,7 +464,7 @@ cdef inline bint CVirtualAddress_write_int8(const CVirtualAddress* virtual_addre
     
     return bytes_written != 1
 
-cdef inline bint CVirtualAddress_write_int8_offset(const CVirtualAddress* virtual_address, const char write_int8, long long offset) nogil:
+cdef inline bint CVirtualAddress_write_int8_offset(const CVirtualAddress* virtual_address, const char write_int8, long long offset) noexcept nogil:
     """
     Writes a 8-bit float value to the virtual address + offset.
 
@@ -486,7 +486,7 @@ cdef inline bint CVirtualAddress_write_int8_offset(const CVirtualAddress* virtua
     )
     return bytes_written != 1
 
-cdef inline bint CVirtualAddress_read_int16(const CVirtualAddress* virtual_address, short* out_int16) nogil:
+cdef inline bint CVirtualAddress_read_int16(const CVirtualAddress* virtual_address, short* out_int16) noexcept nogil:
     """
     Reads a 16-bit integer from the given virtual address and stores it in out_int16.
 
@@ -507,7 +507,7 @@ cdef inline bint CVirtualAddress_read_int16(const CVirtualAddress* virtual_addre
     
     return bytes_read != 2
 
-cdef inline bint CVirtualAddress_read_int16_offset(const CVirtualAddress* virtual_address, short* out_int16, long long offset) nogil:
+cdef inline bint CVirtualAddress_read_int16_offset(const CVirtualAddress* virtual_address, short* out_int16, long long offset) noexcept nogil:
     """
     Reads an 16-bit int from the given virtual address + offset and stores it in out_int16.
 
@@ -531,7 +531,7 @@ cdef inline bint CVirtualAddress_read_int16_offset(const CVirtualAddress* virtua
     
     return bytes_read != 2
 
-cdef inline bint CVirtualAddress_write_int16(const CVirtualAddress* virtual_address, const short write_int16) nogil:
+cdef inline bint CVirtualAddress_write_int16(const CVirtualAddress* virtual_address, const short write_int16) noexcept nogil:
     """
     Writes an 16-bit integer to the address specified by the CVirtualAddress structure.
 
@@ -551,7 +551,7 @@ cdef inline bint CVirtualAddress_write_int16(const CVirtualAddress* virtual_addr
     
     return bytes_written != 2
 
-cdef inline bint CVirtualAddress_write_int16_offset(const CVirtualAddress* virtual_address, const short write_int16, long long offset) nogil:
+cdef inline bint CVirtualAddress_write_int16_offset(const CVirtualAddress* virtual_address, const short write_int16, long long offset) noexcept nogil:
     """
     Writes a 16-bit float value to the virtual address + offset.
 
@@ -573,7 +573,7 @@ cdef inline bint CVirtualAddress_write_int16_offset(const CVirtualAddress* virtu
     )
     return bytes_written != 2
 
-cdef inline bint CVirtualAddress_read_int32(const CVirtualAddress* virtual_address, int* out_int32) nogil:
+cdef inline bint CVirtualAddress_read_int32(const CVirtualAddress* virtual_address, int* out_int32) noexcept nogil:
     """
     Reads a 32-bit integer from the given virtual address and stores it in out_int32.
 
@@ -594,7 +594,7 @@ cdef inline bint CVirtualAddress_read_int32(const CVirtualAddress* virtual_addre
     
     return bytes_read != 4
 
-cdef inline bint CVirtualAddress_read_int32_offset(const CVirtualAddress* virtual_address, int* out_int32, long long offset) nogil:
+cdef inline bint CVirtualAddress_read_int32_offset(const CVirtualAddress* virtual_address, int* out_int32, long long offset) noexcept nogil:
     """
     Reads an 32-bit int from the given virtual address + offset and stores it in out_int32.
 
@@ -618,7 +618,7 @@ cdef inline bint CVirtualAddress_read_int32_offset(const CVirtualAddress* virtua
     
     return bytes_read != 4
 
-cdef inline bint CVirtualAddress_write_int32(const CVirtualAddress* virtual_address, const int write_int32) nogil:
+cdef inline bint CVirtualAddress_write_int32(const CVirtualAddress* virtual_address, const int write_int32) noexcept nogil:
     """
     Writes an 32-bit integer to the address specified by the CVirtualAddress structure.
 
@@ -638,7 +638,7 @@ cdef inline bint CVirtualAddress_write_int32(const CVirtualAddress* virtual_addr
     
     return bytes_written != 4
 
-cdef inline bint CVirtualAddress_write_int32_offset(const CVirtualAddress* virtual_address, const int write_int32, long long offset) nogil:
+cdef inline bint CVirtualAddress_write_int32_offset(const CVirtualAddress* virtual_address, const int write_int32, long long offset) noexcept nogil:
     """
     Writes a 32-bit float value to the virtual address + offset.
 
@@ -660,7 +660,7 @@ cdef inline bint CVirtualAddress_write_int32_offset(const CVirtualAddress* virtu
     )
     return bytes_written != 4
 
-cdef inline bint CVirtualAddress_read_int64(const CVirtualAddress* virtual_address, long long* out_int64) nogil:
+cdef inline bint CVirtualAddress_read_int64(const CVirtualAddress* virtual_address, long long* out_int64) noexcept nogil:
     """
     Reads a 64-bit integer from the given virtual address and stores it in out_int64.
 
@@ -681,7 +681,7 @@ cdef inline bint CVirtualAddress_read_int64(const CVirtualAddress* virtual_addre
     
     return bytes_read != 8
 
-cdef inline bint CVirtualAddress_read_int64_offset(const CVirtualAddress* virtual_address, long long* out_int64, long long offset) nogil:
+cdef inline bint CVirtualAddress_read_int64_offset(const CVirtualAddress* virtual_address, long long* out_int64, long long offset) noexcept nogil:
     """
     Reads an 64-bit int from the given virtual address + offset and stores it in out_int64.
 
@@ -704,7 +704,7 @@ cdef inline bint CVirtualAddress_read_int64_offset(const CVirtualAddress* virtua
     
     return bytes_read != 8
 
-cdef inline bint CVirtualAddress_write_int64(const CVirtualAddress* virtual_address, const long long write_int64) nogil:
+cdef inline bint CVirtualAddress_write_int64(const CVirtualAddress* virtual_address, const long long write_int64) noexcept nogil:
     """
     Writes an 64-bit integer to the address specified by the CVirtualAddress structure.
 
@@ -724,7 +724,7 @@ cdef inline bint CVirtualAddress_write_int64(const CVirtualAddress* virtual_addr
     
     return bytes_written != 8
 
-cdef inline bint CVirtualAddress_write_int64_offset(const CVirtualAddress* virtual_address, const long long write_int64, long long offset) nogil:
+cdef inline bint CVirtualAddress_write_int64_offset(const CVirtualAddress* virtual_address, const long long write_int64, long long offset) noexcept nogil:
     """
     Writes a 64-bit float value to the virtual address + offset.
 
@@ -746,7 +746,7 @@ cdef inline bint CVirtualAddress_write_int64_offset(const CVirtualAddress* virtu
     )
     return bytes_written != 8
 
-cdef inline void CVirtualAddress_free(CVirtualAddress* virtual_address) nogil:
+cdef inline void CVirtualAddress_free(CVirtualAddress* virtual_address) noexcept nogil:
     """
     Frees the memory for the CVirtualAddress struct.
     

@@ -68,7 +68,7 @@ cdef extern from "virtual_memory_toolkit/windows/windows_defs.h":
     cdef SIZE_T MAX_MODULES
 
 
-cdef inline MODULEENTRY32* CollectAllModuleInformation(HANDLE snapshot_handle) nogil:
+cdef inline MODULEENTRY32* CollectAllModuleInformation(HANDLE snapshot_handle) noexcept nogil:
     """
     Extracts all the modules information from a snapshot32 and stores into a MODULEENTRY32 array.
 
@@ -99,7 +99,7 @@ cdef inline MODULEENTRY32* CollectAllModuleInformation(HANDLE snapshot_handle) n
 
     return modules
 
-cdef inline SIZE_T PrivilagedMemoryRead(HANDLE process_handle, LPCVOID base_address, LPVOID out_read_buffer, SIZE_T number_of_bytes) nogil:
+cdef inline SIZE_T PrivilagedMemoryRead(HANDLE process_handle, LPCVOID base_address, LPVOID out_read_buffer, SIZE_T number_of_bytes) noexcept nogil:
     """
     Reads memory from a specified address in a process's virtual memory, adjusting page protection as necessary.
 
@@ -165,7 +165,7 @@ cdef inline SIZE_T PrivilagedMemoryRead(HANDLE process_handle, LPCVOID base_addr
 
     return read_bytes
 
-cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPCVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) nogil:
+cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPCVOID base_address, LPCVOID write_buffer, SIZE_T number_of_bytes) noexcept nogil:
     """
     Writes memory to a specified address in a process's virtual memory, adjusting page protection as necessary.
 
@@ -230,7 +230,7 @@ cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(
     LPCVOID start_address, 
     LPCVOID end_address,
     unsigned long long *out_found_regions
-) nogil:
+) noexcept nogil:
 
     """
     Collects all of the memory regions in a process' virtual memory as 
@@ -301,7 +301,7 @@ cdef inline LPVOID PrivilegedSearchMemoryBytes(
     LPCVOID end_address, 
     PBYTE pattern, 
     SIZE_T pattern_size
-) nogil:
+) noexcept nogil:
     """
     Searches for a byte pattern within a specified memory range. Note that 
     the exact addresses are not strictly bounding the search, the memory
@@ -386,7 +386,7 @@ cdef inline LPVOID PrivilegedSearchMemoryBytes(
 
     return <LPVOID>found_address   # Pattern not found or error occurred
 
-cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept nogil:
+cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM lparam) noexcept noexcept nogil:
     cdef FIND_PROCESS_LPARAM* data = <FIND_PROCESS_LPARAM*>lparam
     cdef int length = GetWindowTextLengthA(hWnd)
     cdef char* current_window_title = <char*>malloc(sizeof(char) * (length + 1))
@@ -419,7 +419,7 @@ cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM 
 
 cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowTitleSubstring(
     const char* window_name_sub_string
-) nogil:
+) noexcept nogil:
     """
     This extracts some key information about a process/window and 
     stores it into a FIND_PROCESS_LPARAM, this struct contains a window

@@ -20,7 +20,7 @@ cdef extern from "virtual_memory_toolkit/process/process.h":
         char* image_filename
     
 
-cdef inline CProcess* CProcess_init(CAppHandle* app_handle) nogil:
+cdef inline CProcess* CProcess_init(CAppHandle* app_handle) noexcept nogil:
     """
     Creates a new CProcess instance and populates its fields.
 
@@ -69,7 +69,7 @@ cdef inline CProcess* CProcess_init(CAppHandle* app_handle) nogil:
     return process
 
 
-cdef inline void CProcess_free(CProcess* process) nogil:
+cdef inline void CProcess_free(CProcess* process) noexcept nogil:
     """
     Frees the memory allocated for a CProcess instance.
 
