@@ -69,6 +69,16 @@ cdef extern from "virtual_memory_toolkit/windows/windows_defs.h":
 
 
 cdef inline MODULEENTRY32* CollectAllModuleInformation(HANDLE snapshot_handle) nogil:
+    """
+    Extracts all the modules information from a snapshot32 and stores into a MODULEENTRY32 array.
+
+    Parameters:
+        snapshot_handle (HANDLE): the snapshot32 handle
+
+    Returns:
+        MODULEENTRY32*: pointer to the MODULEENTRY32 array, this array is of fixed size of MAX_MODULES defined in windows_defs.pxd
+    """
+    
     cdef MODULEENTRY32 me32
     cdef BOOL result
     cdef int count = 0
@@ -216,11 +226,30 @@ cdef inline SIZE_T PrivilagedMemoryWrite(HANDLE process_handle, LPCVOID base_add
 
 
 cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(
-    HANDLE process, 
+    HANDLE process_handle, 
     LPCVOID start_address, 
     LPCVOID end_address,
     unsigned long long *out_found_regions
 ) nogil:
+
+    """
+    Collects all of the memory regions in a process' virtual memory as 
+    MEMORY_BASIC_INFORMATION between start_address and end_address (inclusive). 
+    This is stored in an array of MEMORY_BASIC_INFORMATION, the size of this 
+    array is stored in out_found_regions.
+
+    Parameters:
+        process_handle (HANDLE): process handle of the target process
+        start_address (LPCVOID): start address of scan
+        end_address (LPCVOID): end address of scan
+        out_found_regions (unsigned long long*): out parameter that 
+        will have number of regions in the array stored within 
+    
+    Returns:
+        MEMORY_BASIC_INFORMATION*: array of MEMORY_BASIC_INFORMATION for 
+        each of the regions found between the start_address and the end_address
+    """
+
     cdef MEMORY_BASIC_INFORMATION mbi
     cdef unsigned long information_buffer_size
     cdef LPCVOID current_address = start_address
@@ -236,7 +265,7 @@ cdef inline MEMORY_BASIC_INFORMATION* GetMemoryRegionsInRange(
 
     while current_address < end_address:
 
-        if VirtualQueryEx(process, current_address, &mbi, sizeof(mbi)) == 0:
+        if VirtualQueryEx(process_handle, current_address, &mbi, sizeof(mbi)) == 0:
             current_address = <LPCVOID>(<unsigned long long>current_address + 10)
             continue
 
@@ -274,7 +303,12 @@ cdef inline LPVOID PrivilegedSearchMemoryBytes(
     SIZE_T pattern_size
 ) nogil:
     """
-    Searches for a byte pattern within a specified memory range.
+    Searches for a byte pattern within a specified memory range. Note that 
+    the exact addresses are not strictly bounding the search, the memory
+    regions they belong to do, this means that if the start or end address are
+    contained in the middle of a memory region, the whole memory region will 
+    be included in the search. This may change in future updates if this is deemed
+    an issue.
 
     Parameters:
         process (HANDLE): The handle to the process whose memory will be searched.
@@ -282,10 +316,10 @@ cdef inline LPVOID PrivilegedSearchMemoryBytes(
         end_address (LPCVOID): The end address of the search range.
         pattern (PBYTE): The byte pattern to search for.
         pattern_size (SIZE_T): The size of the byte pattern.
-        out_found_address (LPVOID*): Pointer to store the found address if the pattern is found.
-
     Returns:
-        BOOL: 0 if the pattern is found, 1 if it is not found or an error occurs.
+        LPVOID: the address found by the search, NULL if none found. If multiple found
+        then there is a race condition and any of these addresses could be returned, this
+        will likely be updated in the future to return all the found addresses.
     """
 
     
@@ -383,7 +417,25 @@ cdef inline BOOL _FindProcessFromWindowTitleSubstringCallback(HWND hWnd, LPARAM 
     free(current_window_title)
     return True
 
-cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowTitleSubstring(const char* window_name_sub_string) nogil:
+cdef inline FIND_PROCESS_LPARAM FindProcessFromWindowTitleSubstring(
+    const char* window_name_sub_string
+) nogil:
+    """
+    This extracts some key information about a process/window and 
+    stores it into a FIND_PROCESS_LPARAM, this struct contains a window
+    handle (out_window_handle), a process handle (out_all_access_process_handle),
+    the full window title (out_full_window_name) and the pid (out_pid).
+
+    Parameters:
+        window_name_sub_string (const char*): a substring contained within your target 
+        process' window title.
+    
+    Return:
+        FIND_PROCESS_LPARAM: a struct containing a window
+        handle (out_window_handle), a process handle (out_all_access_process_handle),
+        the full window title (out_full_window_name) and the pid (out_pid).
+    """
+    
     cdef FIND_PROCESS_LPARAM data
     
     data.in_window_name_substring = window_name_sub_string
