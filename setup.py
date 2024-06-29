@@ -35,7 +35,7 @@ with open(os.path.join(root_dir, 'README.md'), encoding='utf-8') as f:
     
 setup(
     name="virtual-memory-toolkit",
-    version="1.1.0",
+    version="1.1.1",
     long_description=long_description,
     long_description_content_type='text/markdown',
     description="Virtual memory manipulation using Cython.",
