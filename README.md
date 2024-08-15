@@ -71,7 +71,7 @@ Then, manually copy the files from `./src/virtual_memory_toolkit/` into your pro
 - Python 3.10+
 
 # Examples
-This section will outline the key structures used within this project and provide minimalistic examples for each one. For a variety of sample projects using this package, refer to the ./examples/ folder - this folder contains several self-contained projects that illustrate how to include this package and how to build the project. 
+For an example project that uses this framework, see [Noita Seed Changer](https://github.com/Le-o-n/noita-seed-changer). This section will outline the key structures used within this project and provide minimalistic examples for each one. For a variety of sample projects using this package, refer to the ./examples/ folder - this folder contains several self-contained projects that illustrate how to include this package and how to build the project. 
 
 ## CAppHandle
 This is a generic handle that wraps around both a maximum privilage process handle (HANDLE) and a window handle (HWND), this struct abstracts the need to micromanage these handles.
